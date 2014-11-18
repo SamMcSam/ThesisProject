@@ -1,0 +1,74 @@
+<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='fr' lang='fr'>
+	<head>
+		<title>PROTOTYPE</title>
+		<meta charset="UTF-8">
+		<style>	
+			#mainBlock {
+				width: 760px;
+				margin-left: auto ;
+				margin-right: auto ;
+			} 
+			fieldset {
+				margin: 30px;
+			} 
+			legend {
+				margin: 0px 5px 0px 5px;
+				font-weight: italic;
+			} 
+			form {
+				margin: 10px;
+			} 
+			
+			.titre {
+				margin: 10px;
+				margin-top: 20px;
+				font-size: 120%;
+				font-weight: bold;
+			}
+			.champs {
+				margin : 10px;
+				display : block;
+			}
+		</style>
+	</head>
+
+	<body>
+	<div id="mainBlock">
+	
+		<div class="titre">City graph</div>
+		<fieldset> <legend>Créer graphe depuis un fichier citygml</legend> 
+			<form method="post" action="_______.php" >
+				<input type="file" name="nom" />
+				<input type="radio" name="isCleaned" value="false" checked>Original
+			</form>
+		</fieldset>
+		
+		<div class="titre">Data graph</div>
+		<fieldset> <legend>Charger les données dans un graphe</legend> 
+			<form method="post" action="_______.php" >
+				<input type="file" name="nom" />
+			</form>
+		</fieldset>
+		
+		<div class="titre">Visualization technique</div>
+		<fieldset> <legend>Créer la visualisation des données dans le 3DCM</legend> 
+			<form method="post" action="_______.php" >
+				Utiliser la ville : <select class="champs" name="grapheCity">
+					<option>City 1</option>
+					<option>City 2</option>
+				</select>
+				Utiliser les données : <select class="champs" name="grapheData">
+					<option>Data 1</option>
+				</select>
+				
+				<br>
+				... PLEIN de choses sur la technique 
+				<br><br>
+				
+				<input class="champs" type="submit" value="Générer 3DCM"/>
+			</form>
+		</fieldset>
+		
+	</div>
+	</body>
+</html>
