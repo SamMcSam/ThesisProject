@@ -9,7 +9,12 @@
 
 require_once('SesameInterface.class.php');
 
-$bdd = new SesameInterface('http://localhost:8080/openrdf-sesame', 'TEST1');
+echo "a";
+
+$sesame = new SesameInterface('http://localhost:8080/openrdf-sesame', 'TEST1');
+
+//$sesame->createRepository("working");
+
 /*
 $bdd->query(
 	"PREFIX dm: <http://learningsparql.com/ns/demo#>
@@ -21,6 +26,7 @@ $bdd->query(
 	}"
 );
 */
+/*
 $bdd->query(
 	'INSERT DATA
 	{
@@ -34,5 +40,6 @@ $bdd->query(
 	  }
 	}'
 );
+*/
 
 ?>
