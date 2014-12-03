@@ -9,11 +9,16 @@
 
 require_once('SesameInterface.class.php');
 
-echo "a";
+//echo "a";
 
-$sesame = new SesameInterface('http://localhost:8080/openrdf-sesame', 'TEST1');
+$sesame = new SesameInterface('http://localhost:8080/openrdf-sesame');
 
 //$sesame->createRepository("working");
+
+//$a = $sesame->existsRepository("SYSTEM");
+
+
+
 
 /*
 $bdd->query(

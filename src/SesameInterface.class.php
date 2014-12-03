@@ -3,13 +3,17 @@
 * Thesis project
 * @author Samuel Constantino
 * created : 10/11/2014
-* last update : 1/12/2014
+* last update : 2/12/2014
 *
 * Interface with Sesame repository 
 * based on : https://github.com/alexlatchford/phpSesame (using cURL instead)
 *
 * Needs cURL enabled on the server
 */	
+ 
+//------------------------------------------------------
+// 
+//------------------------------------------------------
 
 class SesameInterface
 {
@@ -23,13 +27,41 @@ class SesameInterface
 	
 	function __construct($sesameUrl = 'http://localhost:8080/openrdf-sesame', $repository = null)
 	{
-		$this->server = $sesameUrl;
+		$this->setServer($sesameUrl);
 		$this->setRepository($repository);
+	}
+	
+	public function setServer($serv)
+	{
+		$this->server = $serv;
 	}
 	
 	public function setRepository($rep)
 	{
-		$this->repository = $rep;
+		if ($this->existsRepository($rep)) {
+			$this->repository = $rep;
+			return true;
+		}
+		else {
+			$this->repository = null;
+			return false;
+		}
+	}
+	
+	//------------------------------------------------------
+	// Tests on Sesame
+	//------------------------------------------------------
+	
+	public function existsRepository($rep) {
+		$request = new HttpRequest($this->server . '/repositories');
+		$request->setHeader("Accept: " . self::SPARQL_XML);
+		
+		$request->send("GET");
+		
+		if (strpos($request->getResponse(),$rep) !== false)
+			return true;
+		else
+			return false;
 	}
 	
 	//------------------------------------------------------
@@ -50,48 +82,103 @@ class SesameInterface
 			'Sync delay' => '0' 
 		);
 		
-		$this->httpRequest($data, $serverWorkbench . '/repositories/NONE/create');
+		$request = new HttpRequest($serverWorkbench . '/repositories/NONE/create', 0, $data);
+		$request->send();
 	}
 	
-	//public function 
+	//upload xml file
+		//file_get_contents($filePath) 
+	//upload rdf file
+	//do a query
 	
-	//------------------------------------------------------
-	// 
-	//------------------------------------------------------
+ }
+ 
+//------------------------------------------------------
+// 
+//------------------------------------------------------
+ 
+class HttpRequest {
 	
-	private function httpRequest($data, $address, $inputFormat=0)
+	private $address; 
+	private $header; 
+	private $data; 
+	private $status; 
+	private $response; 
+	
+	function __construct($address, $header=0, $data=array())
+	{
+		$this->setAddress($address);
+		$this->setHeader($header);
+		$this->setData($data);
+		$this->status = null;
+		$this->response = null;
+	}
+	
+	public function send($type="POST")
 	{
 		// initialisation curl
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $address);
+		$c = curl_init();
+		curl_setopt($c, CURLOPT_URL, $this->address);
+			
+		curl_setopt($c, CURLOPT_HEADER, $this->header);
 		
-		curl_setopt($ch, CURLOPT_POST, 1);
-		curl_setopt($ch, CURLOPT_HEADER, $inputFormat);
-		
-		$requete = http_build_query($data);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $requete);
-				
 		$timeout = 5;
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($c, CURLOPT_CONNECTTIMEOUT, $timeout);
+		curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
+				
+		if ($type=="POST"){
+			curl_setopt($c, CURLOPT_POST, 1);
+			curl_setopt($c, CURLOPT_POSTFIELDS, $this->data);
+		}
+		//elsif put...
+		//...
 		
 		//execution
-		$reponse = curl_exec($ch);
+		$reponse = curl_exec($c); 
+		$this->status = curl_getinfo($c, CURLINFO_HTTP_CODE);	
 		
-		//close connection
-		curl_close($ch);
+		curl_close($c); //close connection
 		
-		return $reponse;
-		
-		/*
-		//output
-		$xmlDoc = new DOMDocument();
-		$xmlDoc->loadXML($reponse);
-		//afficher xml
-		echo $xmlDoc->saveXML();
-		*/
+		//save output
+		$this->response = $reponse;		
 	}
 	
+	/*
+	//output
+	$xmlDoc = new DOMDocument();
+	$xmlDoc->loadXML($reponse);
+	//afficher xml
+	echo $xmlDoc->saveXML();
+	*/
+	
 	//file_get_contents($filePath);
+	
+	//---------------------------------------------------------
+
+    public function setAddress($value){
+        $this->address = $value;
+    }
+
+    public function setHeader($value ){
+        $this->header = $value;
+    }
+
+    public function setData ($value ){
+		if (is_array($value)){
+			$this->data = http_build_query($value);
+			return true;
+		}
+		else
+			return false;
+    }
+
+	public function getStatus (){
+        return $this->status;
+    }
+
+	// A REFAIRE
+	public function getResponse (){		
+		return $this->response;
+    }
 	
 }
