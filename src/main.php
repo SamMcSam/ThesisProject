@@ -15,7 +15,7 @@ $sesame = new SesameInterface('http://localhost:8080/openrdf-sesame');
 
 //$sesame->createRepository("working");
 
-//$a = $sesame->existsRepository("SYSTEM");
+$a = $sesame->existsRepository("SYSTEM");
 
 
 

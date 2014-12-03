@@ -5,6 +5,7 @@
 * created : 10/11/2014
 * last update : 2/12/2014
 *
+* wrapper
 * Interface with Sesame repository 
 * based on : https://github.com/alexlatchford/phpSesame (using cURL instead)
 *
@@ -28,7 +29,8 @@ class SesameInterface
 	function __construct($sesameUrl = 'http://localhost:8080/openrdf-sesame', $repository = null)
 	{
 		$this->setServer($sesameUrl);
-		$this->setRepository($repository);
+		if ($repository != null)
+			$this->setRepository($repository);
 	}
 	
 	public function setServer($serv)
@@ -52,12 +54,33 @@ class SesameInterface
 	// Tests on Sesame
 	//------------------------------------------------------
 	
+	//PROBLEM : this returns a application/x-binary-rdf-results-table
 	public function existsRepository($rep) {
 		$request = new HttpRequest($this->server . '/repositories');
-		$request->setHeader("Accept: " . self::SPARQL_XML);
+		$request->setHeader(array("Accept" => self::SPARQL_XML));
+		//$request->setHeader(array("Content-type" => "application/xml"));
 		
 		$request->send("GET");
 		
+		
+		//$xmlDoc = new DOMDocument();
+		//$xmlDoc->loadXML($request->getResponse());
+		//afficher xml
+		//echo $xmlDoc->saveXML();
+		
+		//$xmlDoc = simplexml_load_string($request->getResponse());
+		//echo $xmlDoc->saveXML();
+		
+		//header('Content-Type: application/xml; charset=utf-8');
+		var_dump($request->getResponse());
+		//echo '<pre>';
+		//echo htmlspecialchars($request->getResponse());
+		//echo '</pre>';
+		
+		//echo ($request->getResponse());
+		
+		//@todo A REFAIRE
+		//finds if the named repository is in the list of repositories
 		if (strpos($request->getResponse(),$rep) !== false)
 			return true;
 		else
@@ -105,10 +128,12 @@ class HttpRequest {
 	private $status; 
 	private $response; 
 	
-	function __construct($address, $header=0, $data=array())
+	function __construct($address, $header=array(), $data=array())
 	{
 		$this->setAddress($address);
+		$this->header = array();
 		$this->setHeader($header);
+		$this->data = array();
 		$this->setData($data);
 		$this->status = null;
 		$this->response = null;
@@ -120,7 +145,9 @@ class HttpRequest {
 		$c = curl_init();
 		curl_setopt($c, CURLOPT_URL, $this->address);
 			
-		curl_setopt($c, CURLOPT_HEADER, $this->header);
+		//curl_setopt($c, CURLOPT_HEADER, true);
+		curl_setopt($c, CURLOPT_HTTPHEADER, $this->header);
+		//curl_setopt($c, CURLINFO_HEADER_OUT, 'Content-Type: application/xml; charset=utf-8');
 		
 		$timeout = 5;
 		curl_setopt($c, CURLOPT_CONNECTTIMEOUT, $timeout);
@@ -160,12 +187,19 @@ class HttpRequest {
     }
 
     public function setHeader($value ){
-        $this->header = $value;
+        if (is_array($value)){
+			$this->header = array(http_build_query($value));
+			//$this->header = ($value);
+			var_dump($this->header); 
+			return true;
+		}
+		else
+			return false;
     }
 
     public function setData ($value ){
 		if (is_array($value)){
-			$this->data = http_build_query($value);
+			$this->data = http_build_query($value); //dans array?
 			return true;
 		}
 		else
