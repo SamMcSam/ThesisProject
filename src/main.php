@@ -82,8 +82,6 @@ INSERT DATA
 	}
 ';
 
-$query = $sesame->append($c, 'null', '')
-//$query = $sesame->query($c, array());
-//$query = $sesame->query($c, array('Accept: ' . SesameInterface::RDFXML));
+$query = $sesame->update($c);
 
 ?>
