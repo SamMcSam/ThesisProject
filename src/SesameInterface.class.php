@@ -20,7 +20,8 @@ class SesameInterface
 {
 	// Return MIME types
 	const SPARQL_XML = 'application/sparql-results+xml';
-	//const SPARQL_POST = 'application/x-www-form-urlencoded'; //if query sent with post
+	const SPARQL_JSON = 'application/sparql-results+json';
+	const SPARQL_POST = 'application/x-www-form-urlencoded'; //if query sent with post
 	
 	// Input MIME Types
 	const RDFXML = 'application/rdf+xml';
@@ -148,7 +149,7 @@ class SesameInterface
 	{
 		$this->checkRepository();
 		$this->checkContext($context);
-		$this->checkInputFormat($inputFormat);
+		//$this->checkInputFormat($inputFormat);
 		
 		$request = new HttpRequest($this->server . '/repositories/' . $this->repository . '/statements?context=' . $context);
 		$request->setHeader('Content-type: ' . $inputFormat);
@@ -176,18 +177,26 @@ class SesameInterface
 	}
 	
 	
-	public function query($query, $resultFormat = self::SPARQL_XML, $queryLang = 'sparql', $infer = true)
+	public function query($query, $header, $queryLang = 'sparql', $infer = true)
 	{
 		$this->checkRepository();
 		$this->checkQueryLang($queryLang);
 		
 		$request = new HttpRequest($this->server . '/repositories/' . $this->repository);
-		$request->setHeader('Accept: ' . self::SPARQL_XML);
+		
+		/*
+		$header = array(
+			'Accept: ' . self::SPARQL_XML, //for simple query
+			'Accept: ' . self::RDFXML //for construct
+		);
+		*/
+		
+		$request->setHeader($header);
 		
 		$data = array (
-			"query" => $query,
-			"queryLn" => $queryLang,
-			"infer" => $infer
+			"query" => $query
+			//"queryLn" => $queryLang,
+			//"infer" => $infer
 		);
 		$request->setData($data);		
 		
@@ -221,7 +230,6 @@ class HttpRequest {
 	function __construct($address, $header=array(), $data=array())
 	{
 		$this->setAddress($address);
-		$this->header = array();
 		$this->setHeader($header);
 		$this->data = array();
 		$this->setData($data);
@@ -234,9 +242,6 @@ class HttpRequest {
 		// initialisation curl
 		$c = curl_init();
 		curl_setopt($c, CURLOPT_URL, $this->address);
-			
-		curl_setopt($c, CURLOPT_HTTPHEADER, $this->header);
-		//curl_setopt($c, CURLINFO_HEADER_OUT,true);
 		
 		$timeout = 5;
 		curl_setopt($c, CURLOPT_CONNECTTIMEOUT, $timeout);
@@ -245,7 +250,12 @@ class HttpRequest {
 		if ($type==self::METHOD_POST){
 			curl_setopt($c, CURLOPT_POST, 1);
 			curl_setopt($c, CURLOPT_POSTFIELDS, $this->data);
+			
+			$this->header[] = 'Content-type:' . SesameInterface::SPARQL_POST;
 		}
+		
+		curl_setopt($c, CURLOPT_HTTPHEADER, $this->header);
+		//curl_setopt($c, CURLINFO_HEADER_OUT,true);
 		
 		//execution
 		$reponse = curl_exec($c); 
@@ -279,14 +289,17 @@ class HttpRequest {
     }
 
     public function setHeader($value ){
-		$this->header = array($value);
+		if (is_array($value))
+			$this->header = $value;
+		else
+			$this->header = array($value);
     }
 
     public function setData ($value){
 		if (is_array($value))
 			$this->data = http_build_query($value); 
 		else
-		$this->data = $value;
+			$this->data = $value;
     
 		//echo $this->data;
 	}
