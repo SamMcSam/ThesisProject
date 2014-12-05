@@ -31,6 +31,8 @@ class SesameInterface
 		$this->setServer($sesameUrl);
 		if ($repository != null)
 			$this->setRepository($repository);
+		else 
+			$this->repository = null;
 	}
 	
 	public function setServer($serv)
@@ -54,37 +56,28 @@ class SesameInterface
 	// Tests on Sesame
 	//------------------------------------------------------
 	
-	//PROBLEM : this returns a application/x-binary-rdf-results-table
 	public function existsRepository($rep) {
 		$request = new HttpRequest($this->server . '/repositories');
-		$request->setHeader(array("Accept" => self::SPARQL_XML));
-		//$request->setHeader(array("Content-type" => "application/xml"));
+		$request->setHeader("Accept: " . self::SPARQL_XML); //ATTENTION : Header CANNOT have space between Accept and the colon!!!!!!
 		
 		$request->send("GET");
 		
+		$xmlDoc = new DOMDocument();
+		$xmlDoc->loadXML($request->getResponse());
 		
-		//$xmlDoc = new DOMDocument();
-		//$xmlDoc->loadXML($request->getResponse());
-		//afficher xml
-		//echo $xmlDoc->saveXML();
-		
-		//$xmlDoc = simplexml_load_string($request->getResponse());
-		//echo $xmlDoc->saveXML();
-		
-		//header('Content-Type: application/xml; charset=utf-8');
-		var_dump($request->getResponse());
-		//echo '<pre>';
-		//echo htmlspecialchars($request->getResponse());
-		//echo '</pre>';
-		
-		//echo ($request->getResponse());
-		
-		//@todo A REFAIRE
 		//finds if the named repository is in the list of repositories
-		if (strpos($request->getResponse(),$rep) !== false)
-			return true;
-		else
-			return false;
+		$analyseXml = $xmlDoc->documentElement->getElementsByTagName("result");
+		foreach($analyseXml as $repositories){			
+			$bindings = $repositories->getElementsByTagName('binding');
+			$literal = $bindings->item(0)->getElementsByTagName('literal');
+			//echo $literal->item(0)->nodeValue;
+
+			if ($literal->item(0)->nodeValue == $rep){
+				return true;		 
+				echo "OK";}
+		}
+		
+		return false; //hasn't found the repository
 	}
 	
 	//------------------------------------------------------
@@ -145,9 +138,7 @@ class HttpRequest {
 		$c = curl_init();
 		curl_setopt($c, CURLOPT_URL, $this->address);
 			
-		//curl_setopt($c, CURLOPT_HEADER, true);
 		curl_setopt($c, CURLOPT_HTTPHEADER, $this->header);
-		//curl_setopt($c, CURLINFO_HEADER_OUT, 'Content-Type: application/xml; charset=utf-8');
 		
 		$timeout = 5;
 		curl_setopt($c, CURLOPT_CONNECTTIMEOUT, $timeout);
@@ -162,7 +153,7 @@ class HttpRequest {
 		
 		//execution
 		$reponse = curl_exec($c); 
-		$this->status = curl_getinfo($c, CURLINFO_HTTP_CODE);	
+		$this->status = curl_getinfo($c, CURLINFO_HTTP_CODE);
 		
 		curl_close($c); //close connection
 		
@@ -187,14 +178,7 @@ class HttpRequest {
     }
 
     public function setHeader($value ){
-        if (is_array($value)){
-			$this->header = array(http_build_query($value));
-			//$this->header = ($value);
-			var_dump($this->header); 
-			return true;
-		}
-		else
-			return false;
+		$this->header = array($value);
     }
 
     public function setData ($value ){
