@@ -67,7 +67,7 @@ class SesameInterface
 		$request = new HttpRequest($this->server . '/repositories');
 		$request->setHeader("Accept: " . self::SPARQL_XML); //ATTENTION : Header CANNOT have space between Accept and the colon!!!!!!
 		
-		$request->send("GET");
+		$request->send(HttpRequest::METHOD_GET);
 		
 		$xmlDoc = new DOMDocument();
 		$xmlDoc->loadXML($request->getResponse());
@@ -110,6 +110,14 @@ class SesameInterface
 				&& $format != self::TRIG && $format != self::TRIX && $format != self::TURTLE)
 		{
 			throw new Exception ('Please supply a valid input format.');
+		}
+	}
+	
+	private function checkQueryLang($queryLang)
+	{
+		if ($queryLang != 'sparql' && $queryLang != 'serql')
+		{
+			throw new Exception ('Please supply a valid query language, SPARQL or SeRQL supported.');
 		}
 	}
 	
@@ -167,9 +175,31 @@ class SesameInterface
 		$this->append($data, $context, $inputFormat);
 	}
 	
-
-	//upload rdf file
-	//do a query
+	
+	public function query($query, $resultFormat = self::SPARQL_XML, $queryLang = 'sparql', $infer = true)
+	{
+		$this->checkRepository();
+		$this->checkQueryLang($queryLang);
+		
+		$request = new HttpRequest($this->server . '/repositories/' . $this->repository);
+		$request->setHeader('Accept: ' . self::SPARQL_XML);
+		
+		$data = array (
+			"query" => $query,
+			"queryLn" => $queryLang,
+			"infer" => $infer
+		);
+		$request->setData($data);		
+		
+		$request->send();
+		
+		if($request->getStatus() != 200)
+		{
+			throw new Exception ('Failed to run query, HTTP response error: ' . $request->getStatus());
+		}
+		
+		return $request->getResponse();
+	}
 	
  }
  
@@ -178,6 +208,9 @@ class SesameInterface
 //------------------------------------------------------
  
 class HttpRequest {
+	
+	const METHOD_POST = "Post";
+	const METHOD_GET = "Get";
 	
 	private $address; 
 	private $header; 
@@ -196,28 +229,31 @@ class HttpRequest {
 		$this->response = null;
 	}
 	
-	public function send($type="POST")
+	public function send($type=self::METHOD_POST)
 	{
 		// initialisation curl
 		$c = curl_init();
 		curl_setopt($c, CURLOPT_URL, $this->address);
 			
 		curl_setopt($c, CURLOPT_HTTPHEADER, $this->header);
+		//curl_setopt($c, CURLINFO_HEADER_OUT,true);
 		
 		$timeout = 5;
 		curl_setopt($c, CURLOPT_CONNECTTIMEOUT, $timeout);
 		curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
 				
-		if ($type=="POST"){
+		if ($type==self::METHOD_POST){
 			curl_setopt($c, CURLOPT_POST, 1);
 			curl_setopt($c, CURLOPT_POSTFIELDS, $this->data);
 		}
-		//elsif put...
-		//...
 		
 		//execution
 		$reponse = curl_exec($c); 
 		$this->status = curl_getinfo($c, CURLINFO_HTTP_CODE);
+		
+		//echo "<p>";
+		//var_dump(curl_getinfo($c));
+		//echo "</p>";
 		
 		curl_close($c); //close connection
 		
@@ -250,8 +286,10 @@ class HttpRequest {
 		if (is_array($value))
 			$this->data = http_build_query($value); 
 		else
-			$this->data = $value;
-    }
+		$this->data = $value;
+    
+		//echo $this->data;
+	}
 
 	public function getStatus (){
         return $this->status;
