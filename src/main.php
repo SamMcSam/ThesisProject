@@ -2,86 +2,131 @@
 /* 
 * Thesis project
 * @author Samuel Constantino
-* last update : 10/11/2014
+* created : 10/11/2014
+* last update : 6/12/2014
 *
-* calls everything
+* main menu composed of all different menu
+* each menu is called dynamically called with AJAX queries
 */
-
-require_once('SesameInterface.class.php');
-
-//echo "a";
-
-$sesame = new SesameInterface('http://localhost:8080/openrdf-sesame', "INTERFACETEST");
-
-//$sesame->createRepository("INTERFACETEST");
-
-//echo $sesame->existsRepository("FRANKFURT");
-
-//$sesame->appendFile("Munich_clean2.xml");
-
-
-//exemple of a SELECT query
-/*
-$a = '
-PREFIX :<http://www.opengis.net/citygml/1.0>
-PREFIX app:<http://www.opengis.net/citygml/appearance/1.0>
-PREFIX ex:<http://example.org/stuff/1.0/>
-PREFIX xlink:<http://www.w3.org/1999/xlink>
-PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX gml:<http://www.opengis.net/gml>
-PREFIX dem:<http://www.opengis.net/citygml/relief/1.0>
-PREFIX bldg:<http://www.opengis.net/citygml/building/1.0>
-PREFIX xsi:<http://www.w3.org/2001/XMLSchema-instance>
-
-SELECT ?truc ?type
-WHERE {
- ?truc rdf:type ?type.
-}
-';
-*/
-//$query = $sesame->query($a, array('Accept: ' . SesameInterface::SPARQL_XML));
-
-
-
-//exemple of a CONSTRUCT query
-/*
-$b = 'PREFIX test:<http://aa.com/>
-CONSTRUCT {
- _:1 a test:Truc.
- _:1 test:a ?truc.
- _:1 test:b ?a.
- _:1 test:c ?machin.
-}
-FROM <file://fakepath/Munich_clean2.xml>
-WHERE {
- ?truc ?a ?machin.
-}';
-*/
-//$query = $sesame->query($b, array('Accept: ' . SesameInterface::RDFXML));
-
-
-//echo '<pre>';
-//echo htmlspecialchars($query);
-//echo '</pre>';
-
-//$xmlDoc = new DOMDocument();
-//$xmlDoc->loadXML($query);
-//var_dump($xmlDoc);
-
-
-//exemple of INSERT query
-$c = '
-PREFIX data:<http://test.com/>
-INSERT DATA
-	{
-	  GRAPH <http://graphData>
-	  { 
-		data:x data:tag "three" . 
-		data:y data:tag "four" . 
-	  }
-	}
-';
-
-$query = $sesame->update($c);
-
 ?>
+
+<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='fr' lang='fr'>
+	<head>
+		<title>PROTOTYPE</title>
+		<meta charset='UTF-8'>
+		<link rel="stylesheet" href="styles.css">
+	</head>
+
+	<body>
+		<div id='mainBlock'>
+
+			<!-- MENU TO UPLOAD CITY -->
+			<div id='menuCity'>
+			</div>
+			<div id='menuCity_loading' style="display:none;">
+				<img src="../img/loading.gif">
+			</div>
+			
+			<!-- MENU TO UPLOAD DATA -->
+			<div id='menuData'>
+			</div>
+			<div id='menuData_loading' style="display:none;">
+				<img src="../img/loading.gif">
+			</div>
+				
+			<!-- MENU TO CREATE TECHNIQUE -->
+			<div id='menuTechnique'>
+			</div>
+			<div id='menuTechnique_loading' style="display:none;">
+				<img src="../img/loading.gif">
+			</div>
+
+			<!-- MENU TO GENERATE ENRICHED MODEL -->
+			<div id='menuEnrichment'>
+			</div>
+			<div id='menuEnrichment_loading' style="display:none;">
+				<img src="../img/loading.gif">
+			</div>
+			
+		</div>
+	</body>
+
+</html>
+
+<script type="text/javascript">
+    //--------------------------------------------------
+    //Fonctions Ajax
+    //--------------------------------------------------
+    
+	function getXhr() 
+	{
+		var xhr = null;
+
+		if (window.XMLHttpRequest){
+			xhr = new XMLHttpRequest();
+		}
+		else if (window.ActiveXObject) {
+			try {
+				xhr = new ActiveXObject('Msxml2.XMLHTTP');
+			} catch (e) {
+				xhr = new ActiveXObject('Microsoft.XMLHTTP');
+			}       
+		}
+		else {
+			alert('Votre navigateur ne supporte pas les objets XMLHTTPRequest...'); 
+			xhr = false; 
+		}
+		return xhr;
+	}
+    
+    function xhrHTML(div, url, data) 
+	{
+		document.getElementById(div + "_chargement").style.display = '';
+	
+		var xhr = null;
+		var xhr = getXhr();
+		
+		xhr.onreadystatechange = function() {
+			if(xhr.readyState == 4 && xhr.status == 200) {
+				document.getElementById(div).innerHTML = xhr.responseText;
+				document.getElementById(div + "_chargement").style.display = 'none';
+			}
+		}
+		
+		//xhr.open('GET',url,true);
+		//xhr.send();
+		xhr.open("POST",url,true);
+		xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+		xhr.send(data);
+	}
+    
+    //--------------------------------------------------
+
+    function loadCity()
+    {
+    	var data = "";
+
+    	//get all the data from this form
+
+    	xhrHTML("menuCity", "menuCity.php", data);
+    }
+
+    function loadData()
+    {
+    	var data = "";
+
+    	//get all the data from this form
+
+    	xhrHTML("menuData", "menuData.php", data);
+    }
+
+    function loadEnrichment()
+    {
+    	var data = "";
+
+    	//get all the data from this form
+
+    	xhrHTML("menuEnrichment", "menuEnrichment.php", data);
+    }
+
+</script>
