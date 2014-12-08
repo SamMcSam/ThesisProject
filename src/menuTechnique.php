@@ -12,7 +12,7 @@
 <fieldset> <legend>...</legend> 
 	<!--<form method='post' action='_______.php' >
 		<input type='file' name='nom' />
-		<input class='champs' type='submit' value='Upload' onclick="loadData();"/>
+		<button class='champs' type="button" onclick="loadCity();">Upload</button>
 	</form> -->
 <?php echo $msg;?>
 </fieldset>

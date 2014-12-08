@@ -104,6 +104,6 @@ $msg = "";
 		... PLEIN de choses sur la technique 
 		<br><br>
 		
-		<input class='champs' type='submit' value='Générer 3DCM' onclick="loadEnrichment();"/>
+		<button class='champs' type='button' onclick="loadEnrichment();">Générer 3DCM</button>
 	</form>
 </fieldset>

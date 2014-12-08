@@ -24,8 +24,8 @@
 			<div id='menuCity'>
 				<?php include("menuCity.php");?>
 			</div>
-			<div id='menuCity_loading' >
-				<img src="../img/loading.gif" style="display:none;">
+			<div id='menuCity_loading' style="display:none;">
+				<img class ="imgLoading" src="../img/loading.gif" height="50px"> LOADING...
 			</div>
 			
 			<!-- MENU TO UPLOAD DATA -->
@@ -33,7 +33,7 @@
 				<?php include("menuData.php");?>
 			</div>
 			<div id='menuData_loading' style="display:none;">
-				<img src="../img/loading.gif">
+				<img class ="imgLoading" src="../img/loading.gif">
 			</div>
 				
 			<!-- MENU TO CREATE TECHNIQUE -->
@@ -41,7 +41,7 @@
 				<?php include("menuTechnique.php");?>
 			</div>
 			<div id='menuTechnique_loading' style="display:none;">
-				<img src="../img/loading.gif">
+				<img class ="imgLoading" src="../img/loading.gif">
 			</div>
 
 			<!-- MENU TO GENERATE ENRICHED MODEL -->
@@ -49,7 +49,7 @@
 				<?php include("menuEnrichment.php");?>
 			</div>
 			<div id='menuEnrichment_loading' style="display:none;">
-				<img src="../img/loading.gif">
+				<img class ="imgLoading" src="../img/loading.gif">
 			</div>
 			
 		</div>
@@ -58,7 +58,6 @@
 </html>
 
 <script type="text/javascript">
-	
 
     //--------------------------------------------------
     //Fonctions Ajax
@@ -88,6 +87,8 @@
     function xhrHTML(div, url, data) 
 	{
 		document.getElementById(div + "_loading").style.display = '';
+		document.getElementById(div).style.display = 'none';
+
 	
 		var xhr = null;
 		var xhr = getXhr();
@@ -95,26 +96,36 @@
 		xhr.onreadystatechange = function() {
 			if(xhr.readyState == 4 && xhr.status == 200) {
 				document.getElementById(div).innerHTML = xhr.responseText;
+				document.getElementById(div).style.display = '';
 				document.getElementById(div + "_loading").style.display = 'none';
 			}
 		}
 		
-		//xhr.open('GET',url,true);
-		//xhr.send();
 		xhr.open("POST",url,true);
-		xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+		//xhr.setRequestHeader("Content-type", false); //DOES NOT WORK IF USE A FORMDATA
 		xhr.send(data);
 	}
     
+    //--------------------------------------------------
+    //Fonctions pour chaque bouton
     //--------------------------------------------------
 
     function loadCity()
     {
     	//get all the data from this form
-    	var nameCityFile = document.getElementById(uploadcity_name);
+    	var uploadcity_file = document.getElementById("uploadcity_file").files;
+    	var complete_upload = document.getElementById("complete_upload").value;
+    	var remove_texture = document.getElementById("remove_texture").value;
 
-    	var data = "variable1=truc&variable2=bidule";    	
-    	xhrHTML("menuCity", "menuCity.php", data);
+    	if (uploadcity_file.length > 0) {
+	    	var formData = new FormData();
+	    	formData.append('uploadcity_file', uploadcity_file[0], uploadcity_file[0].name);
+	    	formData.append('complete_upload', complete_upload);
+	    	formData.append('remove_texture', remove_texture);
+	    	formData.append('ok', "IS THIS WORKING OR WHAT???");
+
+	    	xhrHTML("menuCity", "menuCity.php", formData);
+   		}
     }
 
     function loadData()

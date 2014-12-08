@@ -47,7 +47,7 @@ $msg = "";
 <fieldset> <legend>Charger les données dans un graphe</legend> 
 	<form method='post' action='_______.php' >
 		<input type='file' name='nom' />
-		<input class='champs' type='submit' value='Upload' onclick="loadData();"/>
+		<button class='champs' type="button" onclick="loadData();">Upload</button>
 	</form>
 <?php echo $msg;?>
 </fieldset>
