@@ -7,6 +7,8 @@
 * Menu to upload data
 */
 
+/*
+
 require_once('SesameInterface.class.php');
 
 //if isset($_POST["uploadcity_name"]);
@@ -37,6 +39,8 @@ $msg = "";
 //else {
 	$msg = "<div class='confirmed'>The data '' has been uploaded to the '' repository!</div>";
 //}
+
+*/
 ?>
 
 <div class='titre'>Data graph</div>

@@ -14,7 +14,7 @@
 	<head>
 		<title>PROTOTYPE</title>
 		<meta charset='UTF-8'>
-		<link rel="stylesheet" href="styles.css">
+		<link rel="stylesheet" href="style.css">
 	</head>
 
 	<body>
@@ -22,13 +22,15 @@
 
 			<!-- MENU TO UPLOAD CITY -->
 			<div id='menuCity'>
+				<?php include("menuCity.php");?>
 			</div>
-			<div id='menuCity_loading' style="display:none;">
-				<img src="../img/loading.gif">
+			<div id='menuCity_loading' >
+				<img src="../img/loading.gif" style="display:none;">
 			</div>
 			
 			<!-- MENU TO UPLOAD DATA -->
 			<div id='menuData'>
+				<?php include("menuData.php");?>
 			</div>
 			<div id='menuData_loading' style="display:none;">
 				<img src="../img/loading.gif">
@@ -36,6 +38,7 @@
 				
 			<!-- MENU TO CREATE TECHNIQUE -->
 			<div id='menuTechnique'>
+				<?php include("menuTechnique.php");?>
 			</div>
 			<div id='menuTechnique_loading' style="display:none;">
 				<img src="../img/loading.gif">
@@ -43,6 +46,7 @@
 
 			<!-- MENU TO GENERATE ENRICHED MODEL -->
 			<div id='menuEnrichment'>
+				<?php include("menuEnrichment.php");?>
 			</div>
 			<div id='menuEnrichment_loading' style="display:none;">
 				<img src="../img/loading.gif">
@@ -54,6 +58,8 @@
 </html>
 
 <script type="text/javascript">
+	
+
     //--------------------------------------------------
     //Fonctions Ajax
     //--------------------------------------------------
@@ -81,7 +87,7 @@
     
     function xhrHTML(div, url, data) 
 	{
-		document.getElementById(div + "_chargement").style.display = '';
+		document.getElementById(div + "_loading").style.display = '';
 	
 		var xhr = null;
 		var xhr = getXhr();
@@ -89,7 +95,7 @@
 		xhr.onreadystatechange = function() {
 			if(xhr.readyState == 4 && xhr.status == 200) {
 				document.getElementById(div).innerHTML = xhr.responseText;
-				document.getElementById(div + "_chargement").style.display = 'none';
+				document.getElementById(div + "_loading").style.display = 'none';
 			}
 		}
 		
@@ -104,10 +110,10 @@
 
     function loadCity()
     {
-    	var data = "";
-
     	//get all the data from this form
+    	var nameCityFile = document.getElementById(uploadcity_name);
 
+    	var data = "variable1=truc&variable2=bidule";    	
     	xhrHTML("menuCity", "menuCity.php", data);
     }
 

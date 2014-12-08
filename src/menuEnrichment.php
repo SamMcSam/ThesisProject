@@ -7,7 +7,9 @@
 * Menu to  generate a enriched 3DCM
 */
 
-require_once('SesameInterface.class.php');
+
+
+//require_once('SesameInterface.class.php');
 
 //if isset($_POST["uploadcity_name"]);
 //if isset($_POST["uploadcity_isCleaned"]);
@@ -15,7 +17,7 @@ require_once('SesameInterface.class.php');
 
 
 
-$sesame = new SesameInterface('http://localhost:8080/openrdf-sesame', "INTERFACETEST");
+//$sesame = new SesameInterface('http://localhost:8080/openrdf-sesame', "INTERFACETEST");
 
 
 //exemple of a SELECT query
@@ -69,9 +71,7 @@ WHERE {
 
 
 
-
-
-
+/*
 $msg = "";
 
 //if ?
@@ -79,6 +79,7 @@ $msg = "";
 //else {
 	$msg = "<div class='confirmed'>The data '' has been uploaded to the '' repository!</div>";
 //}
+*/
 ?>
 
 

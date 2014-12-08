@@ -7,36 +7,40 @@
 * Menu to upload 3d city
 */
 
-require_once('SesameInterface.class.php');
-
-//if isset($_POST["uploadcity_name"]);
-//if isset($_POST["uploadcity_isCleaned"]);
-
-// GENERATE city name
-
-$sesame = new SesameInterface('http://localhost:8080/openrdf-sesame');
+require_once('CityRDF.class.php');
 
 $msg = "";
 
-//if ($sesame->existsRepository(__le_nom du rep__))
-	$msg = "<div class='error'>A repository for this 3D model has already been created!</div>";
-//else {
+if (isset($_POST["uploadcity_name"])) {
 
-	// create repository
-	//$sesame->createRepository("INTERFACETEST");
+	$nameFile = $_POST["uploadcity_name"];
 
-	// upload city model as a graph
-	//$sesame->appendFile("Munich_clean2.xml");
+	$city = new CityRDF();
 
-	$msg = "<div class='confirmed'>A repository for the 3D model '' has been created!</div>";
-//}
+	try {
+		// GENERATE city name
+		//$city->upload($nameFile);
+
+		// create repository
+		//$sesame->createRepository("INTERFACETEST");
+
+		// upload city model as a graph
+		//$sesame->appendFile("Munich_clean2.xml");
+
+		$msg = "<div class='confirmed'>A repository for the 3D model '' has been created!</div>";
+	}
+	catch (Exception $e){
+		$msg = "<div class='error'>". $e->getMessage() ."</div>";
+	}
+}
+
 ?>
 
 <div class='titre'>City graph</div>
 <fieldset> <legend>Créer graphe depuis un fichier citygml</legend> 
 	<form>
 		<input type='file' name='uploadcity_name' />
-		<input type='radio' name='uploadcity_isCleaned' value='false' checked>Original
+		<!--<input type='radio' name='uploadcity_isCleaned' value='false' checked>Original -->
 		<input class='champs' type='submit' value='Upload' onclick="loadCity();"/>
 	</form>
 <?php echo $msg;?>
