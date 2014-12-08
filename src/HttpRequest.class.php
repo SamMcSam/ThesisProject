@@ -5,10 +5,6 @@
 * created : 10/11/2014
 * last update : 2/12/2014
 *
-* Interface with Sesame repository 
-* This is a re-writting of phpSesame using cURL instead
-* phpSesame source : https://github.com/alexlatchford/phpSesame 
-*
 * Needs cURL enabled on the server
 */	
 
