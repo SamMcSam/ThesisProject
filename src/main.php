@@ -122,7 +122,6 @@
 	    	formData.append('uploadcity_file', uploadcity_file[0], uploadcity_file[0].name);
 	    	formData.append('complete_upload', complete_upload);
 	    	formData.append('remove_texture', remove_texture);
-	    	formData.append('ok', "IS THIS WORKING OR WHAT???");
 
 	    	xhrHTML("menuCity", "menuCity.php", formData);
    		}
