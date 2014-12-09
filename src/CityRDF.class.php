@@ -32,6 +32,9 @@ class CityRDF {
 
 		if ($this->removeTexture)
 			removeTextures();
+
+		//do some extra calculations here, to simplify later
+		//$this->calculateCenters();
 	}
 
 	private function generateXML()
@@ -71,6 +74,13 @@ class CityRDF {
 		//this is what the cleaning.py script did
 		//remove all <app:appearance>
 	}
+
+	private function calculateCenters()
+	{
+
+	}
+
+	//------------------------------------------------------------------------------
 
 	public function getXML()
 	{
