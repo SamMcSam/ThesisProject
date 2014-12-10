@@ -31,7 +31,7 @@ class CityRDF {
 		$this->cleaning();
 
 		if ($this->removeTexture)
-			removeTextures();
+			$this->removeTextures();
 
 		//do some extra calculations here, to simplify later
 		//$this->calculateCenters();
@@ -42,10 +42,6 @@ class CityRDF {
 		try {
 			$this->xml = new DOMDocument($this->fileName);
 			$this->xml->load($this->fileName); //LOAD para filename, LOADXML para string :/
-
-			//echo "<pre>";
-			//print_r($this->xml);
-			//echo "</pre>";
 		}
 		catch (E_STRICT  $e) {
 			exit("Erreur : document impossible to parse!");
@@ -54,25 +50,88 @@ class CityRDF {
 
 	private function cleaning()
 	{
-		//add prefix
+		//add prefix and a rdf:RDF node as the root
+		//----------
+		$root = $this->xml->documentElement;
+   		$newRoot = $this->xml->createElement("rdf:RDF");
+   		$this->xml->appendChild($newRoot);
+   		$newRoot->appendChild($root);
 
-		//verify if no unprefixed tags
-		//(surtout uri)
+   		$newRoot->setAttribute('xmlns:rdf','http://www.w3.org/1999/02/22-rdf-syntax-ns#');
+   		$newRoot->setAttribute('xmlns:failsafe','http://escape.uri/');
 
-		//transform multiple pos INTO posList
+		//transform multiple pos INTO a single posList (old gml doc)
+		//----------
+		$xpath = new DOMXPath($this->xml);
+		$xpath->registerNamespace("gml", "http://www.opengis.net/gml");
+		$linearRingList = $xpath->query('//gml:LinearRing');
+		foreach ($linearRingList as $ring) {
+		    $listOfPos = $xpath->query('gml:pos', $ring);
+		    if ($listOfPos->length > 0){
+		    	$posList = $this->xml->createElement("gml:poslist");
+			    foreach ($listOfPos as $pos) {
+		    		$posList->nodeValue .= $pos->nodeValue." ";
+		    		$pos->parentNode->removeChild($pos);
+			    }
+			    $ring->appendChild($posList);
+			}
+		}		
 
-		//extra
-		//---
+		//enlever bldg:address
+		//----------
+		$xpath->registerNamespace("bldg", "http://www.opengis.net/citygml/building/1.0");
+		$bldAddressList = $xpath->query('//bldg:address');
+		foreach ($bldAddressList as $address) {
+			$address->parentNode->removeChild($address);
+		}
 
-		//enlever bounded by
-		//enlever address
-		//enlever exteernalReference
+		//enlever core:externalReference
+		//----------
+		$xpath->registerNamespace("core", "http://www.opengis.net/citygml/1.0");
+		$externalRefList = $xpath->query('//core:externalReference');
+		foreach ($externalRefList as $ref) {
+			$ref->parentNode->removeChild($ref);
+		}
+		
+
+/*
+		//verify if no unprefixed tags (no easy way to change names!!)
+		//----------
+		$allElements = $xpath->query('//*');
+		foreach($allElements as $node) {
+			if (!preg_match("#^.*:.*$#", $node->nodeName))
+				echo ($node->nodeName) . " <br>";
+		}
+*/
+
+		//debug
+		//echo "<pre>";
+		//echo $this->xml->saveXML();
+		//echo "</pre>";
+		
 	}
 
 	private function removeTextures()
 	{
-		//this is what the cleaning.py script did
 		//remove all <app:appearance>
+		$xpath = new DOMXPath($this->xml);
+		$xpath->registerNamespace("app", "http://www.opengis.net/citygml/appearance/1.0");
+		$appearanceList = $xpath->query('//app:Appearance');
+		echo $appearanceList->length;
+		foreach ($appearanceList as $appearance) {
+			$appearance->parentNode->removeChild($appearance);
+		}
+		//in case was written in lower
+		$appearanceList = $xpath->query('//app:appearance');
+		echo $appearanceList->length;
+		foreach ($appearanceList as $appearance) {
+			$appearance->parentNode->removeChild($appearance);
+		}
+
+
+		echo "<pre>";
+		echo $this->xml->saveXML();
+		echo "</pre>";
 	}
 
 	private function calculateCenters()
@@ -94,8 +153,9 @@ class CityRDF {
 	{
 		if ($this->xml != null) {
 				$this->filePath = "city.xml";
-				$this->xml->save("city.xml");
-				return $this->filePath;
+				//use savexML
+				//$this->xml->save("city.xml");
+				//return $this->filePath;
 		}	
 		else 
 			throw new Exception ("Saving the file failed.");

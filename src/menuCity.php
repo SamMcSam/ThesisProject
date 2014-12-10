@@ -23,12 +23,12 @@ if (isset($_FILES["uploadcity_file"])) {
 		$nameFile = $_FILES["uploadcity_file"]["name"];
 		$tempFile = $_FILES["uploadcity_file"]["tmp_name"];
 		//echo $nameFile;
-		$completeUpload = 20;//100; //$_POST["complete_upload"];
+		$completeUpload = 100;//100; //$_POST["complete_upload"];
 		$removeTexture = true; //$_POST["remove_texture"]["removed"];
 
 		//echo ($_FILES["uploadcity_file"]["type"]);
 		//if ($_FILES["uploadcity_file"]["type"] != "text/xml" || $_FILES["uploadcity_file"]["type"] != ".gml")
-		//	throw new Exception ("File type must be either xml or gml");
+		//	throw new Exception ("File type must be either xml or gml");§
 
 		// GENERATE city RDFable
 		$city = new CityRDF($tempFile, $completeUpload, $removeTexture);
@@ -37,7 +37,7 @@ if (isset($_FILES["uploadcity_file"])) {
 		//$nameRepo;
 		//if ($sesame->existsRepository($nameRepo)) {
 			//$sesame->createRepository($nameRepo);
-
+ 
 			// upload city model as a graph
 			//$sesame->appendFile($city->getXML());
 
