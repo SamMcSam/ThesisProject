@@ -91,18 +91,18 @@ class CityRDF {
 		$externalRefList = $xpath->query('//core:externalReference');
 		foreach ($externalRefList as $ref) {
 			$ref->parentNode->removeChild($ref);
-		}
-		
+		}		
 
-/*
+
 		//verify if no unprefixed tags (no easy way to change names!!)
 		//----------
 		$allElements = $xpath->query('//*');
 		foreach($allElements as $node) {
-			if (!preg_match("#^.*:.*$#", $node->nodeName))
+			if (!preg_match("#^.*:.*$#", $node->nodeName)){
+				$newNode = $this->xml->createElement("gml:".$node->nodeName);
+			}
 				echo ($node->nodeName) . " <br>";
 		}
-*/
 
 		//debug
 		//echo "<pre>";
