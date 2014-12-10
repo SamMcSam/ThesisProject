@@ -23,30 +23,39 @@ if (isset($_FILES["uploadcity_file"])) {
 		$nameFile = $_FILES["uploadcity_file"]["name"];
 		$tempFile = $_FILES["uploadcity_file"]["tmp_name"];
 		//echo $nameFile;
-		$completeUpload = 100;//100; //$_POST["complete_upload"];
-		$removeTexture = true; //$_POST["remove_texture"]["removed"];
+		$completeUpload = $_POST["complete_upload"];
+		$removeTexture = (($_POST["remove_texture"] == "true") ? true : false);
 
-		//echo ($_FILES["uploadcity_file"]["type"]);
+		if ($_FILES["uploadcity_file"]["error"] > 0)
+			throw new Exception("Upload error n°".$_FILES["uploadcity_file"]["error"]);
+
 		//if ($_FILES["uploadcity_file"]["type"] != "text/xml" || $_FILES["uploadcity_file"]["type"] != ".gml")
 		//	throw new Exception ("File type must be either xml or gml");§
 
 		// GENERATE city RDFable
 		$city = new CityRDF($tempFile, $completeUpload, $removeTexture);
-
+/*
+		echo "<pre>";
+			echo $city->getXML();
+		echo "</pre>";
+*/
 		// create repository
-		//$nameRepo;
-		//if ($sesame->existsRepository($nameRepo)) {
-			//$sesame->createRepository($nameRepo);
+		$nameRepo = $nameFile; // MODIFICATION??/*
+
+		$sesame = new SesameInterface('http://localhost:8080/openrdf-sesame');
+		if (!$sesame->existsRepository($nameRepo)) {
+			$sesame->createRepository($nameRepo);
+			$sesame->setRepository($nameRepo);
  
 			// upload city model as a graph
-			//$sesame->appendFile($city->getXML());
+			$sesame->appendFile($city->getFile());
 
 			//do some extra tuning?
-		//}
-		//else
-			//throw new Exception("A repository for this file already exists.");
+		}
+		else
+			throw new Exception("A repository for this file already exists.");
 		
-		$msg = "<div class='confirmed'>A repository for the 3D model '' has been created!</div>";
+		$msg = "<div class='confirmed'>A repository for the 3D model '$nameRepo' has been created!</div>";
 	}
 	catch (Exception $e){
 		$msg = "<div class='error'>". $e->getMessage() ."</div>";

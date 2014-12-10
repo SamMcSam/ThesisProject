@@ -115,7 +115,7 @@
     	//get all the data from this form
     	var uploadcity_file = document.getElementById("uploadcity_file").files;
     	var complete_upload = document.getElementById("complete_upload").value;
-    	var remove_texture = document.getElementById("remove_texture").value;
+    	var remove_texture = document.getElementById("remove_texture").checked;
 
     	if (uploadcity_file.length > 0) {
 	    	var formData = new FormData();

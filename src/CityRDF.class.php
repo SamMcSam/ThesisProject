@@ -34,8 +34,10 @@ class CityRDF {
 			$this->removeTextures();
 		}
 
+		//if complete < 100, then remove % of the file
+
 		//do some extra calculations here, to simplify later
-		//$this->calculateCenters();
+		$this->calculateCenters();
 	}
 
 	private function generateXML()
@@ -59,7 +61,7 @@ class CityRDF {
    		$newRoot->appendChild($root);
 
    		$newRoot->setAttribute('xmlns:rdf','http://www.w3.org/1999/02/22-rdf-syntax-ns#');
-   		$newRoot->setAttribute('xmlns:failsafe','http://escape.uri/');
+   		$newRoot->setAttribute('xmlns:failsafe','http://escape.nodes/without/namespaces#');
    		$newRoot->setAttribute('xmlns:core', 'http://www.opengis.net/citygml/1.0');
 
 		//transform multiple pos INTO a single posList (old gml doc)
@@ -96,6 +98,7 @@ class CityRDF {
 		}		
 
 
+		/*
 		//verify if no unprefixed nodes (no easy way to change names!!)
 		//----------
 		$allElements = $xpath->query('//*');
@@ -118,6 +121,7 @@ class CityRDF {
 				//echo $node->nodeName . "<br>";
 			}
 		}
+		*/
 
 		//verify if no unprefixed attributes (same)
 		//----------
@@ -132,6 +136,20 @@ class CityRDF {
 			}
 		}
 
+		//TODO
+		/*
+		//remove all nodes without content & children
+		//----------
+		$allElements = $xpath->query('//*');
+		foreach($allElements as $node) {
+			//echo $node->nodeName . " <br>";
+			if ($node->childNodes->length <= 0){
+				$node->parentNode->removeChild($node);
+				echo "a ";
+			}
+		}
+		*/
+
 		//debug
 		//echo "<pre>";
 		//echo $this->xml->saveXML();
@@ -144,13 +162,11 @@ class CityRDF {
 		$xpath = new DOMXPath($this->xml);
 		$xpath->registerNamespace("app", "http://www.opengis.net/citygml/appearance/1.0");
 		$appearanceList = $xpath->query('//app:Appearance');
-		echo $appearanceList->length;
 		foreach ($appearanceList as $appearance) {
 			$appearance->parentNode->removeChild($appearance);
 		}
 		//in case was written in lower
 		$appearanceList = $xpath->query('//app:appearance');
-		echo $appearanceList->length;
 		foreach ($appearanceList as $appearance) {
 			$appearance->parentNode->removeChild($appearance);
 		}
@@ -159,7 +175,7 @@ class CityRDF {
 		echo "<pre>";
 		echo $this->xml->saveXML();
 		echo "</pre>";
-		*/		
+		*/	
 	}
 
 	private function calculateCenters()
@@ -172,18 +188,19 @@ class CityRDF {
 	public function getXML()
 	{
 		if ($this->xml != null)
-				return $this->xml;
-		else 
+				return $this->xml->saveXML(); //saveXML in a string, save is for saving the 
+		else {
+			echo "aa";
 			throw new Exception ("Parsing the XML/GML file failed.");
+		}
 	}
 
 	public function getFile()
 	{
 		if ($this->xml != null) {
 				$this->filePath = "city.xml";
-				//use savexML
-				//$this->xml->save("city.xml");
-				//return $this->filePath;
+				$this->xml->save($this->filePath);
+				return $this->filePath;
 		}	
 		else 
 			throw new Exception ("Saving the file failed.");
