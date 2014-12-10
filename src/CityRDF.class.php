@@ -30,8 +30,9 @@ class CityRDF {
 		//cleans it and makes it valid for a transfer in a triple store
 		$this->cleaning();
 
-		if ($this->removeTexture)
+		if ($this->removeTexture){
 			$this->removeTextures();
+		}
 
 		//do some extra calculations here, to simplify later
 		//$this->calculateCenters();
@@ -59,6 +60,7 @@ class CityRDF {
 
    		$newRoot->setAttribute('xmlns:rdf','http://www.w3.org/1999/02/22-rdf-syntax-ns#');
    		$newRoot->setAttribute('xmlns:failsafe','http://escape.uri/');
+   		$newRoot->setAttribute('xmlns:core', 'http://www.opengis.net/citygml/1.0');
 
 		//transform multiple pos INTO a single posList (old gml doc)
 		//----------
@@ -94,21 +96,46 @@ class CityRDF {
 		}		
 
 
-		//verify if no unprefixed tags (no easy way to change names!!)
+		//verify if no unprefixed nodes (no easy way to change names!!)
 		//----------
 		$allElements = $xpath->query('//*');
 		foreach($allElements as $node) {
 			if (!preg_match("#^.*:.*$#", $node->nodeName)){
-				$newNode = $this->xml->createElement("gml:".$node->nodeName);
+				$newNode = $this->xml->createElement("failsafe:" . $node->nodeName);
+
+				//copy children
+				$childList = $xpath->query('child::*', $node);
+				foreach($childList as $child) {
+					$newNode->appendChild($child);
+				}
+
+				//copy attributes
+				foreach($node->attributes as $attr) {
+					$newNode->setAttributeNodeNS($attr);
+				}
+				$node->parentNode->replaceChild ($newNode, $node);
+				
+				//echo $node->nodeName . "<br>";
 			}
-				echo ($node->nodeName) . " <br>";
+		}
+
+		//verify if no unprefixed attributes (same)
+		//----------
+		$allAttributes = $xpath->query('//@*');
+		foreach($allAttributes as $attributeNode) {
+			if (!preg_match("#^.*:.*$#", $attributeNode->nodeName)){
+				//echo $attributeNode->nodeName . "<br>"; 
+				$newAttribute = $this->xml->createAttribute("failsafe:" . $attributeNode->nodeName);
+
+				$attributeNode->ownerElement->setAttributeNode ($newAttribute);
+				$attributeNode->ownerElement->removeAttributeNode($attributeNode);
+			}
 		}
 
 		//debug
 		//echo "<pre>";
 		//echo $this->xml->saveXML();
 		//echo "</pre>";
-		
 	}
 
 	private function removeTextures()
@@ -128,10 +155,11 @@ class CityRDF {
 			$appearance->parentNode->removeChild($appearance);
 		}
 
-
+		/*
 		echo "<pre>";
 		echo $this->xml->saveXML();
 		echo "</pre>";
+		*/		
 	}
 
 	private function calculateCenters()
