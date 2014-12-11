@@ -62,7 +62,9 @@ class SesameInterface
 	// Tests on Sesame
 	//------------------------------------------------------
 	
-	public function existsRepository($rep) {
+	public function getListRepositories(){
+		$listRepo = array();
+
 		$request = new HttpRequest($this->server . '/repositories');
 		$request->setHeader("Accept: " . self::SPARQL_XML); //ATTENTION : Header CANNOT have space between Accept and the colon!!!!!!
 		
@@ -73,14 +75,31 @@ class SesameInterface
 		
 		//finds if the named repository is in the list of repositories
 		$analyseXml = $xmlDoc->documentElement->getElementsByTagName("result");
-		foreach($analyseXml as $repositories){			
-			$bindings = $repositories->getElementsByTagName('binding');
-			$literal = $bindings->item(0)->getElementsByTagName('literal');
-			//echo $literal->item(0)->nodeValue;
+		$i = 0;
+		foreach($analyseXml as $repositories){		
+			$listRepo[$i] = array();
 
-			if ($literal->item(0)->nodeValue == $rep){
+			$bindings = $repositories->getElementsByTagName('binding');
+			foreach ($bindings as $info){
+				$key = $info->getAttribute("name");
+				$value = $info->childNodes->item(1)->nodeValue;
+				//echo"$key<br>";
+				//echo"$value<br>";
+				//echo"<br>";
+				$listRepo[$i][$key] = $value;
+			}
+			$i++;
+		}
+		return $listRepo;
+	}
+
+	public function existsRepository($rep) {
+		$listRepo = $this->getListRepositories();
+
+		foreach($listRepo as $repositories){			
+			if ($repositories["id"] == $rep){
 				return true;		 
-				echo "OK";}
+			}
 		}
 		
 		return false; //hasn't found the repository
