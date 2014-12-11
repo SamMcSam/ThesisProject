@@ -125,22 +125,21 @@
 
 	    	xhrHTML("menuCity", "menuCity.php", formData);
    		}
-   		else {
-   			document.getElementById("city_message").className = "error";
-   			document.getElementById("city_message").innerHTML = "Please select a file to upload.";
-   		}
+   		else
+			afficheMessage("city", "Please select a file to upload.");
     }
 
     function loadData()
     {
     	//get all the data from this form
     	var uploaddata_file = document.getElementById("uploaddata_file").files;
-    	var select = document.getElementById("repo_name");
-		var repoNumber = select.options[select.selectedIndex].value;
+    	var selectRepo = document.getElementById("repo_name");
+		var repoNumber = selectRepo.options[selectRepo.selectedIndex].value;
+    	var selectType = document.getElementById("data_type");
+		var dataType = selectType.options[selectType.selectedIndex].value;
 
-		if (repoNumber < 1){
-			document.getElementById("data_message").className  = "error";
-			document.getElementById("data_message").innerHTML  = "Please select a repository";
+		if (repoNumber < 0){
+			afficheMessage("data", "Please select a repository.");
 			return;
 		}
 
@@ -148,13 +147,12 @@
 	    	var formData = new FormData();
 	    	formData.append('uploaddata_file', uploaddata_file[0], uploaddata_file[0].name);
 	    	formData.append('repo_name', repoNumber);
+	    	formData.append('data_type', dataType);
 
 	    	xhrHTML("menuData", "menuData.php", formData);
    		}
-   		else {
-   			document.getElementById("data_message").className = "error";
-   			document.getElementById("data_message").innerHTML = "Please select a file to upload.";
-   		}
+   		else
+   			afficheMessage("data", "Please select a file to upload.");
     }
 
     function loadEnrichment()
@@ -164,6 +162,14 @@
     	//get all the data from this form
 
     	xhrHTML("menuEnrichment", "menuEnrichment.php", data);
+    }
+
+    //--------------------------------------------------
+
+    function afficheMessage(div, message)
+    {
+    	document.getElementById(div + "_message").className = "error";
+   		document.getElementById(div + "_message").innerHTML = message;
     }
 
 </script>

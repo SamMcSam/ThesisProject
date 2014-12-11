@@ -8,18 +8,26 @@
 */
 
 require_once('SesameInterface.class.php');
-
-$sesame = new SesameInterface('http://localhost:8080/openrdf-sesame');
-$listRepo = $sesame->getListRepositories();
+require_once('DataInsert.class.php');
 
 $msg = "<div id='data_message' class='error'></div>";
 
+// Load repository list
+$sesame = new SesameInterface('http://localhost:8080/openrdf-sesame');
+$listRepo = $sesame->getListRepositories();
+
+//load data type list
+$jsonString = file_get_contents("../config/dataTypes.json");
+$listTypes = json_decode($jsonString, true);
+
+//IF called by AJAX with POST request
 if (isset($_FILES["uploaddata_file"])) {
 	try 
 	{
 		$nameFile = $_FILES["uploaddata_file"]["name"];
 		$tempFile = $_FILES["uploaddata_file"]["tmp_name"];
 		$repoName = $listRepo[$_POST["repo_name"]]["id"];
+		$dataType = $_POST["data_type"];
 
 		if ($_FILES["uploaddata_file"]["error"] > 0)
 			throw new Exception("Upload error n°".$_FILES["uploaddata_file"]["error"]);
@@ -32,7 +40,7 @@ if (isset($_FILES["uploaddata_file"])) {
 		//	throw new Exception ("File type must be either xml or gml");§
 
 		// GENERATE data graph
-		$data = new DataRDF($nameFile, $tempFile);
+		$data = new DataInsert($dataType, $nameFile, $tempFile);
 
 		//upload
 		//$query = $sesame->update($city->getGraph());
@@ -55,18 +63,28 @@ if (isset($_FILES["uploaddata_file"])) {
 		<p>
 			Lier les données au modèle : 
 			<select id="repo_name" name="repo_name" size="1">
-				<option value="0"> 
+				<option value="-1"> 
 				<?php
-				$i = 1;
-				foreach($listRepo as $repo){
-					echo "<option value='$i'>" . $repo["id"] . " - " . $repo["title"] ;
-					$i++;
-				}
+					for($i = 1 ; $i < count ($listRepo) ; $i++){
+						echo "<option value='$i'>" . $listRepo[$i]["id"] . " - " . $listRepo[$i]["title"] ;
+					}
 				?>
 			</select>
 		</p>
 		<p>
 			<input id='uploaddata_file' type='file' name='uploaddata_file' />
+			Data type : <select id="data_type" name="data_type" size="1">
+				<?php
+					$i = 1;
+					foreach($listTypes as $key => $val){
+						echo "<option value='$key'> Type $i, defined as : " ;
+						foreach($val as $info){
+							echo "".$info." ";
+						}
+						$i++;
+					}
+				?>
+			</select>
 		</p>
 		<button class='champs' type="button" onclick="loadData();">Upload</button>
 	</form>
