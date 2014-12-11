@@ -25,7 +25,7 @@
 				<?php include("menuCity.php");?>
 			</div>
 			<div id='menuCity_loading' style="display:none;">
-				<img class ="imgLoading" src="../img/loading.gif" height="50px"> LOADING...
+				<img class ="imgLoading" src="../img/loading.gif"> LOADING...
 			</div>
 			
 			<!-- MENU TO UPLOAD DATA -->
@@ -33,7 +33,7 @@
 				<?php include("menuData.php");?>
 			</div>
 			<div id='menuData_loading' style="display:none;">
-				<img class ="imgLoading" src="../img/loading.gif">
+				<img class ="imgLoading" src="../img/loading.gif"> LOADING...
 			</div>
 				
 			<!-- MENU TO CREATE TECHNIQUE -->
@@ -41,7 +41,7 @@
 				<?php include("menuTechnique.php");?>
 			</div>
 			<div id='menuTechnique_loading' style="display:none;">
-				<img class ="imgLoading" src="../img/loading.gif">
+				<img class ="imgLoading" src="../img/loading.gif"> LOADING...
 			</div>
 
 			<!-- MENU TO GENERATE ENRICHED MODEL -->
@@ -49,7 +49,7 @@
 				<?php include("menuEnrichment.php");?>
 			</div>
 			<div id='menuEnrichment_loading' style="display:none;">
-				<img class ="imgLoading" src="../img/loading.gif">
+				<img class ="imgLoading" src="../img/loading.gif"> LOADING...
 			</div>
 			
 		</div>
@@ -125,15 +125,36 @@
 
 	    	xhrHTML("menuCity", "menuCity.php", formData);
    		}
+   		else {
+   			document.getElementById("city_message").className = "error";
+   			document.getElementById("city_message").innerHTML = "Please select a file to upload.";
+   		}
     }
 
     function loadData()
     {
-    	var data = "";
-
     	//get all the data from this form
+    	var uploaddata_file = document.getElementById("uploaddata_file").files;
+    	var select = document.getElementById("repo_name");
+		var repoNumber = select.options[select.selectedIndex].value;
 
-    	xhrHTML("menuData", "menuData.php", data);
+		if (repoNumber < 1){
+			document.getElementById("data_message").className  = "error";
+			document.getElementById("data_message").innerHTML  = "Please select a repository";
+			return;
+		}
+
+    	if (uploaddata_file.length > 0) {
+	    	var formData = new FormData();
+	    	formData.append('uploaddata_file', uploaddata_file[0], uploaddata_file[0].name);
+	    	formData.append('repo_name', repoNumber);
+
+	    	xhrHTML("menuData", "menuData.php", formData);
+   		}
+   		else {
+   			document.getElementById("data_message").className = "error";
+   			document.getElementById("data_message").innerHTML = "Please select a file to upload.";
+   		}
     }
 
     function loadEnrichment()

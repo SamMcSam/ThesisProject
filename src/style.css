@@ -17,6 +17,11 @@ form {
 	margin: 10px;
 } 
 
+
+select {
+	width: 300px;
+} 
+
 #menuCity_loading{
 	height : 182.5px;
 }
@@ -24,6 +29,7 @@ form {
 .imgLoading {
 	margin-top: 50px;
 	margin-left: 100px;
+	height: 50px;
 }
 
 .titre {

@@ -7,47 +7,68 @@
 * Menu to upload data
 */
 
-/*
-
 require_once('SesameInterface.class.php');
 
-//if isset($_POST["uploadcity_name"]);
-//if isset($_POST["uploadcity_isCleaned"]);
+$sesame = new SesameInterface('http://localhost:8080/openrdf-sesame');
+$listRepo = $sesame->getListRepositories();
 
-// GENERATE city name
+$msg = "<div id='data_message' class='error'></div>";
 
-$sesame = new SesameInterface('http://localhost:8080/openrdf-sesame', $repository);
-
-$c = '
-PREFIX data:<http://test.com/>
-INSERT DATA
+if (isset($_FILES["uploaddata_file"])) {
+	try 
 	{
-	  GRAPH <http://graphData>
-	  { 
-		data:x data:tag "three" . 
-		data:y data:tag "four" . 
-	  }
+		$nameFile = $_FILES["uploaddata_file"]["name"];
+		$tempFile = $_FILES["uploaddata_file"]["tmp_name"];
+		$repoName = $listRepo[$_POST["repo_name"]]["id"];
+
+		if ($_FILES["uploaddata_file"]["error"] > 0)
+			throw new Exception("Upload error n°".$_FILES["uploaddata_file"]["error"]);
+
+		//set repository
+		if (!$sesame->setRepository($repoName))
+			throw new Exception("Repository not found.");
+
+		//if ($_FILES["uploadcity_file"]["type"] != "text/xml" || $_FILES["uploadcity_file"]["type"] != ".gml")
+		//	throw new Exception ("File type must be either xml or gml");§
+
+		// GENERATE data graph
+		$data = new DataRDF($nameFile, $tempFile);
+
+		//upload
+		//$query = $sesame->update($city->getGraph());
+
+		//	throw new Exception("A repository for this file already exists.");
+		
+		$msg = "<div id='data_message' class='confirmed'>Data graph was created for the file '$nameFile' in the '$repoName' repository!</div>";
 	}
-';
+	catch (Exception $e){
+		$msg = "<div id='data_message' class='error'>". $e->getMessage() ."</div>";
+	}
+	
+}
 
-//$query = $sesame->update($c);
-
-$msg = "";
-
-//if ?
-	$msg = "<div class='error'>Data couldn't be uploaded. </div>";
-//else {
-	$msg = "<div class='confirmed'>The data '' has been uploaded to the '' repository!</div>";
-//}
-
-*/
 ?>
 
 <div class='titre'>Data graph</div>
 <fieldset> <legend>Charger les données dans un graphe</legend> 
-	<form method='post' action='_______.php' >
-		<input type='file' name='nom' />
+	<form>
+		<p>
+			Lier les données au modèle : 
+			<select id="repo_name" name="repo_name" size="1">
+				<option value="0"> 
+				<?php
+				$i = 1;
+				foreach($listRepo as $repo){
+					echo "<option value='$i'>" . $repo["id"] . " - " . $repo["title"] ;
+					$i++;
+				}
+				?>
+			</select>
+		</p>
+		<p>
+			<input id='uploaddata_file' type='file' name='uploaddata_file' />
+		</p>
 		<button class='champs' type="button" onclick="loadData();">Upload</button>
 	</form>
-<?php echo $msg;?>
+	<?php echo $msg;?>
 </fieldset>

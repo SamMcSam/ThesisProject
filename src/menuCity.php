@@ -15,7 +15,7 @@ ini_set('display_errors', 1);
 require_once('CityRDF.class.php');
 require_once('SesameInterface.class.php');
 
-$msg = "";
+$msg = "<div id='city_message' class='error'></div>";
 
 if (isset($_FILES["uploadcity_file"])) {
 	try 
@@ -34,6 +34,7 @@ if (isset($_FILES["uploadcity_file"])) {
 
 		// GENERATE city RDFable
 		$city = new CityRDF($tempFile, $completeUpload, $removeTexture);
+
 /*
 		echo "<pre>";
 			echo $city->getXML();
@@ -55,11 +56,12 @@ if (isset($_FILES["uploadcity_file"])) {
 		else
 			throw new Exception("A repository for this file already exists.");
 		
-		$msg = "<div class='confirmed'>A repository for the 3D model '$nameRepo' has been created!</div>";
+		$msg = "<div id='city_message' class='confirmed'>A repository for the 3D model '$nameRepo' has been created!</div>";
 	}
 	catch (Exception $e){
-		$msg = "<div class='error'>". $e->getMessage() ."</div>";
+		$msg = "<div id='city_message' class='error'>". $e->getMessage() ."</div>";
 	}
+	
 }
 
 ?>
@@ -67,10 +69,12 @@ if (isset($_FILES["uploadcity_file"])) {
 <div class='titre'>City graph</div>
 <fieldset> <legend>Créer graphe depuis un fichier citygml</legend> 
 	<form>
-		<input id='uploadcity_file' type='file' name='uploadcity_file' />
-		<input id='complete_upload' type='hidden' name='complete_upload' value='100'><!--Completeness percentage -->
-		<input id='remove_texture' type='checkbox' name='remove_texture' value='removed' checked>Remove textures 
+		<p>
+			<input id='uploadcity_file' type='file' name='uploadcity_file' />
+			<input id='complete_upload' type='hidden' name='complete_upload' value='100'><!--Completeness percentage -->
+			<input id='remove_texture' type='checkbox' name='remove_texture' value='removed' checked>Remove textures 
+		</p>
 		<button class='champs' type="button" onclick="loadCity();">Upload</button>
 	</form>
-<?php echo $msg;?>
+	<?php echo $msg;?>
 </fieldset>

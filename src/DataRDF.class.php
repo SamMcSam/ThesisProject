@@ -9,13 +9,15 @@
 */
 class DataRDF {
 
+	private $filePath;
 	private $fileName;
-	//?
+	
 	private $dataFile;
 	private $rdfFile;
 
-	function __construct($fileName) 
+	function __construct($fileName, $filePath) 
 	{
+		$this->filePath = $filePath;
 		$this->fileName = $fileName;
 		
 		$this->dataFile = null;
@@ -34,6 +36,20 @@ class DataRDF {
 		//define structure
 
 		//for each line
+
+		/*
+		$c = '
+		PREFIX data:<http://test.com/>
+		INSERT DATA
+			{
+			  GRAPH <http://graphData>
+			  { 
+				data:x data:tag "three" . 
+				data:y data:tag "four" . 
+			  }
+			}
+		';
+		*/	
 	}
 
 	//------------------------------------------------------------------------------
