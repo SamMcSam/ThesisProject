@@ -56,7 +56,7 @@ class DataInsert extends DataClass {
    					
    					$this->dataArray[$i] = array();
    					for ($j=0; $j < count($this->dataStructure) ; $j++){
-   						$this->dataArray[$i][$this->dataStructure[$j]] = $content[$j];
+   						$this->dataArray[$i][$this->dataStructure[$j]] = rtrim( $content[$j] ); //also removes break char
    					}
    					$i++;
    				}
@@ -64,28 +64,43 @@ class DataInsert extends DataClass {
 	   	}
 
 		fclose($file);
-		var_dump($this->dataArray);
+		//var_dump($this->dataArray);
 	}
 
 	private function generateQuery()
 	{
+		$nameGraph = DataClass::DATA_URI . date("Y-m-d_H-i-s") ."/" . $this->fileName;
+
 		$this->queryString = "
-			PREFIX data:<http://master.thesis/project/>
-				INSERT DATA
-				{
-					GRAPH <http://data.graph/25112014/Munich_DataProto_type1a.txt>
-					{ 
-					data:x data:tag "three" . 
-					data:y data:tag "four" . 
+			PREFIX ". DataClass::DATA_PREFIX .":<". DataClass::DATA_PREFIX_URI .">
+			INSERT DATA
+			{
+				GRAPH <$nameGraph>
+				{ 
+		";		
+
+		$i = 1;
+		foreach ($this->dataArray as $data){
+
+			$nameData = DataClass::DATA_PREFIX . ":Data" . $i;
+			$this->queryString .= $nameData . " a " . DataClass::DATA_PREFIX . ":" . $this->dataStructureName . ". ";
+
+			foreach ($data as $key=>$value){
+				$this->queryString .= $nameData . " " . DataClass::DATA_PREFIX . ":" . $key . " ";
+				if (is_numeric($value))
+					$this->queryString .= $value; //a number
+				else
+					$this->queryString .= '"'.$value.'"'; //a string between quotation marks
+				$this->queryString .= ". ";
+			}
+			$i++;
+
+		}
+
+		$this->queryString .= "
 				}
 			}
 		";
-
-		foreach ($this->dataArray as $data){
-			foreach ($data as $key=>$value){
-
-			}
-		}
 	}
 
 	//------------------------------------------------------------------------------
@@ -96,6 +111,6 @@ class DataInsert extends DataClass {
 				return $this->queryString;
 		}	
 		else 
-			throw new Exception ("Saving the file failed.");
+			throw new Exception ("Query could not be retrieved.");
 	}
 }

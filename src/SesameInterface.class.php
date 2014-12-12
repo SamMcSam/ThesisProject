@@ -162,11 +162,11 @@ class SesameInterface
 		}
 	}
 	
-	//equivalent 
+	//equivalent to Update on OpenWorkbench
 	public function update($data, $inputFormat = self::SPARQL_POST)
 	{
 		$this->checkRepository();
-		$this->checkContext($context);
+		//$this->checkContext($context);
 		//$this->checkInputFormat($inputFormat);
 		
 		$request = new HttpRequest($this->server . '/repositories/' . $this->repository . '/statements');
@@ -184,6 +184,7 @@ class SesameInterface
 		}
 	}
 	
+	//LEGACY code
 	public function append($data, $context = 'null', $inputFormat = self::RDFXML)
 	{
 		$this->checkRepository();

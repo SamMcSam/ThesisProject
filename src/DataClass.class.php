@@ -11,6 +11,12 @@
 
 class DataClass {
 
+	const DATA_URI = "http://data.graph/";
+	const DATA_PREFIX = "data";
+	const DATA_PREFIX_URI = "http://master.thesis/project/data/";
+	const VISU_PREFIX = "visu";
+	const VISU_PREFIX_URI = "http://master.thesis/project/visualization/";
+
 	protected $dataStructureName;
 	protected $dataStructure;
 

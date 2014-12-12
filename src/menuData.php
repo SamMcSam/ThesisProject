@@ -20,6 +20,10 @@ $listRepo = $sesame->getListRepositories();
 $jsonString = file_get_contents("../config/dataTypes.json");
 $listTypes = json_decode($jsonString, true);
 
+foreach($listTypes as $key => $val){
+	echo "$key" ;
+}
+
 //IF called by AJAX with POST request
 if (isset($_FILES["uploaddata_file"])) {
 	try 
@@ -43,7 +47,7 @@ if (isset($_FILES["uploaddata_file"])) {
 		$data = new DataInsert($dataType, $nameFile, $tempFile);
 
 		//upload
-		//$query = $sesame->update($city->getGraph());
+		$query = $sesame->update($data->getQuery());
 
 		//	throw new Exception("A repository for this file already exists.");
 		
