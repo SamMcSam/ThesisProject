@@ -37,7 +37,7 @@ if (isset($_FILES["uploadcity_file"])) {
 		$city = new CityRDF($tempFile, $completeUpload, $removeTexture);
 
 		// create repository
-		$nameRepo = $nameFile; // MODIFICATION??/*
+		$nameRepo = $str=preg_replace('/\s+/', '', $nameFile); // removes spaces
 
 		$sesame = new SesameInterface('http://localhost:8080/openrdf-sesame');
 		if (!$sesame->existsRepository($nameRepo)) {
@@ -46,7 +46,8 @@ if (isset($_FILES["uploadcity_file"])) {
 			$sesame->setRepository($nameRepo);
  
 			// upload city model as a graph
-			$sesame->appendFile($city->getFile());
+			$context = "<" . CityRDF::FILE_CONTEXT . $nameRepo . ">";
+			$sesame->appendFile($city->getFile(), $context);
 		}
 		else{
 			$msg = "<div id='city_message' class='error'>A repository for this file already exists.</div>";

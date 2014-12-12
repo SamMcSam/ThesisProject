@@ -11,6 +11,7 @@
 class CityRDF {
 
 	const TEMP_PATH = "../tmpFiles/";
+	const FILE_CONTEXT = "http://city.file/";
 
 	private $fileName;
 	private $completeUpload;

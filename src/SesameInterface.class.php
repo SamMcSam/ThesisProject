@@ -140,7 +140,7 @@ class SesameInterface
 	}
 	
 	//------------------------------------------------------
-	// 
+	// Repository and context functions
 	//------------------------------------------------------
 	
 	//function only works on OpenWorkbench
@@ -175,6 +175,15 @@ class SesameInterface
 			$request->send();
 		}
 	}
+
+	//TODO
+	public function deleteContext(){
+		//...
+	}
+
+	//------------------------------------------------------
+	// Query functions
+	//------------------------------------------------------
 	
 	//equivalent to Update on OpenWorkbench
 	public function update($data, $inputFormat = self::SPARQL_POST)
@@ -198,7 +207,6 @@ class SesameInterface
 		}
 	}
 	
-	//LEGACY code
 	public function append($data, $context = 'null', $inputFormat = self::RDFXML)
 	{
 		$this->checkRepository();
