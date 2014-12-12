@@ -67,7 +67,6 @@ if (isset($_FILES["uploadcity_file"])) {
 
 ?>
 
-<div class='titre'>City graph</div>
 <fieldset> <legend>Créer graphe depuis un fichier citygml</legend> 
 	<form>
 		<p>
@@ -75,7 +74,7 @@ if (isset($_FILES["uploadcity_file"])) {
 			<input id='complete_upload' type='hidden' name='complete_upload' value='100'><!--Completeness percentage -->
 			<input id='remove_texture' type='checkbox' name='remove_texture' value='removed' checked>Remove textures 
 		</p>
-		<button class='champs' type="button" onclick="loadCity();">Upload</button>
+		<button class='champs' type="button" onclick="loadCity(false);">Upload</button>
 	</form>
 	<?php echo $msg;?>
 </fieldset>

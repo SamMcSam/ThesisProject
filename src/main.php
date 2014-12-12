@@ -21,6 +21,7 @@
 		<div id='mainBlock'>
 
 			<!-- MENU TO UPLOAD CITY -->
+			<div class='titre'>City graph</div>
 			<div id='menuCity'>
 				<?php include("menuCity.php");?>
 			</div>
@@ -29,6 +30,7 @@
 			</div>
 			
 			<!-- MENU TO UPLOAD DATA -->
+			<div class='titre'>Data graph</div>
 			<div id='menuData'>
 				<?php include("menuData.php");?>
 			</div>
@@ -37,6 +39,7 @@
 			</div>
 				
 			<!-- MENU TO CREATE TECHNIQUE -->
+			<div class='titre'>Abstract visualization techniques</div>
 			<div id='menuTechnique'>
 				<?php include("menuTechnique.php");?>
 			</div>
@@ -45,6 +48,7 @@
 			</div>
 
 			<!-- MENU TO GENERATE ENRICHED MODEL -->
+			<div class='titre'>Visualization technique</div>
 			<div id='menuEnrichment'>
 				<?php include("menuEnrichment.php");?>
 			</div>
@@ -98,6 +102,7 @@
 				document.getElementById(div).innerHTML = xhr.responseText;
 				document.getElementById(div).style.display = '';
 				document.getElementById(div + "_loading").style.display = 'none';
+				refreshSection(div);
 			}
 		}
 		
@@ -110,26 +115,30 @@
     //Fonctions pour chaque bouton
     //--------------------------------------------------
 
-    function loadCity()
+    function loadCity(refresh)
     {
     	//get all the data from this form
     	var uploadcity_file = document.getElementById("uploadcity_file").files;
     	var complete_upload = document.getElementById("complete_upload").value;
     	var remove_texture = document.getElementById("remove_texture").checked;
+    	var formData = null;
 
-    	if (uploadcity_file.length > 0) {
-	    	var formData = new FormData();
+    	if (!refresh) {
+    		if (uploadcity_file.length < 1){
+				afficheMessage("city", "Please select a file to upload.");
+				return;
+			}
+
+    		formData = new FormData();
 	    	formData.append('uploadcity_file', uploadcity_file[0], uploadcity_file[0].name);
 	    	formData.append('complete_upload', complete_upload);
 	    	formData.append('remove_texture', remove_texture);
-
-	    	xhrHTML("menuCity", "menuCity.php", formData);
-   		}
-   		else
-			afficheMessage("city", "Please select a file to upload.");
+	    }
+    	
+	    xhrHTML("menuCity", "menuCity.php", formData);
     }
 
-    function loadData()
+    function loadData(refresh)
     {
     	//get all the data from this form
     	var uploaddata_file = document.getElementById("uploaddata_file").files;
@@ -137,31 +146,40 @@
 		var repoNumber = selectRepo.options[selectRepo.selectedIndex].value;
     	var selectType = document.getElementById("data_type");
 		var dataType = selectType.options[selectType.selectedIndex].value;
+		var formData = null;
 
-		if (repoNumber < 0){
-			afficheMessage("data", "Please select a repository.");
-			return;
-		}
+		if (!refresh){
+			if (repoNumber < 0){
+				afficheMessage("data", "Please select a repository.");
+				return;
+			}
 
-    	if (uploaddata_file.length > 0) {
-	    	var formData = new FormData();
+			if (uploaddata_file.length < 1){
+				afficheMessage("data", "Please select a file to upload.");
+				return;
+			}
+
+			formData = new FormData();
 	    	formData.append('uploaddata_file', uploaddata_file[0], uploaddata_file[0].name);
 	    	formData.append('repo_name', repoNumber);
 	    	formData.append('data_type', dataType);
+		}
 
-	    	xhrHTML("menuData", "menuData.php", formData);
-   		}
-   		else
-   			afficheMessage("data", "Please select a file to upload.");
+	    xhrHTML("menuData", "menuData.php", formData);
     }
 
-    function loadEnrichment()
+    function loadEnrichment(refresh)
     {
-    	var data = "";
+    	var formData = null;
 
     	//get all the data from this form
+    	if (!refresh){
+			formData = new FormData();
+	    	//formData.append('uploaddata_file', uploaddata_file[0], uploaddata_file[0].name);
+	    	//formData.append('repo_name', repoNumber);
+		}
 
-    	xhrHTML("menuEnrichment", "menuEnrichment.php", data);
+    	xhrHTML("menuEnrichment", "menuEnrichment.php", formData);
     }
 
     //--------------------------------------------------
@@ -170,6 +188,20 @@
     {
     	document.getElementById(div + "_message").className = "error";
    		document.getElementById(div + "_message").innerHTML = message;
+    }
+
+    //NOT FINISHED
+    function refreshSection(div)
+    {
+    	switch (div) {
+		    case "menuCity":
+		        //loadCityDelete(true);
+    			loadData(true);
+    			//loadDataDelete(true);
+		        break;
+		    //ETC!
+	    }	
+    	
     }
 
 </script>

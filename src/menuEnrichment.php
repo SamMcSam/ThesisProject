@@ -82,14 +82,6 @@ $msg = "";
 */
 ?>
 
-
-
-
-
-
-
-
-<div class='titre'>Visualization technique</div>
 <fieldset> <legend>Créer la visualisation des données dans le 3DCM</legend> 
 	<form method='post' action='_______.php' >
 		Utiliser la ville : <select class='champs' name='grapheCity'>
@@ -104,6 +96,6 @@ $msg = "";
 		... PLEIN de choses sur la technique 
 		<br><br>
 		
-		<button class='champs' type='button' onclick="loadEnrichment();">Générer 3DCM</button>
+		<button class='champs' type='button' onclick="loadEnrichment(false);">Générer 3DCM</button>
 	</form>
 </fieldset>

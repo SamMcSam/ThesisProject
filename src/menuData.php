@@ -57,7 +57,6 @@ if (isset($_FILES["uploaddata_file"])) {
 
 ?>
 
-<div class='titre'>Data graph</div>
 <fieldset> <legend>Charger les données dans un graphe</legend> 
 	<form>
 		<p>
@@ -86,7 +85,7 @@ if (isset($_FILES["uploaddata_file"])) {
 				?>
 			</select>
 		</p>
-		<button class='champs' type="button" onclick="loadData();">Upload</button>
+		<button class='champs' type="button" onclick="loadData(false);">Upload</button>
 	</form>
 	<?php echo $msg;?>
 </fieldset>

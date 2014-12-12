@@ -8,7 +8,6 @@
 */
 ?>
 
-<div class='titre'>Abstract visualization techniques</div>
 <fieldset> <legend>...</legend> 
 	<!--<form method='post' action='_______.php' >
 		<input type='file' name='nom' />

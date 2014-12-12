@@ -198,7 +198,7 @@ class CityRDF {
 	public function getFile()
 	{
 		if ($this->xml != null) {
-				$this->filePath = "tempFiles/city.xml";
+				$this->filePath = "../tempFiles/city.xml";
 				$this->xml->save($this->filePath);
 				return $this->filePath;
 		}	
