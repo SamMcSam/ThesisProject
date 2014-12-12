@@ -15,6 +15,7 @@ ini_set('display_errors', 1);
 require_once('CityRDF.class.php');
 require_once('SesameInterface.class.php');
 
+$nameRepo = "";
 $msg = "<div id='city_message' class='error'></div>";
 
 if (isset($_FILES["uploadcity_file"])) {
@@ -35,11 +36,6 @@ if (isset($_FILES["uploadcity_file"])) {
 		// GENERATE city RDFable
 		$city = new CityRDF($tempFile, $completeUpload, $removeTexture);
 
-/*
-		echo "<pre>";
-			echo $city->getXML();
-		echo "</pre>";
-*/
 		// create repository
 		$nameRepo = $nameFile; // MODIFICATION??/*
 
@@ -51,15 +47,20 @@ if (isset($_FILES["uploadcity_file"])) {
  
 			// upload city model as a graph
 			$sesame->appendFile($city->getFile());
-
-			//do some extra tuning?
 		}
-		else
-			throw new Exception("A repository for this file already exists.");
+		else{
+			$msg = "<div id='city_message' class='error'>A repository for this file already exists.</div>";
+			//throw new Exception("A repository for this file already exists.");
+			//NOT AN ERROR HERE, or will erase the repo!!!
+		}
+			
 		
 		$msg = "<div id='city_message' class='confirmed'>A repository for the 3D model '$nameRepo' has been created!</div>";
 	}
 	catch (Exception $e){
+		//delete repo
+		$sesame->deleteRepository($nameRepo);
+
 		$msg = "<div id='city_message' class='error'>". $e->getMessage() ."</div>";
 	}
 	

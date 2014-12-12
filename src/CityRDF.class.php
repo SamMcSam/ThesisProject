@@ -10,6 +10,8 @@
 
 class CityRDF {
 
+	const TEMP_PATH = "../tmpFiles/";
+
 	private $fileName;
 	private $completeUpload;
 	private $removeTexture;
@@ -198,7 +200,7 @@ class CityRDF {
 	public function getFile()
 	{
 		if ($this->xml != null) {
-				$this->filePath = "../tempFiles/city.xml";
+				$this->filePath = CityRDF::TEMP_PATH . "city.xml";
 				$this->xml->save($this->filePath);
 				return $this->filePath;
 		}	

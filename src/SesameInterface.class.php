@@ -143,6 +143,20 @@ class SesameInterface
 	// 
 	//------------------------------------------------------
 	
+	//function only works on OpenWorkbench
+	public function deleteRepository($name){
+		$serverWorkbench = str_replace("/openrdf-sesame", "/openrdf-workbench", $this->server);  
+
+		//form data
+		$data = array(
+			'id' => $name
+		);
+
+		$request = new HttpRequest($serverWorkbench . '/repositories/NONE/delete', 0, $data);
+		$request->send();
+	}
+
+	//function only works on OpenWorkbench
 	public function createRepository($name, $description){
 		if (!$this->existsRepository($name)){
 			//creating a repository is only possible from the workbench, weirdly...
