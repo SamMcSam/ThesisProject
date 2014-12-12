@@ -143,7 +143,7 @@ class SesameInterface
 	// 
 	//------------------------------------------------------
 	
-	public function createRepository($name){
+	public function createRepository($name, $description){
 		if (!$this->existsRepository($name)){
 			//creating a repository is only possible from the workbench, weirdly...
 			$serverWorkbench = str_replace("/openrdf-sesame", "/openrdf-workbench", $this->server);  
@@ -152,7 +152,7 @@ class SesameInterface
 			$data = array(
 				'type' => "memory-rdfs" ,
 				'Repository ID' => $name ,
-				'Repository title' => "Repository for the city '" . $name . "' created on " . date("Y-m-d H:i:s"),
+				'Repository title' => $description,
 				'Persist' => 'true' ,
 				'Sync delay' => '0' 
 			);

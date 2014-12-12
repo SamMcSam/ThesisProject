@@ -13,6 +13,7 @@ require_once('DataClass.class.php');
 class DataInsert extends DataClass {
 
 	//herited
+	//protected $dataStructureName;
 	//protected $dataStructure;
 
 	private $fileName;
@@ -62,31 +63,29 @@ class DataInsert extends DataClass {
 		    }
 	   	}
 
-		fclose($handle);
-		//var_dump($this->dataArray);
+		fclose($file);
+		var_dump($this->dataArray);
 	}
 
 	private function generateQuery()
 	{
-		//define structure
-
-		//foreach $dataArray
-
-		/*
-		$c = '
-		PREFIX data:<http://test.com/>
-		INSERT DATA
-			{
-			  GRAPH <http://graphData>
-			  { 
-				data:x data:tag "three" . 
-				data:y data:tag "four" . 
-			  }
+		$this->queryString = "
+			PREFIX data:<http://master.thesis/project/>
+				INSERT DATA
+				{
+					GRAPH <http://data.graph/25112014/Munich_DataProto_type1a.txt>
+					{ 
+					data:x data:tag "three" . 
+					data:y data:tag "four" . 
+				}
 			}
-		';
-		*/	
+		";
 
-		//$queryString
+		foreach ($this->dataArray as $data){
+			foreach ($data as $key=>$value){
+
+			}
+		}
 	}
 
 	//------------------------------------------------------------------------------

@@ -45,7 +45,8 @@ if (isset($_FILES["uploadcity_file"])) {
 
 		$sesame = new SesameInterface('http://localhost:8080/openrdf-sesame');
 		if (!$sesame->existsRepository($nameRepo)) {
-			$sesame->createRepository($nameRepo);
+			$description = "Repository for the city '" . $nameRepo . "' created on " . date("Y-m-d H:i:s");
+			$sesame->createRepository($nameRepo, $description);
 			$sesame->setRepository($nameRepo);
  
 			// upload city model as a graph
