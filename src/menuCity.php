@@ -2,7 +2,8 @@
 /* 
 * Thesis project
 * @author Samuel Constantino
-* last update : 10/11/2014
+* created : 10/11/2014
+* last update : 12/12/2014
 *
 * Menu to upload 3d city
 *
@@ -72,7 +73,7 @@ if (isset($_FILES["uploadcity_file"])) {
 
 ?>
 
-<fieldset> <legend>Créer graphe depuis un fichier citygml</legend> 
+<fieldset> <legend>Create a graph from a CityGML file</legend> 
 	<form>
 		<p>
 			<input id='uploadcity_file' type='file' name='uploadcity_file' />

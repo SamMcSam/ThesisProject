@@ -1,3 +1,12 @@
+/* 
+* Thesis project
+* @author Samuel Constantino
+* created : 10/11/2014
+* last update : 12/12/2014
+*
+* AJAX queries et al.
+*/
+
 //--------------------------------------------------
 //Fonctions Ajax
 //--------------------------------------------------
@@ -78,9 +87,9 @@ function loadData(refresh)
 {
 	//get all the data from this form
 	var uploaddata_file = document.getElementById("uploaddata_file").files;
-	var selectRepo = document.getElementById("repo_name");
+	var selectRepo = document.getElementById("uploaddata_repo");
 	var repoNumber = selectRepo.options[selectRepo.selectedIndex].value;
-	var selectType = document.getElementById("data_type");
+	var selectType = document.getElementById("uploaddata_type");
 	var dataType = selectType.options[selectType.selectedIndex].value;
 	var formData = null;
 
@@ -97,8 +106,8 @@ function loadData(refresh)
 
 		formData = new FormData();
     	formData.append('uploaddata_file', uploaddata_file[0], uploaddata_file[0].name);
-    	formData.append('repo_name', repoNumber);
-    	formData.append('data_type', dataType);
+    	formData.append('uploaddata_repo', repoNumber);
+    	formData.append('uploaddata_type', dataType);
 	}
 
     xhrHTML("menuData", "menuData.php", formData);

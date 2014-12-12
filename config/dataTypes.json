@@ -7,13 +7,13 @@
     ],
 
     "DataType2": [
-        "object",
+        "id_object",
         "value"
     ],
 
     "DataType3": [
-        "objectA",
-        "objectB",
+        "id_objectA",
+        "id_objectB",
         "value"
     ]
 }

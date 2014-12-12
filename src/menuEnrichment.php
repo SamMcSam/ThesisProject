@@ -82,13 +82,13 @@ $msg = "";
 */
 ?>
 
-<fieldset> <legend>Créer la visualisation des données dans le 3DCM</legend> 
+<fieldset> <legend>Generate an enriched 3DCM</legend> 
 	<form method='post' action='_______.php' >
-		Utiliser la ville : <select class='champs' name='grapheCity'>
+		Use the city : <select class='champs' name='grapheCity'>
 			<option>City 1</option>
 			<option>City 2</option>
 		</select>
-		Utiliser les données : <select class='champs' name='grapheData'>
+		Use the data : <select class='champs' name='grapheData'>
 			<option>Data 1</option>
 		</select>
 		

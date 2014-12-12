@@ -26,8 +26,8 @@ if (isset($_FILES["uploaddata_file"])) {
 	{
 		$nameFile = $_FILES["uploaddata_file"]["name"];
 		$tempFile = $_FILES["uploaddata_file"]["tmp_name"];
-		$repoName = $listRepo[$_POST["repo_name"]]["id"];
-		$dataType = $_POST["data_type"];
+		$repoName = $listRepo[$_POST["uploaddata_repo"]]["id"];
+		$dataType = $_POST["uploaddata_type"];
 
 		if ($_FILES["uploaddata_file"]["error"] > 0)
 			throw new Exception("Upload error n°".$_FILES["uploaddata_file"]["error"]);
@@ -57,11 +57,11 @@ if (isset($_FILES["uploaddata_file"])) {
 
 ?>
 
-<fieldset> <legend>Charger les données dans un graphe</legend> 
+<fieldset> <legend>Load data in triple store</legend> 
 	<form>
 		<p>
-			Lier les données au modèle : 
-			<select id="repo_name" name="repo_name" size="1">
+			Link data to the city repository : 
+			<select id="uploaddata_repo" name="uploaddata_repo" size="1">
 				<option value="-1"> 
 				<?php
 					for($i = 1 ; $i < count ($listRepo) ; $i++){
@@ -72,7 +72,7 @@ if (isset($_FILES["uploaddata_file"])) {
 		</p>
 		<p>
 			<input id='uploaddata_file' type='file' name='uploaddata_file' />
-			Data type : <select id="data_type" name="data_type" size="1">
+			Data type : <select id="uploaddata_type" name="uploaddata_type" size="1">
 				<?php
 					$i = 1;
 					foreach($listTypes as $key => $val){
