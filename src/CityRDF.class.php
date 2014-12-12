@@ -33,10 +33,15 @@ class CityRDF {
 		//cleans it and makes it valid for a transfer in a triple store
 		$this->cleaning();
 
+		//remove appearances tags
 		if ($this->removeTexture){
 			$this->removeTextures();
 		}
 
+		//remove part of the object tags (in percent)
+		if ($this->completeUpload < 100){
+			$this->removePercent();
+		}
 		//if complete < 100, then remove % of the file
 
 		//do some extra calculations here, to simplify later
@@ -148,7 +153,6 @@ class CityRDF {
 			//echo $node->nodeName . " <br>";
 			if ($node->childNodes->length <= 0){
 				$node->parentNode->removeChild($node);
-				echo "a ";
 			}
 		}
 		*/
@@ -179,6 +183,19 @@ class CityRDF {
 		echo $this->xml->saveXML();
 		echo "</pre>";
 		*/	
+	}
+
+	//TODO : add support of lowercase tag
+	private function removePercent()
+	{
+		$xpath = new DOMXPath($this->xml);
+		$cityObjectList = $xpath->query("//*[local-name() = 'cityObjectMember']"); 
+
+		//remove last % given
+		$nbrLeft = $cityObjectList->length / 100 * $this->completeUpload;
+		for ($i = $cityObjectList->length - 1; $i >= $nbrLeft ; $i--) {
+			$cityObjectList->item($i)->parentNode->removeChild($cityObjectList->item($i));
+		}
 	}
 
 	private function calculateCenters()

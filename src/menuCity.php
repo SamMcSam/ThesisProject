@@ -7,6 +7,9 @@
 * Menu to upload 3d city
 *
 * ATTENTION : in php conf file, set post_max_size and upload_max_filesize to large size (~20M)
+
+TODO : 
+- removing some percent of file might not work if tags are in LOWERCASE!!
 */
 
 ini_set('display_errors', 1);
@@ -24,8 +27,8 @@ if (isset($_FILES["uploadcity_file"])) {
 		$nameFile = $_FILES["uploadcity_file"]["name"];
 		$tempFile = $_FILES["uploadcity_file"]["tmp_name"];
 		//echo $nameFile;
-		$completeUpload = $_POST["complete_upload"];
-		$removeTexture = (($_POST["remove_texture"] == "true") ? true : false);
+		$completeUpload = $_POST["uploadcity_complete"];
+		$removeTexture = (($_POST["uploadcity_texture"] == "true") ? true : false);
 
 		if ($_FILES["uploadcity_file"]["error"] > 0)
 			throw new Exception("Upload error n°".$_FILES["uploadcity_file"]["error"]);
@@ -73,8 +76,14 @@ if (isset($_FILES["uploadcity_file"])) {
 	<form>
 		<p>
 			<input id='uploadcity_file' type='file' name='uploadcity_file' />
-			<input id='complete_upload' type='hidden' name='complete_upload' value='100'><!--Completeness percentage -->
-			<input id='remove_texture' type='checkbox' name='remove_texture' value='removed' checked>Remove textures 
+			File type : 
+			<input id='uploadcity_type' type='radio' name='uploadcity_type' readonly checked/> GML
+		</p>
+		<p>		
+			Remove textures : <input id='uploadcity_texture' type='checkbox' name='uploadcity_texture' value='removed' checked>
+		</p>
+		<p>		
+			Upload completeness : <input id='uploadcity_complete' type='number' name='uploadcity_complete' value='20' style="width:50px" onchange="verifyPercent(this);"> %
 		</p>
 		<button class='champs' type="button" onclick="loadCity(false);">Upload</button>
 	</form>
