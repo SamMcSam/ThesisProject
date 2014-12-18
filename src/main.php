@@ -28,7 +28,9 @@
 			<div id='menuCity_loading' style="display:none;">
 				<img class ="imgLoading" src="../img/loading.gif"> LOADING...
 			</div>
-			
+
+			<!-- add 'delete cities' menu here-->
+
 			<!-- MENU TO UPLOAD DATA -->
 			<div class='titre'>Data graph</div>
 			<div id='menuData'>
@@ -37,6 +39,8 @@
 			<div id='menuData_loading' style="display:none;">
 				<img class ="imgLoading" src="../img/loading.gif"> LOADING...
 			</div>
+			
+			<!-- add 'delete data graphs' menu here-->
 				
 			<!-- MENU TO CREATE TECHNIQUE -->
 			<div class='titre'>Abstract visualization techniques</div>
@@ -48,7 +52,7 @@
 			</div>
 
 			<!-- MENU TO GENERATE ENRICHED MODEL -->
-			<div class='titre'>Visualization technique</div>
+			<div class='titre'>Enriched city model</div>
 			<div id='menuEnrichment'>
 				<?php include("menuEnrichment.php");?>
 			</div>
