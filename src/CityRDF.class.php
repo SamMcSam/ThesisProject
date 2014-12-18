@@ -200,7 +200,18 @@ class CityRDF {
 
 	private function calculateCenters()
 	{
-
+		//$xpath = new DOMXPath($this->xml);
+		
+		//for each object with a gml:id
+		//*[@gml:id]
+			//$positionLists = $xpath->query("//gml:posList", _node_); 
+			//for each node in the list
+				//update lowest x
+				//update lowest y
+				//update lowest z
+				//update highest x
+				//update highest y
+				//update highest z
 	}
 
 	//------------------------------------------------------------------------------
