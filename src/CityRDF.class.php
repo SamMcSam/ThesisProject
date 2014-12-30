@@ -71,8 +71,9 @@ class CityRDF {
    		$newRoot->setAttribute('xmlns:rdf','http://www.w3.org/1999/02/22-rdf-syntax-ns#');
    		$newRoot->setAttribute('xmlns:failsafe','http://escape.nodes/without/namespaces#');
    		$newRoot->setAttribute('xmlns:core', 'http://www.opengis.net/citygml/1.0');
+   		$newRoot->setAttribute('xmlns:protothree', 'http://unige.ch/masterThesis/'); //for adding attributes
 
-		//transform multiple pos INTO a single posList (old gml doc)
+		//transform multiple pos into a single posList (old gml doc)
 		//----------
 		$xpath = new DOMXPath($this->xml);
 		$xpath->registerNamespace("gml", "http://www.opengis.net/gml");
@@ -200,8 +201,22 @@ class CityRDF {
 
 	private function calculateCenters()
 	{
-		//$xpath = new DOMXPath($this->xml);
+		$xpath = new DOMXPath($this->xml);
+		/*
+		$xpath->registerNamespace("gml", "http://www.opengis.net/gml");
+		$polygonList = $xpath->query("/gml:poslist"); 
+
+		echo $polygonList->length;
 		
+
+		echo "<pre>";
+		echo $this->xml->saveXML();
+		foreach ($polygonList as $node) {
+		  echo $node->nodeValue ;
+		}
+		echo "</pre>";
+		*/
+
 		//for each object with a gml:id
 		//*[@gml:id]
 			//$positionLists = $xpath->query("//gml:posList", _node_); 
