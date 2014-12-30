@@ -53,6 +53,7 @@ class CityRDF {
 		try {
 			$this->xml = new DOMDocument($this->fileName);
 			$this->xml->load($this->fileName); //LOAD para filename, LOADXML para string :/
+			$this->xml->preserveWhiteSpace = false;
 		}
 		catch (E_STRICT  $e) {
 			exit("Erreur : document impossible to parse!");
@@ -77,11 +78,12 @@ class CityRDF {
 		//----------
 		$xpath = new DOMXPath($this->xml);
 		$xpath->registerNamespace("gml", "http://www.opengis.net/gml");
+
 		$linearRingList = $xpath->query('//gml:LinearRing');
 		foreach ($linearRingList as $ring) {
 		    $listOfPos = $xpath->query('gml:pos', $ring);
 		    if ($listOfPos->length > 0){
-		    	$posList = $this->xml->createElement("gml:poslist");
+		    	$posList = $this->xml->createElementNS("http://www.opengis.net/gml", "gml:poslist");
 			    foreach ($listOfPos as $pos) {
 		    		$posList->nodeValue .= $pos->nodeValue." ";
 		    		$pos->parentNode->removeChild($pos);
@@ -115,6 +117,7 @@ class CityRDF {
 			if (!preg_match("#^.*:.*$#", $attributeNode->nodeName)){
 				//echo $attributeNode->nodeName . "<br>"; 
 				$newAttribute = $this->xml->createAttribute("failsafe:" . $attributeNode->nodeName);
+				$newAttribute->value = $attributeNode->value;
 
 				$attributeNode->ownerElement->setAttributeNode ($newAttribute);
 				$attributeNode->ownerElement->removeAttributeNode($attributeNode);
@@ -133,6 +136,9 @@ class CityRDF {
 			}
 		}
 		*/
+
+		//remove white spaces
+		$this->xml->normalize();
 
 		//debug
 		//echo "<pre>";
@@ -171,21 +177,50 @@ class CityRDF {
 
 	private function calculateCenters()
 	{
-		$xpath = new DOMXPath($this->xml);
 		/*
-		$xpath->registerNamespace("gml", "http://www.opengis.net/gml");
-		$polygonList = $xpath->query("//gml:poslist"); 
-
-		echo $polygonList->length;
-		
-
 		echo "<pre>";
 		echo $this->xml->saveXML();
-		foreach ($polygonList as $node) {
-		  echo $node->nodeValue ;
+		echo "</pre>";
+		*/
+
+		$xpath = new DOMXPath($this->xml);
+		$xpath->registerNamespace("gml", "http://www.opengis.net/gml");
+
+		// 1) add compute centers for each linear ring by averaging all of the midpoints of each ring's verticles
+		//normally, xpath to poslist, but not working for everyfile.... TODO find out why
+
+		$ringList = $xpath->query("//gml:linearRing | //gml:linearring | //gml:LinearRing"); 
+		//$ringList = $xpath->query("//gml:posList | //gml:poslist | //gml:PosList"); 
+		//$polygonList = $xpath->query("//*[local-name()='posList'] | //*[local-name()='poslist'] | //*[local-name()='PosList']");  //without namespace?		
+
+		/*		
+		foreach ($ringList as $node) {
+			$posListList = $xpath->query("gml:posList | gml:poslist | gml:PosList", $node); 
+			//echo $posListList->item(0)->nodeName . " ";
+			foreach ($posListList as $child) {
+		  		echo $child->nodeValue . " ";
+		  		echo "<br><br>";
+		  	}
+			//echo $node->childNodes->length . " ";
+		}
+		*/
+
+		/*
+		echo "<pre>";
+		//echo $this->xml->saveXML();
+		foreach ($ringList as $node) {
+			
+		  	echo $node->childNodes->length . " ";
+		  	foreach ($node->childNodes as $child) {
+		  		echo $child->nodeValue . " ";
+		  	}
 		}
 		echo "</pre>";
 		*/
+
+		//$polygonList = $xpath->query("//gml:posList | //gml:poslist | //gml:PosList"); 
+
+		// 2) recursively average the centers for each id (excluding linearRing)
 
 		//for each object with a gml:id
 		//*[@gml:id]
