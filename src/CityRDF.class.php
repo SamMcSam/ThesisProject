@@ -106,7 +106,7 @@ class CityRDF {
 			$ref->parentNode->removeChild($ref);
 		}		
 
-
+		//not necessary! only attributes need to be prefixed
 		/*
 		//verify if no unprefixed nodes (no easy way to change names!!)
 		//----------
@@ -166,19 +166,13 @@ class CityRDF {
 
 	private function removeTextures()
 	{
-		//remove all <app:appearance>
+		//remove all <app:appearance> and/or <app:Appearance> 
 		$xpath = new DOMXPath($this->xml);
 		$xpath->registerNamespace("app", "http://www.opengis.net/citygml/appearance/1.0");
-		$appearanceList = $xpath->query('//app:Appearance');
+		$appearanceList = $xpath->query('//app:Appearance | //app:appearance');
 		foreach ($appearanceList as $appearance) {
 			$appearance->parentNode->removeChild($appearance);
 		}
-		//in case was written in lower
-		$appearanceList = $xpath->query('//app:appearance');
-		foreach ($appearanceList as $appearance) {
-			$appearance->parentNode->removeChild($appearance);
-		}
-
 		/*
 		echo "<pre>";
 		echo $this->xml->saveXML();
@@ -204,7 +198,7 @@ class CityRDF {
 		$xpath = new DOMXPath($this->xml);
 		/*
 		$xpath->registerNamespace("gml", "http://www.opengis.net/gml");
-		$polygonList = $xpath->query("/gml:poslist"); 
+		$polygonList = $xpath->query("//gml:poslist"); 
 
 		echo $polygonList->length;
 		
