@@ -106,33 +106,9 @@ class CityRDF {
 			$ref->parentNode->removeChild($ref);
 		}		
 
-		//not necessary! only attributes need to be prefixed
-		/*
-		//verify if no unprefixed nodes (no easy way to change names!!)
-		//----------
-		$allElements = $xpath->query('//*');
-		foreach($allElements as $node) {
-			if (!preg_match("#^.*:.*$#", $node->nodeName)){
-				$newNode = $this->xml->createElement("failsafe:" . $node->nodeName);
-
-				//copy children
-				$childList = $xpath->query('child::*', $node);
-				foreach($childList as $child) {
-					$newNode->appendChild($child);
-				}
-
-				//copy attributes
-				foreach($node->attributes as $attr) {
-					$newNode->setAttributeNodeNS($attr);
-				}
-				$node->parentNode->replaceChild ($newNode, $node);
-				
-				//echo $node->nodeName . "<br>";
-			}
-		}
-		*/
-
-		//verify if no unprefixed attributes (same)
+		//verify if no unprefixed attributes
+		//(not necessary for elements, only attributes need to be prefixed)
+		//see commits until 53a427963f23710aae094094851d8bbb48d1c661 for prefixation of elements
 		//----------
 		$allAttributes = $xpath->query('//@*');
 		foreach($allAttributes as $attributeNode) {
