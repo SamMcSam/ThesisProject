@@ -187,38 +187,31 @@ class CityRDF {
 		$xpath->registerNamespace("gml", "http://www.opengis.net/gml");
 
 		// 1) add compute centers for each linear ring by averaging all of the midpoints of each ring's verticles
-		//normally, xpath to poslist, but not working for everyfile.... TODO find out why
+		$posListList = $xpath->query("//gml:posList | //gml:poslist | //gml:PosList"); 
+		//$posListList = $xpath->query("//*[local-name()='posList'] | //*[local-name()='poslist'] | //*[local-name()='PosList']");  //without namespace?		
 
-		$ringList = $xpath->query("//gml:linearRing | //gml:linearring | //gml:LinearRing"); 
-		//$ringList = $xpath->query("//gml:posList | //gml:poslist | //gml:PosList"); 
-		//$polygonList = $xpath->query("//*[local-name()='posList'] | //*[local-name()='poslist'] | //*[local-name()='PosList']");  //without namespace?		
+		echo $posListList->length . "<br>";
 
-		/*		
-		foreach ($ringList as $node) {
-			$posListList = $xpath->query("gml:posList | gml:poslist | gml:PosList", $node); 
-			//echo $posListList->item(0)->nodeName . " ";
-			foreach ($posListList as $child) {
-		  		echo $child->nodeValue . " ";
-		  		echo "<br><br>";
+		foreach ($posListList as $posList) {
+		  	$arrayValue = explode(" ", $posList->nodeValue);
+
+		  	//compute midpoints
+		  	$midpoints = array();
+		  	for ($i=0 ; $i<sizeof($arrayValue)-4;$i+=3){ //(3 by 3 because values are in order x1 y1 z1 x2 y2 z2 etc.)
+		  		 $midx = ($arrayValue[$i] + $arrayValue[$i+3]) / 2;
+		  		 $midy = ($arrayValue[$i+1] + $arrayValue[$i+1+3]) / 2;
+		  		 $midz = ($arrayValue[$i+2] + $arrayValue[$i+2+3]) / 2;
+
+				$midpoints[] = ["x" => $midx, "y" => $midy, "z" => $midz];
+				echo "Midpoint : " . $midx . ", " . $midy . ", " . $midz;
+    			echo "<br>";
 		  	}
+
+		  	// AVERAGE THE MIDPOINT
+		  	// CREATE NODENS HERE FOR CENTER
+
 			//echo $node->childNodes->length . " ";
 		}
-		*/
-
-		/*
-		echo "<pre>";
-		//echo $this->xml->saveXML();
-		foreach ($ringList as $node) {
-			
-		  	echo $node->childNodes->length . " ";
-		  	foreach ($node->childNodes as $child) {
-		  		echo $child->nodeValue . " ";
-		  	}
-		}
-		echo "</pre>";
-		*/
-
-		//$polygonList = $xpath->query("//gml:posList | //gml:poslist | //gml:PosList"); 
 
 		// 2) recursively average the centers for each id (excluding linearRing)
 
