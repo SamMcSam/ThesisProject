@@ -72,7 +72,7 @@ class CityRDF {
    		$newRoot->setAttribute('xmlns:rdf','http://www.w3.org/1999/02/22-rdf-syntax-ns#');
    		$newRoot->setAttribute('xmlns:failsafe','http://escape.nodes/without/namespaces#');
    		$newRoot->setAttribute('xmlns:core', 'http://www.opengis.net/citygml/1.0');
-   		$newRoot->setAttribute('xmlns:protothree', 'http://unige.ch/masterThesis/'); //for adding attributes
+   		$newRoot->setAttribute('xmlns:protogeometry', 'http://unige.ch/masterThesis/'); //for adding attributes
 
 		//transform multiple pos into a single posList (old gml doc)
 		//----------
@@ -175,14 +175,16 @@ class CityRDF {
 		}
 	}
 
+	//TODO : corners!!
+	//for each node in the list
+	//update lowest x
+	//update lowest y
+	//update lowest z
+	//update highest x
+	//update highest y
+	//update highest z
 	private function calculateCenters()
 	{
-		/*
-		echo "<pre>";
-		echo $this->xml->saveXML();
-		echo "</pre>";
-		*/
-
 		$xpath = new DOMXPath($this->xml);
 		$xpath->registerNamespace("gml", "http://www.opengis.net/gml");
 
@@ -204,39 +206,58 @@ class CityRDF {
 		  		 $midy = ($arrayValue[$i+1] + $arrayValue[$i+1+3]) / 2;
 		  		 $midz = ($arrayValue[$i+2] + $arrayValue[$i+2+3]) / 2;
 
-				//$midpoints[] = ["x" => $midx, "y" => $midy, "z" => $midz];
 				$midpointsX[] = $midx;
 				$midpointsY[] = $midy;
 				$midpointsZ[] = $midz;
-				echo "Midpoint : " . $midx . ", " . $midy . ", " . $midz;
-    			echo "<br>";
+				//echo "Midpoint : " . $midx . ", " . $midy . ", " . $midz;
+    			//echo "<br>";
 		  	}
 
-		  	echo "<br>";
-		  	$center = ["x" => array_sum($midpointsX)/count($midpointsX), "y" => array_sum($midpointsY)/count($midpointsY), "z" => array_sum($midpointsZ)/count($midpointsZ)];
-		  	echo "Center at : " . $center["x"] . ", " . $center["y"] . ", " . $center["z"];
-		  	echo "<br>";
-		  	echo "<br>";
-
 		  	// AVERAGE THE MIDPOINT
+		  	$center = ["x" => array_sum($midpointsX)/count($midpointsX), "y" => array_sum($midpointsY)/count($midpointsY), "z" => array_sum($midpointsZ)/count($midpointsZ)];
+		  	//echo "Center at : " . $center["x"] . ", " . $center["y"] . ", " . $center["z"];
+		  	//echo "<br>";
+		  	//echo "<br>";
 
-		  	// CREATE NODENS HERE FOR CENTER
+		  	// CREATE NODES HERE FOR CENTER //('xmlns:protogeometry', 'http://unige.ch/masterThesis/')
+		  	$centerNode = $this->xml->createElementNS("http://unige.ch/masterThesis/", "protogeometry:center");
+		  	$x = $this->xml->createElementNS("http://unige.ch/masterThesis/", "protogeometry:x", $center["x"]);
+		  	$y = $this->xml->createElementNS("http://unige.ch/masterThesis/", "protogeometry:y", $center["y"]);
+		  	$z = $this->xml->createElementNS("http://unige.ch/masterThesis/", "protogeometry:z", $center["z"]);
+	    	
+		    $centerNode->appendChild($x);
+		    $centerNode->appendChild($y);
+		    $centerNode->appendChild($z);
+		    $posList->parentNode->appendChild($centerNode);
 
 			//echo $node->childNodes->length . " ";
 		}
 
-		// 2) recursively average the centers for each id (excluding linearRing)
+		// 2) propagate centers and average them for each id
+		$this->propagateCenters();
+		
+		echo "<pre>";
+		echo $this->xml->saveXML();
+		echo "</pre>";
+		
+	}
 
-		//for each object with a gml:id
-		//*[@gml:id]
-			//$positionLists = $xpath->query("//gml:posList", _node_); 
-			//for each node in the list
-				//update lowest x
-				//update lowest y
-				//update lowest z
-				//update highest x
-				//update highest y
-				//update highest z
+	private function propagateCenters()
+	{
+		// WHILE not done
+			// for each node with status=propagate
+				// loop through parents while doesn't find id 
+					// if id
+						// remove status of center
+						// copy center in id  
+						// add status=average to copy
+				// if loop reached root - remove status
+			// for each node with status=average
+				//compute average
+				//remove all centers
+				//add average center with status propagate
+			// if no more node with status=propagate 
+				//done
 	}
 
 	//------------------------------------------------------------------------------
