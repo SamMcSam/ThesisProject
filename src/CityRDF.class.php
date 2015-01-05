@@ -190,24 +190,36 @@ class CityRDF {
 		$posListList = $xpath->query("//gml:posList | //gml:poslist | //gml:PosList"); 
 		//$posListList = $xpath->query("//*[local-name()='posList'] | //*[local-name()='poslist'] | //*[local-name()='PosList']");  //without namespace?		
 
-		echo $posListList->length . "<br>";
+		//echo $posListList->length . "<br>";
 
 		foreach ($posListList as $posList) {
 		  	$arrayValue = explode(" ", $posList->nodeValue);
 
 		  	//compute midpoints
-		  	$midpoints = array();
+		  	$midpointsX = array();
+		  	$midpointsY = array();
+		  	$midpointsZ = array();
 		  	for ($i=0 ; $i<sizeof($arrayValue)-4;$i+=3){ //(3 by 3 because values are in order x1 y1 z1 x2 y2 z2 etc.)
 		  		 $midx = ($arrayValue[$i] + $arrayValue[$i+3]) / 2;
 		  		 $midy = ($arrayValue[$i+1] + $arrayValue[$i+1+3]) / 2;
 		  		 $midz = ($arrayValue[$i+2] + $arrayValue[$i+2+3]) / 2;
 
-				$midpoints[] = ["x" => $midx, "y" => $midy, "z" => $midz];
+				//$midpoints[] = ["x" => $midx, "y" => $midy, "z" => $midz];
+				$midpointsX[] = $midx;
+				$midpointsY[] = $midy;
+				$midpointsZ[] = $midz;
 				echo "Midpoint : " . $midx . ", " . $midy . ", " . $midz;
     			echo "<br>";
 		  	}
 
+		  	echo "<br>";
+		  	$center = ["x" => array_sum($midpointsX)/count($midpointsX), "y" => array_sum($midpointsY)/count($midpointsY), "z" => array_sum($midpointsZ)/count($midpointsZ)];
+		  	echo "Center at : " . $center["x"] . ", " . $center["y"] . ", " . $center["z"];
+		  	echo "<br>";
+		  	echo "<br>";
+
 		  	// AVERAGE THE MIDPOINT
+
 		  	// CREATE NODENS HERE FOR CENTER
 
 			//echo $node->childNodes->length . " ";
