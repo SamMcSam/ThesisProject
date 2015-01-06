@@ -302,13 +302,17 @@ class CityRDF {
 				}				
 			}
 
-/*
+
 
 			// for each node with status=average (nodes of any type, with an id)
 			$nodesToAverage = $xpath->query("//*[@".CityRDF::STAT_NAME."='".CityRDF::STAT_AVERAGE."']"); 
+			echo "node to aver total : " . $nodesToAverage->length . "<br>";
+
 			foreach ($nodesToAverage as $node)
 			{
 				$childCenters = $xpath->query("./".CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_CENTER, $node); //relative query
+				echo "child per capita : " . $childCenters->length . "<br>";
+
 
 				//compute average
 				$sumX = 0;
@@ -328,6 +332,9 @@ class CityRDF {
 				$sumY /= $childCenters->length;
 				$sumZ /= $childCenters->length;
 
+				echo "<br>";
+
+				
 				//add average center node
 				$average = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_CENTER);
 			  	$x = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":x", $sumX);
@@ -337,6 +344,7 @@ class CityRDF {
 			    $average->appendChild($y);
 			    $average->appendChild($z);
 
+
 				//remove all centers
 				foreach ($childCenters as $child) {
 					$node->removeChild($child);
@@ -345,10 +353,10 @@ class CityRDF {
 				//add average center with status propagate
 				$average->setAttribute(CityRDF::STAT_NAME, CityRDF::STAT_PROPAGATE);
 			    $node->appendChild($average);
+				
+				//remove status=average
+				$node->removeAttribute(CityRDF::STAT_NAME);
 			}
-
-*/
-$done = true;
 
 			// if no more node with status=propagate (number infered from number of parents with average to do)
 			if ($nodesToAverage->length < 1)
