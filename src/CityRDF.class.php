@@ -254,10 +254,11 @@ class CityRDF {
 		// 2) propagate centers and average them for each id
 		$this->propagateCenters();
 		
+		/*
 		echo "<pre>";
 		echo $this->xml->saveXML();
 		echo "</pre>";
-		
+		*/
 	}
 
 	//this function propagates the center nodes to all their parents with ids - for id with several centers, it creates an average of its child centers - only average centers are propagated
@@ -278,13 +279,15 @@ class CityRDF {
 
 				// loop through parents while doesn't find id 
 				while ($parent != null){
-					foreach ($parent->attributes as $attr){
-						//echo $attr->nodeName. "<br>";
-						if ($attr->nodeName == "gml:id"){
-							//echo "OHSHITITSABOUTTOGODOWN";
-							break 2;
+					if ($parent->attributes != null){
+						foreach ($parent->attributes as $attr){
+							//echo $attr->nodeName. "<br>";
+							if ($attr->nodeName == "gml:id"){
+								//echo "OHSHITITSABOUTTOGODOWN";
+								break 2;
+							}
+								
 						}
-							
 					}
 
 					$parent = $parent->parentNode;
@@ -306,13 +309,12 @@ class CityRDF {
 
 			// for each node with status=average (nodes of any type, with an id)
 			$nodesToAverage = $xpath->query("//*[@".CityRDF::STAT_NAME."='".CityRDF::STAT_AVERAGE."']"); 
-			echo "node to aver total : " . $nodesToAverage->length . "<br>";
+			//echo "node to aver total : " . $nodesToAverage->length . "<br>";
 
 			foreach ($nodesToAverage as $node)
 			{
 				$childCenters = $xpath->query("./".CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_CENTER, $node); //relative query
-				echo "child per capita : " . $childCenters->length . "<br>";
-
+				//echo "child per capita : " . $childCenters->length . "<br>";
 
 				//compute average
 				$sumX = 0;
@@ -331,10 +333,8 @@ class CityRDF {
 				$sumX /= $childCenters->length;
 				$sumY /= $childCenters->length;
 				$sumZ /= $childCenters->length;
+				//echo "<br>";
 
-				echo "<br>";
-
-				
 				//add average center node
 				$average = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_CENTER);
 			  	$x = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":x", $sumX);
@@ -343,7 +343,6 @@ class CityRDF {
 			    $average->appendChild($x);
 			    $average->appendChild($y);
 			    $average->appendChild($z);
-
 
 				//remove all centers
 				foreach ($childCenters as $child) {
