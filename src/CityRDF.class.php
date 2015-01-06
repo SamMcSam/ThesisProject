@@ -13,6 +13,15 @@ class CityRDF {
 	const TEMP_PATH = "../tmpFiles/";
 	const FILE_CONTEXT = "http://city.file/";
 
+	const STAT_NAME = "status";
+	const STAT_PROPAGATE = "propagate";
+	const STAT_AVERAGE = "average";
+
+	const GML_URI = "http://www.opengis.net/gml";
+	const GEOADDED_NAME = "protogeometry";
+	const GEOADDED_URI = "http://unige.ch/masterThesis/";
+	const GEOADDED_CENTER = "center";
+
 	private $fileName;
 	private $completeUpload;
 	private $removeTexture;
@@ -186,7 +195,7 @@ class CityRDF {
 	private function calculateCenters()
 	{
 		$xpath = new DOMXPath($this->xml);
-		$xpath->registerNamespace("gml", "http://www.opengis.net/gml");
+		$xpath->registerNamespace("gml", CityRDF::GML_URI);
 
 		// 1) add compute centers for each linear ring by averaging all of the midpoints of each ring's verticles
 		$posListList = $xpath->query("//gml:posList | //gml:poslist | //gml:PosList"); 
@@ -220,11 +229,13 @@ class CityRDF {
 		  	//echo "<br>";
 
 		  	// CREATE NODES HERE FOR CENTER //('xmlns:protogeometry', 'http://unige.ch/masterThesis/')
-		  	$centerNode = $this->xml->createElementNS("http://unige.ch/masterThesis/", "protogeometry:center");
-		  	$x = $this->xml->createElementNS("http://unige.ch/masterThesis/", "protogeometry:x", $center["x"]);
-		  	$y = $this->xml->createElementNS("http://unige.ch/masterThesis/", "protogeometry:y", $center["y"]);
-		  	$z = $this->xml->createElementNS("http://unige.ch/masterThesis/", "protogeometry:z", $center["z"]);
+		  	$centerNode = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_CENTER);
+		  	$x = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":x", $center["x"]);
+		  	$y = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":y", $center["y"]);
+		  	$z = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":z", $center["z"]);
 	    	
+		  	$centerNode->setAttribute(CityRDF::STAT_NAME, CityRDF::STAT_PROPAGATE); //for step 2
+
 		    $centerNode->appendChild($x);
 		    $centerNode->appendChild($y);
 		    $centerNode->appendChild($z);
@@ -242,22 +253,71 @@ class CityRDF {
 		
 	}
 
+	//this function propagates the center nodes to all their parents with ids - for id with several centers, it creates an average of its child centers - only average centers are propagated
 	private function propagateCenters()
 	{
-		// WHILE not done
-			// for each node with status=propagate
+		$xpath = new DOMXPath($this->xml);
+		$xpath->registerNamespace(CityRDF::GEOADDED_NAME, CityRDF::GEOADDED_URI);
+
+		$done = false;
+
+		while (!$done)
+		{
+			// for each node with status=propagate (nodes of type center)
+			$nodesToPropag = $xpath->query("//*[@".CityRDF::STAT_NAME."='".CityRDF::STAT_PROPAGATE."']"); 
+			foreach ($nodesToPropag as $node)
+			{
+				$parent = $node->parentNode->parentNode; //starts 2 levels higher to current id
+
 				// loop through parents while doesn't find id 
-					// if id
-						// remove status of center
-						// copy center in id  
-						// add status=average to copy
-				// if loop reached root - remove status
-			// for each node with status=average
+				while ($parent != null || !$parent->hasAttributeNS(CityRDF::GML_URI, "gml:id")){
+					$parent = $parent->parentNode;
+				}
+
+				// remove status (if loop reached end, else will add a new one in the copy)
+				$node->removeAttribute(CityRDF::STAT_NAME);
+				
+				// if id
+				if ($parent != null) {
+					$copy = $node->cloneNode(true);
+					$parent->appendChild($copy);
+					// adds status=average to PARENT!
+					$parent->setAttribute(CityRDF::STAT_NAME, CityRDF::STAT_AVERAGE); 
+				}				
+			}
+
+			// for each node with status=average (nodes of any type, with an id)
+			$nodesToAverage = $xpath->query("//*[@".CityRDF::STAT_NAME."='".CityRDF::STAT_AVERAGE."']"); 
+			foreach ($nodesToAverage as $node)
+			{
+				$childCenters = $xpath->query("./".CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_CENTER, $node); //relative query
+
 				//compute average
+				//...
+
+				//add average center node
+				$average = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_CENTER);
+			  	$x = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":x", $center["x"]);
+			  	$y = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":y", $center["y"]);
+			  	$z = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":z", $center["z"]);
+			    $average->appendChild($x);
+			    $average->appendChild($y);
+			    $average->appendChild($z);
+
 				//remove all centers
+				foreach ($childCenters as $child) {
+					$node->removeChild($child);
+				}
+
 				//add average center with status propagate
-			// if no more node with status=propagate 
-				//done
+				$average->setAttribute(CityRDF::STAT_NAME, CityRDF::STAT_PROPAGATE);
+			    $node->appendChild($average);
+			}
+
+			// if no more node with status=propagate (number infered from number of parents with average to do)
+			if ($nodesToAverage->length < 1)
+				$done = true;
+		}
 	}
 
 	//------------------------------------------------------------------------------
