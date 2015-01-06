@@ -17,6 +17,8 @@ class CityRDF {
 	const STAT_PROPAGATE = "propagate";
 	const STAT_AVERAGE = "average";
 
+	const RDF_NODE = "rdf:RDF";
+	const RDF_URI = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 	const GML_URI = "http://www.opengis.net/gml";
 	const GEOADDED_NAME = "protogeometry";
 	const GEOADDED_URI = "http://unige.ch/masterThesis/";
@@ -74,11 +76,11 @@ class CityRDF {
 		//add prefix and a rdf:RDF node as the root
 		//----------
 		$root = $this->xml->documentElement;
-   		$newRoot = $this->xml->createElement("rdf:RDF");
+   		$newRoot = $this->xml->createElementNS(CityRDF::RDF_URI, CityRDF::RDF_NODE);
    		$this->xml->appendChild($newRoot);
    		$newRoot->appendChild($root);
 
-   		$newRoot->setAttribute('xmlns:rdf','http://www.w3.org/1999/02/22-rdf-syntax-ns#');
+   		//$newRoot->setAttribute('xmlns:rdf','http://www.w3.org/1999/02/22-rdf-syntax-ns#');
    		$newRoot->setAttribute('xmlns:failsafe','http://escape.nodes/without/namespaces#');
    		$newRoot->setAttribute('xmlns:core', 'http://www.opengis.net/citygml/1.0');
    		$newRoot->setAttribute('xmlns:protogeometry', 'http://unige.ch/masterThesis/'); //for adding attributes
@@ -270,8 +272,14 @@ class CityRDF {
 				$parent = $node->parentNode->parentNode; //starts 2 levels higher to current id
 
 				// loop through parents while doesn't find id 
-				while ($parent != null || !$parent->hasAttributeNS(CityRDF::GML_URI, "gml:id")){
+				while ($parent != null){
+					if ($parent->attributes != null) {
+						if ($parent->attributes->getNamedItemNS(CityRDF::GML_URI, "gml:id") != null) //if a node with attribute id
+							break;
+					}
 					$parent = $parent->parentNode;
+
+					echo $parent->nodeName;
 				}
 
 				// remove status (if loop reached end, else will add a new one in the copy)
