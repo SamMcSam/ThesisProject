@@ -293,7 +293,22 @@ class CityRDF {
 				$childCenters = $xpath->query("./".CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_CENTER, $node); //relative query
 
 				//compute average
-				//...
+				$sumX = 0;
+				$sumY = 0;
+				$sumZ = 0;
+				foreach ($childCenters as $child) {
+					foreach ($child->childNodes as $dimensions){
+						if ($dimensions->nodeName == CityRDF::GEOADDED_NAME.":x")
+							$sumX += $dimensions->nodeValue;
+						else if ($dimensions->nodeName == CityRDF::GEOADDED_NAME.":y")	
+							$sumY += $dimensions->nodeValue;	
+						else if ($dimensions->nodeName == CityRDF::GEOADDED_NAME.":z")	
+							$sumZ += $dimensions->nodeValue;	
+					}
+				}
+				$sumX /= $childCenters->length;
+				$sumY /= $childCenters->length;
+				$sumZ /= $childCenters->length;
 
 				//add average center node
 				$average = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_CENTER);
