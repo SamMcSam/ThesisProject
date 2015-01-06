@@ -50,10 +50,10 @@ class CityRDF {
 		}
 
 		//remove part of the object tags (in percent)
+		//if complete < 100, then remove % of the file
 		if ($this->completeUpload < 100){
 			$this->removePercent();
 		}
-		//if complete < 100, then remove % of the file
 
 		//do some extra calculations here, to simplify later
 		$this->calculateCenters();
