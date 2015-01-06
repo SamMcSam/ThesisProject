@@ -206,16 +206,21 @@ class CityRDF {
 		//echo $posListList->length . "<br>";
 
 		foreach ($posListList as $posList) {
+			$posList->nodeValue = preg_replace ('/\r\n|\r|\n/', " ", $posList->nodeValue); //remove breaks!
 		  	$arrayValue = explode(" ", $posList->nodeValue);
+
+		  	echo $posList->nodeValue . "<br>";
+		  	echo sizeof($arrayValue). "---<br>";
+		  	print_r($arrayValue);
 
 		  	//compute midpoints
 		  	$midpointsX = array();
 		  	$midpointsY = array();
 		  	$midpointsZ = array();
 		  	for ($i=0 ; $i<sizeof($arrayValue)-4;$i+=3){ //(3 by 3 because values are in order x1 y1 z1 x2 y2 z2 etc.)
-		  		 $midx = ($arrayValue[$i] + $arrayValue[$i+3]) / 2;
-		  		 $midy = ($arrayValue[$i+1] + $arrayValue[$i+1+3]) / 2;
-		  		 $midz = ($arrayValue[$i+2] + $arrayValue[$i+2+3]) / 2;
+		  		$midx = ($arrayValue[$i] + $arrayValue[$i+3]) / 2;
+		  		$midy = ($arrayValue[$i+1] + $arrayValue[$i+1+3]) / 2;
+		  		$midz = ($arrayValue[$i+2] + $arrayValue[$i+2+3]) / 2;
 
 				$midpointsX[] = $midx;
 				$midpointsY[] = $midy;
