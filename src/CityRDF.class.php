@@ -209,9 +209,9 @@ class CityRDF {
 			$posList->nodeValue = preg_replace ('/\r\n|\r|\n/', " ", $posList->nodeValue); //remove breaks!
 		  	$arrayValue = explode(" ", $posList->nodeValue);
 
-		  	echo $posList->nodeValue . "<br>";
-		  	echo sizeof($arrayValue). "---<br>";
-		  	print_r($arrayValue);
+		  	//echo $posList->nodeValue . "<br>";
+		  	//echo sizeof($arrayValue). "---<br>";
+		  	//print_r($arrayValue);
 
 		  	//compute midpoints
 		  	$midpointsX = array();
@@ -278,13 +278,16 @@ class CityRDF {
 
 				// loop through parents while doesn't find id 
 				while ($parent != null){
-					if ($parent->attributes != null) {
-						if ($parent->attributes->getNamedItemNS(CityRDF::GML_URI, "gml:id") != null) //if a node with attribute id
-							break;
+					foreach ($parent->attributes as $attr){
+						//echo $attr->nodeName. "<br>";
+						if ($attr->nodeName == "gml:id"){
+							//echo "OHSHITITSABOUTTOGODOWN";
+							break 2;
+						}
+							
 					}
-					$parent = $parent->parentNode;
 
-					echo $parent->nodeName;
+					$parent = $parent->parentNode;
 				}
 
 				// remove status (if loop reached end, else will add a new one in the copy)
@@ -298,6 +301,8 @@ class CityRDF {
 					$parent->setAttribute(CityRDF::STAT_NAME, CityRDF::STAT_AVERAGE); 
 				}				
 			}
+
+/*
 
 			// for each node with status=average (nodes of any type, with an id)
 			$nodesToAverage = $xpath->query("//*[@".CityRDF::STAT_NAME."='".CityRDF::STAT_AVERAGE."']"); 
@@ -325,9 +330,9 @@ class CityRDF {
 
 				//add average center node
 				$average = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_CENTER);
-			  	$x = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":x", $center["x"]);
-			  	$y = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":y", $center["y"]);
-			  	$z = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":z", $center["z"]);
+			  	$x = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":x", $sumX);
+			  	$y = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":y", $sumY);
+			  	$z = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":z", $sumZ);
 			    $average->appendChild($x);
 			    $average->appendChild($y);
 			    $average->appendChild($z);
@@ -341,6 +346,9 @@ class CityRDF {
 				$average->setAttribute(CityRDF::STAT_NAME, CityRDF::STAT_PROPAGATE);
 			    $node->appendChild($average);
 			}
+
+*/
+$done = true;
 
 			// if no more node with status=propagate (number infered from number of parents with average to do)
 			if ($nodesToAverage->length < 1)
