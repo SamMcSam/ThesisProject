@@ -22,6 +22,7 @@ class CityRDF {
 	const GML_URI = "http://www.opengis.net/gml";
 	const GEOADDED_NAME = "protogeometry";
 	const GEOADDED_URI = "http://unige.ch/masterThesis/";
+	const GEOADDED_INFO = "information";
 	const GEOADDED_CENTER = "center";
 
 	private $fileName;
@@ -53,15 +54,13 @@ class CityRDF {
 		//if complete < 100, then remove % of the file
 		if ($this->completeUpload < 100){
 			$this->removePercent();
-		}
-
-		/*echo "<pre>";
-		echo $this->xml->saveXML();
-		echo "</pre>";
-		*/
+		}		
 
 		//do some extra calculations here, to simplify later
-		//$this->calculateCenters();
+		$this->calculateCenters();
+
+		//save file in temp folder
+		$this->getFile();
 	}
 
 	private function generateXML()
@@ -155,7 +154,7 @@ class CityRDF {
 		*/
 
 		//remove white spaces
-		//$this->xml->normalize();
+		$this->xml->normalize();
 
 		//debug
 		/*
@@ -244,18 +243,22 @@ class CityRDF {
 		  	//echo "<br>";
 
 		  	// CREATE NODES HERE FOR CENTER //('xmlns:protogeometry', 'http://unige.ch/masterThesis/')
+		  	//$infoNode = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_INFO);
 		  	$centerNode = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_CENTER);
 		  	$x = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":x", $center["x"]);
 		  	$y = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":y", $center["y"]);
 		  	$z = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":z", $center["z"]);
 	    	
 		  	$centerNode->setAttribute(CityRDF::STAT_NAME, CityRDF::STAT_PROPAGATE); //for step 2
+		  	//$infoNode->setAttribute(CityRDF::STAT_NAME, CityRDF::STAT_PROPAGATE); //for step 2
 
 		    $centerNode->appendChild($x);
 		    $centerNode->appendChild($y);
 		    $centerNode->appendChild($z);
-		    $posList->parentNode->appendChild($centerNode);
+		   // $infoNode->appendChild($centerNode);
 
+		    $posList->parentNode->appendChild($centerNode);
+		    //$posList->parentNode->appendChild($infoNode);
 			//echo $node->childNodes->length . " ";
 		}
 
@@ -322,7 +325,8 @@ class CityRDF {
 			foreach ($nodesToAverage as $node)
 			{
 				$childCenters = $xpath->query("./".CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_CENTER, $node); //relative query
-				//echo "child per capita : " . $childCenters->length . "<br>";
+				//$childCenters = $xpath->query("./*/".CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_CENTER, $node); //relative query
+				echo "child per capita : " . $childCenters->length . "<br>";
 
 				//compute average
 				$sumX = 0;
@@ -344,6 +348,7 @@ class CityRDF {
 				//echo "<br>";
 
 				//add average center node
+				//$infoNode = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_INFO);
 				$average = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_CENTER);
 			  	$x = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":x", $sumX);
 			  	$y = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":y", $sumY);
@@ -351,15 +356,18 @@ class CityRDF {
 			    $average->appendChild($x);
 			    $average->appendChild($y);
 			    $average->appendChild($z);
+			    //$infoNode->appendChild($average);
 
 				//remove all centers
 				foreach ($childCenters as $child) {
 					$node->removeChild($child);
 				}
 
-				//add average center with status propagate
+				//add averaged center with status propagate
 				$average->setAttribute(CityRDF::STAT_NAME, CityRDF::STAT_PROPAGATE);
 			    $node->appendChild($average);
+				//$infoNode->setAttribute(CityRDF::STAT_NAME, CityRDF::STAT_PROPAGATE);
+			    //$node->appendChild($infoNode);
 				
 				//remove status=average
 				$node->removeAttribute(CityRDF::STAT_NAME);

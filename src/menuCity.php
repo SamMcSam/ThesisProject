@@ -39,7 +39,7 @@ if (isset($_FILES["uploadcity_file"])) {
 
 		// GENERATE city RDFable
 		$city = new CityRDF($tempFile, $completeUpload, $removeTexture);
-		
+/*
 		// create repository
 		$nameRepo = $str=preg_replace('/\s+/', '', $nameFile); // removes spaces
 		$sesame = new SesameInterface('http://localhost:8080/openrdf-sesame');
@@ -57,12 +57,12 @@ if (isset($_FILES["uploadcity_file"])) {
 			//throw new Exception("A repository for this file already exists.");
 			//NOT AN ERROR HERE, or will erase the repo!!!
 		}
-		
+*/		
 		$msg = "<div id='city_message' class='confirmed'>A repository for the 3D model '$nameRepo' has been created!</div>";
 	}
 	catch (Exception $e){
 		//delete repo
-		$sesame->deleteRepository($nameRepo);
+		//$sesame->deleteRepository($nameRepo);
 
 		$msg = "<div id='city_message' class='error'>". $e->getMessage() ."</div>";
 	}
@@ -82,7 +82,7 @@ if (isset($_FILES["uploadcity_file"])) {
 			Remove textures : <input id='uploadcity_texture' type='checkbox' name='uploadcity_texture' value='removed' checked>
 		</p>
 		<p>		
-			Upload completeness : <input id='uploadcity_complete' type='number' name='uploadcity_complete' value='100' style="width:50px" onchange="verifyPercent(this);"> %
+			Upload completeness : <input id='uploadcity_complete' type='number' name='uploadcity_complete' value='50' style="width:50px" onchange="verifyPercent(this);"> %
 		</p>
 		<button class='champs' type="button" onclick="loadCity(false);">Upload</button>
 	</form>
