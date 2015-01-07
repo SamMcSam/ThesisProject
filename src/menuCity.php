@@ -39,7 +39,7 @@ if (isset($_FILES["uploadcity_file"])) {
 
 		// GENERATE city RDFable
 		$city = new CityRDF($tempFile, $completeUpload, $removeTexture);
-
+		
 		// create repository
 		$nameRepo = $str=preg_replace('/\s+/', '', $nameFile); // removes spaces
 		$sesame = new SesameInterface('http://localhost:8080/openrdf-sesame');

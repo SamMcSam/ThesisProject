@@ -55,6 +55,11 @@ class CityRDF {
 			$this->removePercent();
 		}
 
+		/*echo "<pre>";
+		echo $this->xml->saveXML();
+		echo "</pre>";
+		*/
+
 		//do some extra calculations here, to simplify later
 		//$this->calculateCenters();
 	}
