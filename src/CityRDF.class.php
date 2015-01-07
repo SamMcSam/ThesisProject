@@ -22,8 +22,8 @@ class CityRDF {
 	const GML_URI = "http://www.opengis.net/gml";
 	const GEOADDED_NAME = "protogeometry";
 	const GEOADDED_URI = "http://unige.ch/masterThesis/";
-	const GEOADDED_INFO = "information";
 	const GEOADDED_CENTER = "center";
+	const GEOADDED_LOC = "location";
 
 	private $fileName;
 	private $completeUpload;
@@ -243,22 +243,20 @@ class CityRDF {
 		  	//echo "<br>";
 
 		  	// CREATE NODES HERE FOR CENTER //('xmlns:protogeometry', 'http://unige.ch/masterThesis/')
-		  	//$infoNode = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_INFO);
 		  	$centerNode = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_CENTER);
+		  	$locationNode = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_LOC);
 		  	$x = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":x", $center["x"]);
 		  	$y = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":y", $center["y"]);
 		  	$z = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":z", $center["z"]);
-	    	
-		  	$centerNode->setAttribute(CityRDF::STAT_NAME, CityRDF::STAT_PROPAGATE); //for step 2
-		  	//$infoNode->setAttribute(CityRDF::STAT_NAME, CityRDF::STAT_PROPAGATE); //for step 2
 
-		    $centerNode->appendChild($x);
-		    $centerNode->appendChild($y);
-		    $centerNode->appendChild($z);
-		   // $infoNode->appendChild($centerNode);
+		    $locationNode->appendChild($x);
+		    $locationNode->appendChild($y);
+		    $locationNode->appendChild($z);
+		    $centerNode->appendChild($locationNode);
+
+			$centerNode->setAttribute(CityRDF::STAT_NAME, CityRDF::STAT_PROPAGATE); //for step 2
 
 		    $posList->parentNode->appendChild($centerNode);
-		    //$posList->parentNode->appendChild($infoNode);
 			//echo $node->childNodes->length . " ";
 		}
 
@@ -282,6 +280,7 @@ class CityRDF {
 
 		while (!$done)
 		{
+			// Step A
 			// for each node with status=propagate (nodes of type center)
 			$nodesToPropag = $xpath->query("//*[@".CityRDF::STAT_NAME."='".CityRDF::STAT_PROPAGATE."']"); 
 			foreach ($nodesToPropag as $node)
@@ -311,29 +310,30 @@ class CityRDF {
 				if ($parent != null) {
 					$copy = $node->cloneNode(true);
 					$parent->appendChild($copy);
-					// adds status=average to PARENT!
-					$parent->setAttribute(CityRDF::STAT_NAME, CityRDF::STAT_AVERAGE); 
+					
+					$parent->setAttribute(CityRDF::STAT_NAME, CityRDF::STAT_AVERAGE);  // adds status=average to PARENT!
 				}				
 			}
 
-
-
+			// Step B
 			// for each node with status=average (nodes of any type, with an id)
 			$nodesToAverage = $xpath->query("//*[@".CityRDF::STAT_NAME."='".CityRDF::STAT_AVERAGE."']"); 
 			//echo "node to aver total : " . $nodesToAverage->length . "<br>";
 
 			foreach ($nodesToAverage as $node)
 			{
-				$childCenters = $xpath->query("./".CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_CENTER, $node); //relative query
-				//$childCenters = $xpath->query("./*/".CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_CENTER, $node); //relative query
-				echo "child per capita : " . $childCenters->length . "<br>";
+				//$childCenters = $xpath->query("./".CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_CENTER, $node); //relative query
+				$childCenters = $xpath->query("./".CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_CENTER."/*", $node); //relative query
+				//echo "child per capita : " . $childCenters->length . "<br>";
 
 				//compute average
 				$sumX = 0;
 				$sumY = 0;
 				$sumZ = 0;
 				foreach ($childCenters as $child) {
+					//echo $child->nodeName . "<br>";
 					foreach ($child->childNodes as $dimensions){
+						//echo $dimensions->nodeName . "<br>";
 						if ($dimensions->nodeName == CityRDF::GEOADDED_NAME.":x")
 							$sumX += $dimensions->nodeValue;
 						else if ($dimensions->nodeName == CityRDF::GEOADDED_NAME.":y")	
@@ -345,29 +345,31 @@ class CityRDF {
 				$sumX /= $childCenters->length;
 				$sumY /= $childCenters->length;
 				$sumZ /= $childCenters->length;
-				//echo "<br>";
+				//echo $sumZ."<br>";
 
 				//add average center node
-				//$infoNode = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_INFO);
 				$average = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_CENTER);
+				$locationNode = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_LOC);
 			  	$x = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":x", $sumX);
 			  	$y = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":y", $sumY);
 			  	$z = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":z", $sumZ);
-			    $average->appendChild($x);
-			    $average->appendChild($y);
-			    $average->appendChild($z);
-			    //$infoNode->appendChild($average);
+			    //$average->appendChild($x);
+			    //$average->appendChild($y);
+			    //$average->appendChild($z);
+			    $locationNode->appendChild($x);
+			    $locationNode->appendChild($y);
+			    $locationNode->appendChild($z);
+			    $average->appendChild($locationNode);
 
-				//remove all centers
-				foreach ($childCenters as $child) {
-					$node->removeChild($child);
+				//remove all geometric information in double
+				$geoInfo = $xpath->query("./".CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_CENTER, $node); 
+				foreach ($geoInfo as $info) {
+					$node->removeChild($info);
 				}
 
 				//add averaged center with status propagate
 				$average->setAttribute(CityRDF::STAT_NAME, CityRDF::STAT_PROPAGATE);
 			    $node->appendChild($average);
-				//$infoNode->setAttribute(CityRDF::STAT_NAME, CityRDF::STAT_PROPAGATE);
-			    //$node->appendChild($infoNode);
 				
 				//remove status=average
 				$node->removeAttribute(CityRDF::STAT_NAME);
@@ -386,7 +388,7 @@ class CityRDF {
 		if ($this->xml != null)
 				return $this->xml->saveXML(); //saveXML in a string, save is for saving the 
 		else {
-			echo "aa";
+			//echo "aa";
 			throw new Exception ("Parsing the XML/GML file failed.");
 		}
 	}
