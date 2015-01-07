@@ -56,7 +56,7 @@ class CityRDF {
 		}
 
 		//do some extra calculations here, to simplify later
-		$this->calculateCenters();
+		//$this->calculateCenters();
 	}
 
 	private function generateXML()
@@ -77,6 +77,7 @@ class CityRDF {
 		//----------
 		$root = $this->xml->documentElement;
    		$newRoot = $this->xml->createElementNS(CityRDF::RDF_URI, CityRDF::RDF_NODE);
+   		//$newRoot = $this->xml->createElement(CityRDF::RDF_NODE);
    		$this->xml->appendChild($newRoot);
    		$newRoot->appendChild($root);
 
@@ -149,12 +150,14 @@ class CityRDF {
 		*/
 
 		//remove white spaces
-		$this->xml->normalize();
+		//$this->xml->normalize();
 
 		//debug
-		//echo "<pre>";
-		//echo $this->xml->saveXML();
-		//echo "</pre>";
+		/*
+		echo "<pre>";
+		echo $this->xml->saveXML();
+		echo "</pre>";
+		*/
 	}
 
 	private function removeTextures()
