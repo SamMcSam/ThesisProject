@@ -94,7 +94,7 @@ $msg = "";
 		</select>
 		
 		<br>
-		... PLEIN de choses sur la technique 
+		(dynamically generates input form for custom parameters)
 		<br><br>
 		
 		<button class='champs' type='button' onclick="loadEnrichment(false);">Générer 3DCM</button>

@@ -18,6 +18,13 @@
 	</head>
 
 	<body>
+		<header>
+			<div id='headerText'>
+				Prototyping visualization techniques in 3DCM
+				<p>How to use</p>
+			</div>
+		</header>
+
 		<div id='mainBlock'>
 
 			<!-- MENU TO UPLOAD CITY -->

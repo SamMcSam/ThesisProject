@@ -1,5 +1,14 @@
 /*--------------*/
 
+header {
+	margin-top: -10px;
+	background-color: rgb(176, 176, 176);
+	color: white;
+
+	/*for the moment*/
+	display:none;
+}
+
 fieldset {
 	margin: 30px;
 }
@@ -48,11 +57,15 @@ select {
 
 /*--------------*/
 
-#mainBlock {
+#mainBlock, #headerText {
 	width: 760px;
 	margin-left: auto ;
 	margin-right: auto ;
 } 
+
+#mainBlock {
+	margin-top: 50px ;
+}
 
 #menuCity_loading{
 	height : 182.5px;
@@ -60,4 +73,6 @@ select {
 
 #uploadtechnique_text{
 	resize:both;
+	width: 400px;
+	height: 100px;
 }

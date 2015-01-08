@@ -12,6 +12,10 @@
 <a name="technique"></a>
 <fieldset> <legend>Upload visualization techniques</legend> 
 	<form>
+
+<?php
+	// menu confirmation
+	echo "
 		<p>
 			Query language : 
 			<input id='uploadtechnique_lang' type='radio' name='uploadtechnique_lang' value='sparql1.0' readonly checked/> SPARQL 1.0
@@ -23,9 +27,10 @@
 		</p>
 		<p>
 			<input id='uploadtechnique_file' type='file' name='uploadtechnique_file'/>
-			<input id='uploadtechnique_text' type='text' name='uploadtechnique_text' style='display:none;'/>
+			<textarea id='uploadtechnique_text' name='uploadtechnique_text' style='display:none;'></textarea>
 		</p>
-		
+	";
+?>	
 		<button class='champs' type="button" onclick="loadTechnique(false);">Upload</button>
 	</form>
 	<p>
