@@ -71,6 +71,7 @@ if (isset($_FILES["uploadcity_file"])) {
 
 ?>
 
+<a name="model"></a>
 <fieldset> <legend>Create a graph from a CityGML file</legend> 
 	<form>
 		<p>

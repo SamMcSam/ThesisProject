@@ -1,8 +1,4 @@
-#mainBlock {
-	width: 760px;
-	margin-left: auto ;
-	margin-right: auto ;
-} 
+/*--------------*/
 
 fieldset {
 	margin: 30px;
@@ -22,9 +18,7 @@ select {
 	width: 300px;
 } 
 
-#menuCity_loading{
-	height : 182.5px;
-}
+/*--------------*/
 
 .imgLoading {
 	margin-top: 50px;
@@ -50,4 +44,20 @@ select {
 
 .error {
 	color : red;
+}
+
+/*--------------*/
+
+#mainBlock {
+	width: 760px;
+	margin-left: auto ;
+	margin-right: auto ;
+} 
+
+#menuCity_loading{
+	height : 182.5px;
+}
+
+#uploadtechnique_text{
+	resize:both;
 }

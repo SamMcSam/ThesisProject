@@ -129,12 +129,6 @@ function loadEnrichment(refresh)
 
 //--------------------------------------------------
 
-function afficheMessage(div, message)
-{
-	document.getElementById(div + "_message").className = "error";
-		document.getElementById(div + "_message").innerHTML = message;
-}
-
 //NOT FINISHED
 function refreshSection(div)
 {
@@ -148,6 +142,32 @@ function refreshSection(div)
     }	
 	
 }
+
+//--------------------------------------------------
+
+function afficheMessage(div, message)
+{
+	document.getElementById(div + "_message").className = "error";
+		document.getElementById(div + "_message").innerHTML = message;
+}
+
+function switchTechniqueUploadType()
+{
+	textType = document.getElementById('uploadtechnique_typeupload_text').checked;
+	fileType = document.getElementById('uploadtechnique_typeupload_file').checked;
+	textChamp = document.getElementById('uploadtechnique_text').style;
+	fileChamp = document.getElementById('uploadtechnique_file').style;
+
+	if (textType){
+		textChamp.display = '';
+		fileChamp.display = 'none';
+	}
+	else if (fileType){
+		textChamp.display = 'none';
+		fileChamp.display = '';
+	}
+}
+
 
 // -----------------------------------------------
 

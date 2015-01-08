@@ -4,14 +4,32 @@
 * @author Samuel Constantino
 * last update : 6/12/2014
 *
-* Menu to create visualization technique?
+* Menu to upload visualization techniques
+* analyses varaibles and layout managers to see if correct
 */
 ?>
 
-<fieldset> <legend>...</legend> 
-	<!--<form method='post' action='_______.php' >
-		<input type='file' name='nom' />
-		<button class='champs' type="button" onclick="loadCity();">Upload</button>
-	</form> -->
-<?php echo $msg;?>
+<a name="technique"></a>
+<fieldset> <legend>Upload visualization techniques</legend> 
+	<form>
+		<p>
+			Query language : 
+			<input id='uploadtechnique_lang' type='radio' name='uploadtechnique_lang' value='sparql1.0' readonly checked/> SPARQL 1.0
+		</p>
+		<p>
+			Upload by : 
+			<input id='uploadtechnique_typeupload_file' type='radio' name='uploadtechnique_typeupload' value='file' checked onclick='switchTechniqueUploadType();'/> File
+			<input id='uploadtechnique_typeupload_text' type='radio' name='uploadtechnique_typeupload' value='text'onclick='switchTechniqueUploadType();'/> Text input
+		</p>
+		<p>
+			<input id='uploadtechnique_file' type='file' name='uploadtechnique_file'/>
+			<input id='uploadtechnique_text' type='text' name='uploadtechnique_text' style='display:none;'/>
+		</p>
+		
+		<button class='champs' type="button" onclick="loadTechnique(false);">Upload</button>
+	</form>
+	<p>
+		<a href='#technique'>Read me more on technique definition format</a>
+	</p>
+	<?php echo $msg;?>
 </fieldset>

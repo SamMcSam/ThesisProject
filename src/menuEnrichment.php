@@ -82,6 +82,7 @@ $msg = "";
 */
 ?>
 
+<a name="enrichment"></a>
 <fieldset> <legend>Generate an enriched 3DCM</legend> 
 	<form method='post' action='_______.php' >
 		Use the city : <select class='champs' name='grapheCity'>

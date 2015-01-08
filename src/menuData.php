@@ -57,6 +57,7 @@ if (isset($_FILES["uploaddata_file"])) {
 
 ?>
 
+<a name="data"></a>
 <fieldset> <legend>Load data in triple store</legend> 
 	<form>
 		<p>
