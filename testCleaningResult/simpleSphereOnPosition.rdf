@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:gml="http://www.opengis.net/gml"
+	xmlns:data="http://master.thesis/project/data/"
+	xmlns:vizu="http://unige.ch/masterThesis/"
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+	xmlns:sesame="http://www.openrdf.org/schema/sesame#"
+	xmlns:owl="http://www.w3.org/2002/07/owl#"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+	xmlns:fn="http://www.w3.org/2005/xpath-functions#">
+
+<rdf:Description rdf:nodeID="node19b4d60q8x37">
+	<rdf:type rdf:resource="http://unige.ch/masterThesis/SphereWithValueAsRadius"/>
+	<vizu:sphereObject rdf:nodeID="node19b4d60q8x38"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node19b4d60q8x38">
+	<vizu:radius rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</vizu:radius>
+	<vizu:color>1 0 0</vizu:color>
+	<vizu:location rdf:nodeID="node19b4d60q8x39"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node19b4d60q8x39">
+	<rdf:type rdf:resource="http://unige.ch/masterThesis/SimplePositionOnCoordinate"/>
+	<vizu:x>691730</vizu:x>
+	<vizu:y>5335080</vizu:y>
+	<vizu:z>530</vizu:z>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node19b4d60q8x40">
+	<rdf:type rdf:resource="http://unige.ch/masterThesis/SphereWithValueAsRadius"/>
+	<vizu:sphereObject rdf:nodeID="node19b4d60q8x41"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node19b4d60q8x41">
+	<vizu:radius rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</vizu:radius>
+	<vizu:color>1 0 0</vizu:color>
+	<vizu:location rdf:nodeID="node19b4d60q8x42"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node19b4d60q8x42">
+	<rdf:type rdf:resource="http://unige.ch/masterThesis/SimplePositionOnCoordinate"/>
+	<vizu:x>691730</vizu:x>
+	<vizu:y>5335080</vizu:y>
+	<vizu:z>530</vizu:z>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node19b4d60q8x43">
+	<rdf:type rdf:resource="http://unige.ch/masterThesis/SphereWithValueAsRadius"/>
+	<vizu:sphereObject rdf:nodeID="node19b4d60q8x44"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node19b4d60q8x44">
+	<vizu:radius rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">8</vizu:radius>
+	<vizu:color>1 0 0</vizu:color>
+	<vizu:location rdf:nodeID="node19b4d60q8x45"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node19b4d60q8x45">
+	<rdf:type rdf:resource="http://unige.ch/masterThesis/SimplePositionOnCoordinate"/>
+	<vizu:x>691730</vizu:x>
+	<vizu:y>5335080</vizu:y>
+	<vizu:z>530</vizu:z>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node19b4d60q8x46">
+	<rdf:type rdf:resource="http://unige.ch/masterThesis/SphereWithValueAsRadius"/>
+	<vizu:sphereObject rdf:nodeID="node19b4d60q8x47"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node19b4d60q8x47">
+	<vizu:radius rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</vizu:radius>
+	<vizu:color>1 0 0</vizu:color>
+	<vizu:location rdf:nodeID="node19b4d60q8x48"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node19b4d60q8x48">
+	<rdf:type rdf:resource="http://unige.ch/masterThesis/SimplePositionOnCoordinate"/>
+	<vizu:x>691730</vizu:x>
+	<vizu:y>5335080</vizu:y>
+	<vizu:z>530</vizu:z>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node19b4d60q8x49">
+	<rdf:type rdf:resource="http://unige.ch/masterThesis/SphereWithValueAsRadius"/>
+	<vizu:sphereObject rdf:nodeID="node19b4d60q8x50"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node19b4d60q8x50">
+	<vizu:radius rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</vizu:radius>
+	<vizu:color>1 0 0</vizu:color>
+	<vizu:location rdf:nodeID="node19b4d60q8x51"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node19b4d60q8x51">
+	<rdf:type rdf:resource="http://unige.ch/masterThesis/SimplePositionOnCoordinate"/>
+	<vizu:x>691730</vizu:x>
+	<vizu:y>5335080</vizu:y>
+	<vizu:z>530</vizu:z>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node19b4d60q8x52">
+	<rdf:type rdf:resource="http://unige.ch/masterThesis/SphereWithValueAsRadius"/>
+	<vizu:sphereObject rdf:nodeID="node19b4d60q8x53"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node19b4d60q8x53">
+	<vizu:radius rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</vizu:radius>
+	<vizu:color>1 0 0</vizu:color>
+	<vizu:location rdf:nodeID="node19b4d60q8x54"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node19b4d60q8x54">
+	<rdf:type rdf:resource="http://unige.ch/masterThesis/SimplePositionOnCoordinate"/>
+	<vizu:x>691730</vizu:x>
+	<vizu:y>5335080</vizu:y>
+	<vizu:z>530</vizu:z>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node19b4d60q8x55">
+	<rdf:type rdf:resource="http://unige.ch/masterThesis/SphereWithValueAsRadius"/>
+	<vizu:sphereObject rdf:nodeID="node19b4d60q8x56"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node19b4d60q8x56">
+	<vizu:radius rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">7</vizu:radius>
+	<vizu:color>1 0 0</vizu:color>
+	<vizu:location rdf:nodeID="node19b4d60q8x57"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node19b4d60q8x57">
+	<rdf:type rdf:resource="http://unige.ch/masterThesis/SimplePositionOnCoordinate"/>
+	<vizu:x>691730</vizu:x>
+	<vizu:y>5335080</vizu:y>
+	<vizu:z>530</vizu:z>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node19b4d60q8x58">
+	<rdf:type rdf:resource="http://unige.ch/masterThesis/SphereWithValueAsRadius"/>
+	<vizu:sphereObject rdf:nodeID="node19b4d60q8x59"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node19b4d60q8x59">
+	<vizu:radius rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</vizu:radius>
+	<vizu:color>1 0 0</vizu:color>
+	<vizu:location rdf:nodeID="node19b4d60q8x60"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node19b4d60q8x60">
+	<rdf:type rdf:resource="http://unige.ch/masterThesis/SimplePositionOnCoordinate"/>
+	<vizu:x>691730</vizu:x>
+	<vizu:y>5335080</vizu:y>
+	<vizu:z>530</vizu:z>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node19b4d60q8x61">
+	<rdf:type rdf:resource="http://unige.ch/masterThesis/SphereWithValueAsRadius"/>
+	<vizu:sphereObject rdf:nodeID="node19b4d60q8x62"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node19b4d60q8x62">
+	<vizu:radius rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</vizu:radius>
+	<vizu:color>1 0 0</vizu:color>
+	<vizu:location rdf:nodeID="node19b4d60q8x63"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node19b4d60q8x63">
+	<rdf:type rdf:resource="http://unige.ch/masterThesis/SimplePositionOnCoordinate"/>
+	<vizu:x>691730</vizu:x>
+	<vizu:y>5335080</vizu:y>
+	<vizu:z>530</vizu:z>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node19b4d60q8x64">
+	<rdf:type rdf:resource="http://unige.ch/masterThesis/SphereWithValueAsRadius"/>
+	<vizu:sphereObject rdf:nodeID="node19b4d60q8x65"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node19b4d60q8x65">
+	<vizu:radius rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</vizu:radius>
+	<vizu:color>1 0 0</vizu:color>
+	<vizu:location rdf:nodeID="node19b4d60q8x66"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node19b4d60q8x66">
+	<rdf:type rdf:resource="http://unige.ch/masterThesis/SimplePositionOnCoordinate"/>
+	<vizu:x>691730</vizu:x>
+	<vizu:y>5335080</vizu:y>
+	<vizu:z>530</vizu:z>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node19b4d60q8x67">
+	<rdf:type rdf:resource="http://unige.ch/masterThesis/SphereWithValueAsRadius"/>
+	<vizu:sphereObject rdf:nodeID="node19b4d60q8x68"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node19b4d60q8x68">
+	<vizu:radius rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</vizu:radius>
+	<vizu:color>1 0 0</vizu:color>
+	<vizu:location rdf:nodeID="node19b4d60q8x69"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node19b4d60q8x69">
+	<rdf:type rdf:resource="http://unige.ch/masterThesis/SimplePositionOnCoordinate"/>
+	<vizu:x>691730</vizu:x>
+	<vizu:y>5335080</vizu:y>
+	<vizu:z>530</vizu:z>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node19b4d60q8x70">
+	<rdf:type rdf:resource="http://unige.ch/masterThesis/SphereWithValueAsRadius"/>
+	<vizu:sphereObject rdf:nodeID="node19b4d60q8x71"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node19b4d60q8x71">
+	<vizu:radius rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">8</vizu:radius>
+	<vizu:color>1 0 0</vizu:color>
+	<vizu:location rdf:nodeID="node19b4d60q8x72"/>
+</rdf:Description>
+
+<rdf:Description rdf:nodeID="node19b4d60q8x72">
+	<rdf:type rdf:resource="http://unige.ch/masterThesis/SimplePositionOnCoordinate"/>
+	<vizu:x>691730</vizu:x>
+	<vizu:y>5335080</vizu:y>
+	<vizu:z>530</vizu:z>
+</rdf:Description>
+
+</rdf:RDF>
