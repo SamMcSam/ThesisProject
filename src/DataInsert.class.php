@@ -5,12 +5,13 @@
 * created update : 9/12/2014
 * last update : 11/12/2014
 *
-* Generates an insert query from a data file
+* Generates an insert query from a data file 
 */
 
 //require_once('DataClass.class.php');
 
-class DataInsert extends DataClass {
+class DataInsert {
+				// extends DataClass {
 
 	const DATA_URI = "http://data.graph/";
 	const DATA_PREFIX = "data";
