@@ -63,6 +63,8 @@ class TechniqueQuery {
 		    }
 	   	}
 
+	   	//$this->queryString = preg_replace( "/\r|\n/", "", $this->queryString );
+
 		fclose($file);
 
 		/*
@@ -159,8 +161,10 @@ class TechniqueQuery {
 
 		$pos = strrpos($this->queryString , "WHERE");
 
-		$fromModel = "FROM " . htmlspecialchars($this->modelContext) . " ";
-		$fromData = "FROM " . htmlspecialchars($this->dataContext) . " ";
+		//$fromModel = "FROM " . htmlspecialchars($this->modelContext) . " ";
+		//$fromData = "FROM " . htmlspecialchars($this->dataContext) . " ";
+		$fromModel = "FROM " . ($this->modelContext) . " ";
+		$fromData = "FROM " . ($this->dataContext) . " ";
 
 		$this->queryString = substr_replace($this->queryString, $fromModel . $fromData, $pos, 0);
 
@@ -170,9 +174,11 @@ class TechniqueQuery {
 			$this->queryString = preg_replace("/\#(".$key.".*)\#/", $value, $this->queryString);
 		}
 
+		/*
 		echo "<pre>";
 		echo ($this->queryString);
 		echo "</pre>";
+		*/
 	}
 
 	public function getQuery()
