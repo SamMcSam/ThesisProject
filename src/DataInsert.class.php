@@ -8,13 +8,18 @@
 * Generates an insert query from a data file
 */
 
-require_once('DataClass.class.php');
+//require_once('DataClass.class.php');
 
 class DataInsert extends DataClass {
 
-	//herited
-	//protected $dataStructureName;
-	//protected $dataStructure;
+	const DATA_URI = "http://data.graph/";
+	const DATA_PREFIX = "data";
+	const DATA_PREFIX_URI = "http://master.thesis/project/data/";
+	const VISU_PREFIX = "visu";
+	const VISU_PREFIX_URI = "http://master.thesis/project/visualization/";
+
+	private $dataStructureName;
+	private $dataStructure;
 
 	private $fileName;
 	private $filePath;
@@ -24,8 +29,16 @@ class DataInsert extends DataClass {
 
 	function __construct($dataType, $fileName, $filePath) 
 	{
-		//creates structure in $dataStructure
-		parent::__construct($dataType);
+		//load data type list
+		$jsonString = file_get_contents("../config/dataTypes.json");
+		$listTypes = json_decode($jsonString, true);
+
+		if (array_key_exists($dataType, $listTypes)){
+			$this->dataStructureName = $dataType;
+			$this->dataStructure = $listTypes[$dataType];
+		}
+		else
+			throw new Exception("Data type has not been defined.", 1);
 
 		$this->fileName = $fileName;
 		$this->filePath = $filePath;
