@@ -12,6 +12,8 @@ require_once('SesameInterface.class.php');
 require_once('DataInsert.class.php');
 require_once('TechniqueQuery.class.php');
 
+include_once('cleanSesameResults.php');
+
 try 
 {
 	// Technique
@@ -31,11 +33,6 @@ try
 		throw new Exception("Repository not found.");
 
 	//open technique
-
-	// ...
-	// P A R A M E T E R S
-	// ...
-
 	//$name = "SphereWithValueAsRadius_default";
 	$name = "SphereWithValueAsRadius";
 	$technique = new TechniqueQuery($name);
@@ -62,12 +59,16 @@ try
 		WHERE {
 		?x a ?y.
 		}';
-*/
+	*/
+
+
 	// Runs CONSTRUCT
 	//----------------------------
 	
 	$reponse = $sesame->query($query , 'Accept: ' . SesameInterface::RDFXML);
 	//echo "$reponse";
+
+	// cleans the result in a more compact and efficient result
 
 	// Apply Layout managers
 	//----------------------------
