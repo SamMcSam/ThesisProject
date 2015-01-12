@@ -14,7 +14,12 @@ class TechniqueQuery {
 	const TECHNIQUE_DIRECTORY = "../VisualizationTechniques/";
 	const TECHNIQUE_EXT = ".tech";
 
+	const LAYOUT_URI = "<http://unige.ch/masterThesis/layoutmanagers/>";
+	const LAYOUT_NAME = "layout";
+
 	private $exportable;
+
+	private $listManagers;
 
 	private $parameters;
 	private $modelContext;
@@ -26,6 +31,8 @@ class TechniqueQuery {
 	function __construct($fileName, $modelContext = "", $dataContext = "") 
 	{
 		$this->exportable = false;
+
+		$this->listManagers = array();
 
 		$this->parameters = array();
 		$this->modelContext = $modelContext;
@@ -39,6 +46,9 @@ class TechniqueQuery {
 
 		//creates the list of customizable parameters
 		$this->generateParameters();
+
+		//creates the list of layout managers
+		$this->generateManagers();
 	}
 
 	private function loadFile()
@@ -81,7 +91,23 @@ class TechniqueQuery {
 		$this->validateParameters();
 	}
 
+	private function generateManagers()
+	{
+		preg_match_all("/layout:(.*)\./", $this->queryString, $retour);
+
+		foreach ($retour[1] as $value) {
+			$this->listManagers[] = $value;
+		}
+
+		//print_r($this->listManagers);
+	}
+
 	//-------------------------------------------------------
+
+	public function getLayoutNames()
+	{
+		return $this->listManagers;
+	}
 
 	public function getParameterNames()
 	{

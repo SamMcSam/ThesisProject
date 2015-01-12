@@ -36,7 +36,7 @@ try
 	$technique->setDataGraph("<http://city.file/Munich_v_1_0_0.xml>");
 
 	//$technique->getParameterNames();
-	$technique->loadParameterValues(["a" => "22", "b" => "23", "c" => "24", "d" => "25", ]);
+	//$technique->loadParameterValues(["color" => "'2 2 2'"]);
 
 	//$technique->generateQuery();
 	$technique->getQuery();
