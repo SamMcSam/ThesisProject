@@ -84,7 +84,7 @@ $msg = "";
 
 <a name="enrichment"></a>
 <fieldset> <legend>Generate an enriched 3DCM</legend> 
-	<form method='post' action='_______.php' >
+	<form method='post' action='generateEnrichment.php' >
 		Use the city : <select class='champs' name='grapheCity'>
 			<option>City 1</option>
 			<option>City 2</option>
@@ -97,6 +97,7 @@ $msg = "";
 		(dynamically generates input form for custom parameters)
 		<br><br>
 		
-		<button class='champs' type='button' onclick="loadEnrichment(false);">Générer 3DCM</button>
+		<!--<button class='champs' type='button' onclick="loadEnrichment(false);">Générer 3DCM</button>-->
+		<input type='submit' value='Test it out dog'/>
 	</form>
 </fieldset>

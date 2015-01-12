@@ -1,0 +1,27 @@
+PREFIX gml:<http://www.opengis.net/gml>
+PREFIX data:<http://master.thesis/project/data/>
+PREFIX vizu:<http://unige.ch/masterThesis/>
+
+CONSTRUCT {
+  _:technique a vizu:SphereWithValueAsRadius.
+  _:technique vizu:location _:position.
+  _:position a "SimplePositionOnCoordinate".
+  _:position vizu:x ?x.
+  _:position vizu:y  ?y.
+  _:position vizu:z  ?z.
+  _:position vizu:sceneObject _:object.
+  _:object a "SphereObject".
+  _:object vizu:radius ?val.
+  _:object vizu:color #a=2#.
+  _:object vizu:color #b#.
+  _:object vizu:color #c=222#.
+  _:object vizu:color #d#.
+}
+
+WHERE {
+?info a data:DataType1.
+?info data:value ?val.
+?info data:x ?x.
+?info data:y ?y.
+?info data:z ?z.
+}
