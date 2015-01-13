@@ -9,11 +9,19 @@
 -->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
-    xmlns="http://www.w3.org/1999/xhtml">
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+>
 
 	<!--Include layout translater here-->
+	<!--<xsl:include href="../Position.xsl"/>-->
 
-	 <xsl:template match="@*|node()">
+	<!--removes remnants of rdf-->
+	<xsl:template match="rdf:*">
+	</xsl:template>
+
+
+	<xsl:template match="@*|node()">
         <xsl:copy>
             <xsl:apply-templates select="@*|node()" />
         </xsl:copy>

@@ -21,6 +21,7 @@ class VisualizationResult
 
 	const LANG_X3D = "X3D";
 
+	const GENERIC_FILE = "_/overall";
 	const EXTENSION = ".xsl";
 
 	private $reponse;
@@ -102,7 +103,7 @@ class VisualizationResult
 		$xslSheet = new DOMDocument();
 
 		//generic style for the document
-		$xslSheet->load(PATH_LAYOUTMANAGERS . "_/" . "overall" . VisualizationResult::EXTENSION);
+		$xslSheet->load(PATH_LAYOUTMANAGERS . VisualizationResult::GENERIC_FILE . VisualizationResult::EXTENSION);
 		//$xslSheet->load(PATH_LAYOUTMANAGERS .  "overall" . VisualizationResult::EXTENSION);
 
 		$xpath = new DOMXPath($xslSheet);
@@ -122,25 +123,64 @@ class VisualizationResult
 		$xslt->importStylesheet($xslSheet);
 		$this->xml = $xslt->transformToDoc($this->xml);
 
+
+		/*
 		echo "<pre>";
 		//echo $res;
 		//echo $xslSheet->saveXML();
 		echo $this->xml->saveXML();
 		echo "</pre>";
+		*/
 
 	}
 
+
+	// A refaire!! (pour accepter autres languages)
 	public function translateLanguage($languageName)
 	{
-		if ($languageName == VisualizationResult::LANG_X3D)
-		{
-
-		}
-		//other languages here
-		else
-		{
+		//NO SUPPORT FOR OTHER LANGUAGES YET!!!
+		if ($languageName != VisualizationResult::LANG_X3D)
 			throw new Exception("Can't translate output into '$languageName' language.");
+
+		//---------------------------------------
+
+		$xslSheet = new DOMDocument();
+
+		//generic file (same as previous function)
+		$xslSheet->load(PATH_TRANSLATORS . VisualizationResult::LANG_X3D . "/" . VisualizationResult::GENERIC_FILE . VisualizationResult::EXTENSION);
+
+		$xpath = new DOMXPath($xslSheet);
+		$xpath->registerNamespace("xsl", VisualizationResult::XSL_URI);
+
+		//here, not a selective input, but add ALL files
+		//for all files in the translator language
+		foreach (glob(PATH_TRANSLATORS . VisualizationResult::LANG_X3D . "/*.*") as $nameTranslator) 
+		{
+			$arrayResource = explode("/", $nameTranslator);
+			$nameTranslator = $arrayResource[count($arrayResource)-1];
+
+			echo $nameTranslator . " <br>";
+			
+			$include = $xslSheet->createElementNS(VisualizationResult::XSL_URI, "xsl:include");
+			$include->setAttribute("href", "../" . $nameTranslator);
+			//$include->setAttribute("href", $nameLayout . VisualizationResult::EXTENSION);
+
+			$xpath->query('//xsl:stylesheet')->item(0)->appendChild($include);
+			
 		}
+
+		
+		//apply style sheet
+		$xslt = new XSLTProcessor();
+		$xslt->importStylesheet($xslSheet);
+		$this->xml = $xslt->transformToDoc($this->xml);
+
+		echo "<pre>";
+		//echo $res;
+		//echo $xslSheet->saveXML();
+		echo $this->xml->saveXML();
+		echo "</pre>";
+		
 	}
 
 }

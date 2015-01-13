@@ -18,9 +18,8 @@
 >
 
 	<!--Include layout managers here-->
-	<!--<xsl:include xmlns:xsl="<http://www.w3.org/1999/XSL/Transform>" href="../SimplePositionOnCoordinate.xsl"/>-->
-	<!--<xsl:include xmlns:xsl="<http://www.w3.org/1999/XSL/Transform>" href="../SphereObject.xsl"/>-->
-	<!--<xsl:include xmlns:xsl="<http://www.w3.org/1999/XSL/Transform>" href="../SphereObject.xsl"/>-->
+	<!--<xsl:include href="../SimplePositionOnCoordinate.xsl"/>-->
+	<!--<xsl:include href="../SphereObject.xsl"/>-->
 
 	<xsl:template match="rdf:Description">
 		<Visualization>

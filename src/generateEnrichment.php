@@ -61,8 +61,8 @@ try
 	$visualization->appliesLayouts($layoutNames);
 
 	//transforms in X3D
-	//$languageOutput = "X3D";
-	//$visualization->translateLanguage($languageOutput);
+	$languageOutput = "X3D";
+	$visualization->translateLanguage($languageOutput);
 
 
 	// Enriched Model
