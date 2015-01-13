@@ -7,17 +7,19 @@
 * Menu to upload data
 */
 
+require_once('../config/constantsPath.php');
+
 require_once('SesameInterface.class.php');
 require_once('DataInsert.class.php');
 
 $msg = "<div id='data_message' class='error'></div>";
 
 // Load repository list
-$sesame = new SesameInterface('http://localhost:8080/openrdf-sesame');
+$sesame = new SesameInterface(URL_SESAME);
 $listRepo = $sesame->getListRepositories();
 
 //load data type list
-$jsonString = file_get_contents("../config/dataTypes.json");
+$jsonString = file_get_contents(PATH_DATATYPES);
 $listTypes = json_decode($jsonString, true);
 
 //IF called by AJAX with POST request

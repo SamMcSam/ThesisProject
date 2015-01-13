@@ -11,7 +11,7 @@
 
 class TechniqueQuery {
 
-	const TECHNIQUE_DIRECTORY = "../VisualizationTechniques/";
+	const TECHNIQUE_DIRECTORY = "../sys/VisualizationTechniques/";
 	const TECHNIQUE_EXT = ".tech";
 
 	const LAYOUT_URI = "<http://unige.ch/masterThesis/layoutmanagers/>";
@@ -98,10 +98,18 @@ class TechniqueQuery {
 		preg_match_all("/layout:(.*)\./", $this->queryString, $retour);
 
 		foreach ($retour[1] as $value) {
-			$this->listManagers[] = $value;
+			$this->listManagers[] = htmlspecialchars($value);
 		}
 
-		//print_r($this->listManagers);
+		//skip the first ; ie the PREFIX layout: <some uri>
+		unset($this->listManagers[0]); 
+
+		/*
+		echo "<pre>";
+		print_r($retour);
+		print_r($this->listManagers);
+		echo "</pre>";
+		*/
 	}
 
 	//-------------------------------------------------------

@@ -13,8 +13,9 @@ TODO :
 - removing some percent of file might not work if tags are in LOWERCASE!!
 */
 
-ini_set('display_errors', 1);
+//ini_set('display_errors', 1);
 
+require_once('../config/constantsPath.php');
 
 require_once('CityRDF.class.php');
 require_once('SesameInterface.class.php');
@@ -41,8 +42,10 @@ if (isset($_FILES["uploadcity_file"])) {
 		$city = new CityRDF($tempFile, $completeUpload, $removeTexture);
 
 		// create repository
+
 		$nameRepo = $str=preg_replace('/\s+/', '', $nameFile); // removes spaces
-		$sesame = new SesameInterface('http://localhost:8080/openrdf-sesame');
+		$sesame = new SesameInterface(URL_SESAME);
+
 		if (!$sesame->existsRepository($nameRepo)) {
 			$description = "Repository for the city '" . $nameRepo . "' created on " . date("Y-m-d H:i:s");
 			$sesame->createRepository($nameRepo, $description);

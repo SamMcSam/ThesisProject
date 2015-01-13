@@ -7,7 +7,7 @@
 * Menu to  generate a enriched 3DCM
 */
 
-
+//require_once('../config/constantsPath.php');
 
 //require_once('SesameInterface.class.php');
 
@@ -17,7 +17,7 @@
 
 
 
-//$sesame = new SesameInterface('http://localhost:8080/openrdf-sesame', "INTERFACETEST");
+//$sesame = new SesameInterface(');
 
 
 //exemple of a SELECT query

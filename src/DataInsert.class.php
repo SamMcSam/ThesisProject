@@ -8,7 +8,7 @@
 * Generates an insert query from a data file 
 */
 
-//require_once('DataClass.class.php');
+require_once('../config/constantsPath.php');
 
 class DataInsert {
 				// extends DataClass {
@@ -31,7 +31,7 @@ class DataInsert {
 	function __construct($dataType, $fileName, $filePath) 
 	{
 		//load data type list
-		$jsonString = file_get_contents("../config/dataTypes.json");
+		$jsonString = file_get_contents(PATH_DATATYPES);
 		$listTypes = json_decode($jsonString, true);
 
 		if (array_key_exists($dataType, $listTypes)){

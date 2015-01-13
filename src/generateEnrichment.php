@@ -8,11 +8,12 @@
 * calls different methods necessary to get rdf from technique, apply layout managers and add it to 3d model
 */
 
+require_once('../config/constantsPath.php');
+
 require_once('SesameInterface.class.php');
 require_once('DataInsert.class.php');
 require_once('TechniqueQuery.class.php');
-
-include_once('cleanSesameResults.php');
+require_once('VisualizationResult.class.php');
 
 try 
 {
@@ -20,11 +21,11 @@ try
 	//----------------------------
 
 	// Load repository list
-	$sesame = new SesameInterface('http://localhost:8080/openrdf-sesame');
+	$sesame = new SesameInterface(URL_SESAME);
 	$listRepo = $sesame->getListRepositories();
 
 	//load data type list
-	$jsonString = file_get_contents("../config/dataTypes.json");
+	$jsonString = file_get_contents(PATH_DATATYPES);
 	$listTypes = json_decode($jsonString, true);
 
 	//set repository
@@ -37,8 +38,8 @@ try
 	$name = "SphereWithValueAsRadius";
 	$technique = new TechniqueQuery($name);
 
-	$technique->setModelGraph("<http://data.graph/2015-01-08_10-31-31/Munich_DataProto_type1a.txt>");
-	$technique->setDataGraph("<http://city.file/Munich_v_1_0_0.xml>");
+	$technique->setModelGraph("<http://city.file/Munich_v_1_0_0.xml>");
+	$technique->setDataGraph("<http://data.graph/2015-01-08_10-31-31/Munich_DataProto_type1a.txt>");
 
 	//$technique->getParameterNames();
 	$technique->loadParameterValues(["color" => "'2 2 2'"]);
@@ -46,38 +47,40 @@ try
 	$layoutNames = $technique->getLayoutNames();
 
 	$query = $technique->getQuery();
-	/*$query = 'PREFIX gml:<http://www.opengis.net/gml>
-		PREFIX data:<http://master.thesis/project/data/>
-		PREFIX vizu:<http://unige.ch/masterThesis/>
-		PREFIX layout:<http://unige.ch/masterThesis/layoutmanagers/>
-
-		CONSTRUCT {
-		 $x a "truc".
-		}
-		FROM <http://data.graph/2015-01-08_10-31-31/Munich_DataProto_type1a.txt>
-		FROM <http://city.file/Munich_v_1_0_0.xml>
-		WHERE {
-		?x a ?y.
-		}';
-	*/
 
 
 	// Runs CONSTRUCT
 	//----------------------------
 	
-	$reponse = $sesame->query($query , 'Accept: ' . SesameInterface::RDFXML);
-	//echo "$reponse";
+	//gets constructed graph
+	//$reponse = $sesame->query($query , 'Accept: ' . SesameInterface::RDFXML);
+	//echo $reponse;
+	$visualization = new VisualizationResult($sesame, $query);
 
-	// cleans the result in a more compact and efficient result
+	//applies layout managers
+	$visualization->appliesLayouts($layoutNames);
 
-	// Apply Layout managers
+	//transforms in X3D
+	//$languageOutput = "X3D";
+	//$visualization->translateLanguage($languageOutput);
+
+
+	// Enriched Model
 	//----------------------------
 
+	//creates X3D model
+	//$model = new Model($sesame, $repoName);
+
+	//adds visualization objects to X3D
+	//$model->addVisualization($visualization);
+
+	//output
+	// echo HTML
+	// xml
+	// balise x3d etc.
 
 }catch (Exception $e)
 {
 	echo "Error : " . $e->getMessage();
 }
 
-
-?>
