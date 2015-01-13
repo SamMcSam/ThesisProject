@@ -16,14 +16,12 @@ require_once('SesameInterface.class.php');
 
 class VisualizationResult 
 {
-	const RDF_URI = "<http://www.w3.org/1999/02/22-rdf-syntax-ns#>";
-	const XSL_URI = "<http://www.w3.org/1999/XSL/Transform>";
+	const RDF_URI = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+	const XSL_URI = "http://www.w3.org/1999/XSL/Transform";
 
 	const LANG_X3D = "X3D";
 
-	const PATH_TEMPLATES = "../sys/LayoutManagers/";
 	const EXTENSION = ".xsl";
-
 
 	private $reponse;
 	private $xml;
@@ -73,6 +71,12 @@ class VisualizationResult
 				            $reference->appendChild($child->cloneNode(true));
 				        }
 
+				        //adds simpler way to find the type of layout
+				        $resourceLayout = $xpath->query("./rdf:type/@rdf:resource", $reference)->item(0)->nodeValue;
+						$arrayResource = explode("/", $resourceLayout);
+						$nameLayout = $arrayResource[count($arrayResource)-1];
+						$reference->setAttribute("typeLayout", $nameLayout);
+
 						$foundRef = true;
 					}
 				}
@@ -95,31 +99,35 @@ class VisualizationResult
 	//Transforms abstract objects into concrete (generic) objects, with the help of layout managers
 	public function appliesLayouts($arrayLayout)
 	{
-		$xslt = new XSLTProcessor();
 		$xslSheet = new DOMDocument();
 
 		//generic style for the document
-		$xslSheet->load(VisualizationResult::PATH_TEMPLATES . "_/" . "overall" . VisualizationResult::EXTENSION);
+		$xslSheet->load(PATH_LAYOUTMANAGERS . "_/" . "overall" . VisualizationResult::EXTENSION);
+		//$xslSheet->load(PATH_LAYOUTMANAGERS .  "overall" . VisualizationResult::EXTENSION);
 
 		$xpath = new DOMXPath($xslSheet);
-		$xpath->registerNamespace("xsl",VisualizationResult::XSL_URI);
+		$xpath->registerNamespace("xsl", VisualizationResult::XSL_URI);
 
 		//for each layout manager, adds the appropriate call in xslt
 		foreach ($arrayLayout as $nameLayout) 
 		{
-			$include = $xslSheet->createElementNS(VisualizationResult::XSL_URI,"xsl:include");
+			$include = $xslSheet->createElementNS(VisualizationResult::XSL_URI, "xsl:include");
 			$include->setAttribute("href", "../" . $nameLayout . VisualizationResult::EXTENSION);
+			//$include->setAttribute("href", $nameLayout . VisualizationResult::EXTENSION);
 
 			$xpath->query('//xsl:stylesheet')->item(0)->appendChild($include);
 		}
-
 		//apply style sheet
+		$xslt = new XSLTProcessor();
 		$xslt->importStylesheet($xslSheet);
 		$this->xml = $xslt->transformToDoc($this->xml);
 
 		echo "<pre>";
+		//echo $res;
+		//echo $xslSheet->saveXML();
 		echo $this->xml->saveXML();
 		echo "</pre>";
+
 	}
 
 	public function translateLanguage($languageName)

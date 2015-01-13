@@ -29,7 +29,7 @@
 >
 
 	<!--Position object-->
-	<xsl:template match="*[rdf:type='SimplePositionOnCoordinate']">	
+	<xsl:template match="*[@typeLayout='SimplePositionOnCoordinate']">	
 
 		<Position>
 			<xsl:attribute name="translation">

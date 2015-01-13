@@ -30,7 +30,7 @@
 >
 
 	<!--shape object-->
-	<xsl:template match="*[rdf:type='SphereObject']">
+	<xsl:template match="*[@typeLayout='SphereObject']">
 
 		<Shape>
 			<Sphere>
