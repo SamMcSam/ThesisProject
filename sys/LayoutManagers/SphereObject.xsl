@@ -23,7 +23,6 @@
 -->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
-    xmlns="http://www.w3.org/1999/xhtml"
 
     xmlns:vizu="http://unige.ch/masterThesis/" 
     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
@@ -32,17 +31,17 @@
 	<!--shape object-->
 	<xsl:template match="*[@typeLayout='SphereObject']">
 
-		<Shape>
-			<Sphere>
+		<shape>
+			<sphere>
 				<xsl:attribute name="radius"><xsl:value-of select="./vizu:radius"/></xsl:attribute>
-			</Sphere>
+			</sphere>
 			
-			<Appearance>
-				<Material>
+			<appearance>
+				<material>
 				<xsl:attribute name="diffuseColor"><xsl:value-of select="./vizu:color"/></xsl:attribute>
-				</Material>
-			</Appearance>
-		</Shape>
+				</material>
+			</appearance>
+		</shape>
 
 	</xsl:template>	
 

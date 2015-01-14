@@ -9,7 +9,6 @@
 -->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
-    xmlns="http://www.w3.org/1999/xhtml"
 
     xmlns:vizu="http://unige.ch/masterThesis/" 
     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
@@ -22,16 +21,16 @@
 	<!--<xsl:include href="../SphereObject.xsl"/>-->
 
 	<xsl:template match="rdf:Description">
-		<Visualization>
+		<visualization>
 			<xsl:apply-templates />
-		</Visualization>
+		</visualization>
     </xsl:template>
 
 
 	<xsl:template match="rdf:RDF">
-		<Visualizations>
+		<visualizations>
 			<xsl:apply-templates />
-		</Visualizations>
+		</visualizations>
     </xsl:template>
 	
 	<xsl:template match="@*|node()">

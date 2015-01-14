@@ -22,7 +22,6 @@
 -->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
-    xmlns="http://www.w3.org/1999/xhtml"
 
     xmlns:vizu="http://unige.ch/masterThesis/" 
     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
@@ -31,7 +30,7 @@
 	<!--Position object-->
 	<xsl:template match="*[@typeLayout='SimplePositionOnCoordinate']">	
 
-		<vizu:Position>
+		<position>
 			<xsl:attribute name="translation">
 				<xsl:value-of select="vizu:x" /><xsl:text> </xsl:text>
 				<xsl:value-of select="vizu:x" /><xsl:text> </xsl:text>
@@ -39,7 +38,7 @@
 			</xsl:attribute>
 			
 			<xsl:apply-templates select="./vizu:sceneObject" />
-		</vizu:Position>
+		</position>
 
 	</xsl:template>
 
