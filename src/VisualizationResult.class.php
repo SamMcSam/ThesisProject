@@ -3,7 +3,7 @@
 * Thesis project
 * @author Samuel Constantin
 * created : 13/1/2015
-* last update : 13/1/2015
+* last update : 14/1/2015
 *
 * queries the repository with a CONSTRUCT query (got from TechniqueQuery object) -> gets abstract objects
 * applies layout managers -> gets concrete generic objects
@@ -159,7 +159,7 @@ class VisualizationResult
 			$arrayResource = explode("/", $nameTranslator);
 			$nameTranslator = $arrayResource[count($arrayResource)-1];
 
-			echo $nameTranslator . " <br>";
+			//echo $nameTranslator . " <br>";
 			
 			$include = $xslSheet->createElementNS(VisualizationResult::XSL_URI, "xsl:include");
 			$include->setAttribute("href", "../" . $nameTranslator);
@@ -168,19 +168,19 @@ class VisualizationResult
 			$xpath->query('//xsl:stylesheet')->item(0)->appendChild($include);
 			
 		}
-
 		
 		//apply style sheet
 		$xslt = new XSLTProcessor();
 		$xslt->importStylesheet($xslSheet);
 		$this->xml = $xslt->transformToDoc($this->xml);
 
+		/*
 		echo "<pre>";
 		//echo $res;
 		//echo $xslSheet->saveXML();
 		echo $this->xml->saveXML();
 		echo "</pre>";
-		
+		*/
 	}
 
 }

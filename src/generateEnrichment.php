@@ -14,6 +14,7 @@ require_once('SesameInterface.class.php');
 require_once('DataInsert.class.php');
 require_once('TechniqueQuery.class.php');
 require_once('VisualizationResult.class.php');
+require_once('ModelResult.class.php');
 
 try 
 {
@@ -69,7 +70,7 @@ try
 	//----------------------------
 
 	//creates X3D model
-	//$model = new Model($sesame, $repoName);
+	$model = new ModelResult($sesame, $repoName, false);
 
 	//adds visualization objects to X3D
 	//$model->addVisualization($visualization);

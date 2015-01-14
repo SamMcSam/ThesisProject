@@ -11,9 +11,7 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
 
     xmlns:vizu="http://unige.ch/masterThesis/" 
-    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
-
-    
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"     
 >
 
 	<!--Include layout managers here-->
