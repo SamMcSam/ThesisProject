@@ -99,7 +99,7 @@ class CityRDF {
 		foreach ($linearRingList as $ring) {
 		    $listOfPos = $xpath->query('gml:pos', $ring);
 		    if ($listOfPos->length > 0){
-		    	$posList = $this->xml->createElementNS("http://www.opengis.net/gml", "gml:poslist");
+		    	$posList = $this->xml->createElementNS("http://www.opengis.net/gml", "gml:posList");
 			    foreach ($listOfPos as $pos) {
 		    		$posList->nodeValue .= $pos->nodeValue." ";
 		    		$pos->parentNode->removeChild($pos);

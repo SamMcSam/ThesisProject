@@ -11,7 +11,7 @@
 require_once('../config/constantsPath.php');
 
 class DataInsert {
-				// extends DataClass {
+				// extends DataInsert {
 
 	const DATA_URI = "http://data.graph/";
 	const DATA_PREFIX = "data";
@@ -83,10 +83,10 @@ class DataInsert {
 
 	private function generateQuery()
 	{
-		$nameGraph = DataClass::DATA_URI . date("Y-m-d_H-i-s") ."/" . $this->fileName;
+		$nameGraph = DataInsert::DATA_URI . date("Y-m-d_H-i-s") ."/" . $this->fileName;
 
 		$this->queryString = "
-			PREFIX ". DataClass::DATA_PREFIX .":<". DataClass::DATA_PREFIX_URI .">
+			PREFIX ". DataInsert::DATA_PREFIX .":<". DataInsert::DATA_PREFIX_URI .">
 			INSERT DATA
 			{
 				GRAPH <$nameGraph>
@@ -96,11 +96,11 @@ class DataInsert {
 		$i = 1;
 		foreach ($this->dataArray as $data){
 
-			$nameData = DataClass::DATA_PREFIX . ":Data" . $i;
-			$this->queryString .= $nameData . " a " . DataClass::DATA_PREFIX . ":" . $this->dataStructureName . ". ";
+			$nameData = DataInsert::DATA_PREFIX . ":Data" . $i;
+			$this->queryString .= $nameData . " a " . DataInsert::DATA_PREFIX . ":" . $this->dataStructureName . ". ";
 
 			foreach ($data as $key=>$value){
-				$this->queryString .= $nameData . " " . DataClass::DATA_PREFIX . ":" . $key . " ";
+				$this->queryString .= $nameData . " " . DataInsert::DATA_PREFIX . ":" . $key . " ";
 				if (is_numeric($value))
 					$this->queryString .= $value; //a number
 				else
