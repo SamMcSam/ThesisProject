@@ -16,6 +16,8 @@ require_once('TechniqueQuery.class.php');
 require_once('VisualizationResult.class.php');
 require_once('ModelResult.class.php');
 
+$output = "";
+
 try 
 {
 	// Technique
@@ -40,15 +42,14 @@ try
 	$technique = new TechniqueQuery($name);
 
 	$technique->setModelGraph("<http://city.file/Munich_v_1_0_0.xml>");
-	$technique->setDataGraph("<http://data.graph/2015-01-08_10-31-31/Munich_DataProto_type1a.txt>");
+	$technique->setDataGraph("<http://data.graph/2015-01-15_12-16-59/Munich_DataProto_type1a.txt>");
 
 	//$technique->getParameterNames();
-	$technique->loadParameterValues(["color" => "'2 2 2'"]);
+	$technique->loadParameterValues(["color" => "'1 0 0'"]);
 
 	$layoutNames = $technique->getLayoutNames();
 
 	$query = $technique->getQuery();
-
 
 	// Runs CONSTRUCT
 	//----------------------------
@@ -73,15 +74,26 @@ try
 	$model = new ModelResult($sesame, $repoName, false);
 
 	//adds visualization objects to X3D
-	//$model->addVisualization($visualization);
-
-	//output
-	// echo HTML
-	// xml
-	// balise x3d etc.
+	// output contains enriched model
+	$output = $model->addVisualization($visualization);
 
 }catch (Exception $e)
 {
 	echo "Error : " . $e->getMessage();
 }
 
+?>
+
+<html>
+	<head> 
+		<meta http-equiv='content-type' content='text/html; charset=ISO-8859-1' /> 
+		<title>My 3D enriched model</title>
+		<link rel='stylesheet' type='text/css' href='<?php echo PATH_3DSYS;?>x3dom.css'></link>
+		<script type='text/javascript' src='<?php echo PATH_3DSYS;?>x3dom.js'></script>
+	</head>
+	<body>
+		<x3d width='600px' height='400px'>
+			<?php echo $output; ?>
+		</x3d>
+	</body>
+</html>

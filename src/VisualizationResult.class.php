@@ -183,4 +183,8 @@ class VisualizationResult
 		*/
 	}
 
+	public function getXML(){
+		return $this->xml;
+	}
+
 }

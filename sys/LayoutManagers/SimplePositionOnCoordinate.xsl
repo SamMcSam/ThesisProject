@@ -4,7 +4,7 @@
 
 	Author : Samuel Constantino
 	Created : 9/1/15
-	Last update : 9/1/15
+	Last update : 15/1/15
 	***************************
 
 	Description : most basic positionning for given three-dimensional coordinates of an object
@@ -33,8 +33,8 @@
 		<position>
 			<xsl:attribute name="translation">
 				<xsl:value-of select="vizu:x" /><xsl:text> </xsl:text>
-				<xsl:value-of select="vizu:x" /><xsl:text> </xsl:text>
-				<xsl:value-of select="vizu:y" />
+				<xsl:value-of select="vizu:y" /><xsl:text> </xsl:text>
+				<xsl:value-of select="vizu:z" />
 			</xsl:attribute>
 			
 			<xsl:apply-templates select="./vizu:sceneObject" />

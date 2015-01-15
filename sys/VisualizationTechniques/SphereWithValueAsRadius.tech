@@ -8,8 +8,8 @@ CONSTRUCT {
   _:technique vizu:location _:position.
   _:position a layout:SimplePositionOnCoordinate.
   _:position vizu:x ?x.
-  _:position vizu:y  ?y.
-  _:position vizu:z  ?z.
+  _:position vizu:y ?y.
+  _:position vizu:z ?z.
   _:position vizu:sceneObject _:object.
   _:object a layout:SphereObject.
   _:object vizu:radius ?val.
