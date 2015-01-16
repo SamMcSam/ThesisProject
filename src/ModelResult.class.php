@@ -114,7 +114,7 @@ class ModelResult
 
 		//adds it to main transform
 		$position = $xpath->query('//*/@translation')->item(0);
-		$position->nodeValue = (-1 * (int)$coordVal[0]) . " " .(-1 * (int)$coordVal[1]). " " .(-1 * (int)$coordVal[2]) ;
+		$position->nodeValue = (-1 * (int)$coordVal[0]) . " " .(-1 * (int)$coordVal[1]). " " .(-1 * (int)$coordVal[2] - 150) ;
 	}
 
 	//---------------------------------------------------------------------------------------------

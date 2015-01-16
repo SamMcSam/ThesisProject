@@ -6,4 +6,4 @@
 	define("PATH_LAYOUTMANAGERS", "../sys/LayoutManagers/");
 	define("PATH_TRANSLATORS", "../sys/Translators/");
 
-	define("PATH_3DSYS", "../sys/3D/");
+	define("PATH_3DSYS", "../sys/Model3D/");

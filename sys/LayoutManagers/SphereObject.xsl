@@ -4,7 +4,7 @@
 
 	Author : Samuel Constantino
 	Created : 9/1/15
-	Last update : 9/1/15
+	Last update : 16/1/15
 	***************************
 
 	Description : defines a 3d sphere object
@@ -34,6 +34,7 @@
 		<shape>
 			<sphere>
 				<xsl:attribute name="radius"><xsl:value-of select="./vizu:radius"/></xsl:attribute>
+				<xsl:text> </xsl:text> <!--REALLY IMPORTANT!! - without it, php will create an empty tag (not accepted in x3d) -->
 			</sphere>
 			
 			<appearance>

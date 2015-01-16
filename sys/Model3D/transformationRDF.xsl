@@ -13,11 +13,9 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:rdf='http://www.w3.org/2005/sparql-results#' >
 
-	<xsl:output method="xml" indent="yes"/>
-
 	<xsl:template match="rdf:literal">
 		<Shape>
-			<IndexedFaceSet solid="false" coordIndex="0 1 2 3  ">
+			<IndexedFaceSet solid="false" coordIndex="0 1 2 3 -1" creaseAngle='1'>
 				<xsl:element name="Coordinate">
 					<xsl:attribute name="point">
 						<xsl:value-of select="." />
@@ -25,7 +23,8 @@
 				</xsl:element>
 			</IndexedFaceSet>
 			<Appearance>
-				<Material diffuseColor='0 1 0' />
+				<Material diffuseColor='0.8 0.8 0.8'>
+				</Material>
 			</Appearance>
 		</Shape>		
     </xsl:template>
