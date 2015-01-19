@@ -55,6 +55,11 @@ select {
 	color : red;
 }
 
+.analyse {
+	font-family: Courier;
+	font-size : 80%;
+}
+
 /*--------------*/
 
 #mainBlock, #headerText {

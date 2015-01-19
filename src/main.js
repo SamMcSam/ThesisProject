@@ -113,6 +113,30 @@ function loadData(refresh)
     xhrHTML("menuData", "menuData.php", formData);
 }
 
+function loadTechnique(refresh)
+{
+	//get all the data from this form
+	var uploadtechnique_file = document.getElementById("uploadtechnique_file").files;
+	var uploadtechnique_lang = document.getElementById("uploadtechnique_lang").value;
+	//var uploadtechnique_typeupload_file = document.getElementById("uploadtechnique_typeupload_file").checked;
+
+	var formData = null;
+
+	if (!refresh){
+		if (uploadtechnique_file.length < 1){
+			afficheMessage("data", "No technique submitted.");
+			return;
+		}
+
+		formData = new FormData();
+    	formData.append('uploadtechnique_file', uploadtechnique_file[0], uploadtechnique_file[0].name);
+    	formData.append('uploadtechnique_lang', uploadtechnique_lang);
+    	//formData.append('uploadtechnique_typeupload_file', dataType);
+	}
+
+    xhrHTML("menuTechnique", "menuTechnique.php", formData);
+}
+
 function loadEnrichment(refresh)
 {
 	var formData = null;
@@ -139,6 +163,9 @@ function refreshSection(div)
 			//loadDataDelete(true);
 	        break;
 	    //ETC!
+
+	    case "menuTechnique":
+	    	loadEnrichment(true);
     }	
 	
 }

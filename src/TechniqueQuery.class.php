@@ -9,6 +9,8 @@
 * returns an usable query string on triple store
 */
 
+require_once('../config/constantsPath.php');
+
 class TechniqueQuery {
 
 	const TECHNIQUE_DIRECTORY = "../sys/VisualizationTechniques/";
@@ -17,7 +19,8 @@ class TechniqueQuery {
 	const LAYOUT_URI = "<http://unige.ch/masterThesis/layoutmanagers/>";
 	const LAYOUT_NAME = "layout";
 
-	private $exportable;
+	private $parametersValid;
+	private $layoutsValid;
 
 	private $listManagers;
 
@@ -28,32 +31,34 @@ class TechniqueQuery {
 	private $fileName;
 	private $queryString;
 
-	function __construct($fileName, $modelContext = "", $dataContext = "") 
+	function __construct($fileName, $path = TechniqueQuery::TECHNIQUE_DIRECTORY) 
 	{
-		$this->exportable = false;
+		$this->parametersValid = false;
+		$this->layoutsValid = false;
 
 		$this->listManagers = array();
 
 		$this->parameters = array();
-		$this->modelContext = $modelContext;
-		$this->dataContext = $dataContext;
+		$this->modelContext = "";
+		$this->dataContext = "";
 
 		$this->fileName = $fileName;
 		$this->queryString = "";
 
 		//loads the technique file
-		$this->loadFile();
+		$this->loadFile($path);
 
 		//creates the list of customizable parameters
 		$this->generateParameters();
 
 		//creates the list of layout managers
 		$this->generateManagers();
+		$this->validateLayoutManagers();
 	}
 
-	private function loadFile()
+	private function loadFile($path)
 	{
-		$file = fopen(TechniqueQuery::TECHNIQUE_DIRECTORY . $this->fileName . TechniqueQuery::TECHNIQUE_EXT, "r");
+		$file = fopen($path . $this->fileName . TechniqueQuery::TECHNIQUE_EXT, "r");
 
 	    if (! $file) 
 	        throw new Exception("Could not open the file!");
@@ -114,16 +119,6 @@ class TechniqueQuery {
 
 	//-------------------------------------------------------
 
-	public function getLayoutNames()
-	{
-		return $this->listManagers;
-	}
-
-	public function getParameterNames()
-	{
-		return array_keys($this->parameters);
-	}
-
 	//load values from array that should have at least the same parameter keys found in technique file
 	public function loadParameterValues($parameterValues)
 	{
@@ -132,8 +127,6 @@ class TechniqueQuery {
 		}
 
 		//print_r($this->parameters);
-
-		$this->validateParameters();
 	}
 
 	public function setModelGraph($modelContext)
@@ -150,46 +143,65 @@ class TechniqueQuery {
 
 	private function validateParameters()
 	{
-		$this->exportable = true;
+		$this->parametersValid = true;
 
 		foreach ($this->parameters as $key => $value) {
 			if (empty($value))
-				$this->exportable = false;
+				$this->parametersValid = false;
 		}
 
-		//echo $this->exportable;
+		//echo $this->parametersValid;
 		//print_r($this->parameters);
+		return $this->parametersValid;
 	}
+
+	private function validateLayoutManagers()
+	{
+		$this->layoutsValid = true;
+		$listLayout = TechniqueQuery::getLayoutsSupported();
+
+		foreach ($this->listManagers as $manager) {
+			if (! in_array ($manager , $listLayout))
+				$this->layoutsValid = false;
+		}
+
+		return $this->layoutsValid;
+	}
+
 
 	//-------------------------------------------------------
 
 	public function generateQuery()
 	{
-		// ADDS 'FROM' statements 
-		//not necessary?
-
-		$pos = strrpos($this->queryString , "WHERE");
-		//$fromModel = "FROM " . ($this->modelContext) . " ";
-		//$fromData = "FROM " . ($this->dataContext) . " ";
-		//$this->queryString = substr_replace($this->queryString, $fromModel . $fromData, $pos, 0);
-
 		// REPLACES parameter with custom values
 
 		foreach ($this->parameters as $key => $value) {
 			$this->queryString = preg_replace("/\#(".$key.".*)\#/", $value, $this->queryString);
 		}
+	}
 
-		/*
-		echo "<pre>";
-		echo ($this->queryString);
-		echo "</pre>";
-		*/
+	//-------------------------------------------------------
+
+	public function isValidTechnique(){
+		return $this->layoutsValid;
+	}
+
+	public function getLayoutNames()
+	{
+		return $this->listManagers;
+	}
+
+	public function getParameterNames()
+	{
+		return array_keys($this->parameters);
 	}
 
 	public function getQuery()
 	{
-		if (!$this->exportable)
+		if (!$this->parametersValid)
 			throw new  Exception("Incomplete parameters list (some values are missing)", 1);
+		if (!$this->layoutsValid)
+			throw new  Exception("One or more layout manager requested isn't present in the system.", 1);
 		elseif (empty($this->modelContext))
 			throw new  Exception("Missing model graph URI", 1);
 		elseif (empty($this->dataContext))
@@ -200,6 +212,38 @@ class TechniqueQuery {
 
 			return $this->queryString;
 		}
+	}
+
+	//-------------------------------------------------------
+
+	//gives array with names of Layouts in the layout directory
+	public static function getLayoutsSupported()
+	{
+		$list = scandir(PATH_LAYOUTMANAGERS);
+		$layoutManagers = null;
+
+		foreach ($list as $el)
+		{
+			if(is_file(PATH_LAYOUTMANAGERS.$el))
+				$layoutManagers[] = explode(".", $el)[0];
+		}
+
+		return $layoutManagers;
+	}
+
+	//gives array with names of techniques in the techniques directory
+	public static function getTechniquesSupported()
+	{
+		$list = scandir(PATH_TECHNIQUES);
+		$techniques = null;
+
+		foreach ($list as $el)
+		{
+			if(is_file(PATH_TECHNIQUES.$el))
+				$techniques[] = explode(".", $el)[0];
+		}
+
+		return $techniques;
 	}
 
 }
