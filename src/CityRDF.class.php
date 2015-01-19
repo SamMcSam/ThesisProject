@@ -8,9 +8,10 @@
 * Generates a city file in XML that can be uploaded to a triple store (from a GML file)
 */
 
+require_once('../config/constantsPath.php');
+
 class CityRDF {
 
-	const TEMP_PATH = "../tmpFiles/";
 	const FILE_CONTEXT = "http://city.file/";
 
 	const STAT_NAME = "status";
@@ -396,7 +397,7 @@ class CityRDF {
 	public function getFile()
 	{
 		if ($this->xml != null) {
-				$this->filePath = CityRDF::TEMP_PATH . "city.xml";
+				$this->filePath = PATH_TEMPFILES . "city.xml";
 				$this->xml->save($this->filePath);
 				return $this->filePath;
 		}	

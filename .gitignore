@@ -1,5 +1,7 @@
 # directory for saves
-tmpFiles/
+tempFiles/
+
+# =========================
 
 # Windows image file caches
 Thumbs.db
