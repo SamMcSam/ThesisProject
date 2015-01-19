@@ -24,11 +24,9 @@
 				<p>
 					Upload by : 
 					<input id='uploadtechnique_typeupload_file' type='radio' name='uploadtechnique_typeupload' value='file' checked onclick='switchTechniqueUploadType();'/> File
-					<input id='uploadtechnique_typeupload_text' type='radio' name='uploadtechnique_typeupload' value='text'onclick='switchTechniqueUploadType();'/> Text input
 				</p>
 				<p>
 					<input id='uploadtechnique_file' type='file' name='uploadtechnique_file'/>
-					<textarea id='uploadtechnique_text' name='uploadtechnique_text' style='display:none;'></textarea>
 				</p>
 			";
 			//else
