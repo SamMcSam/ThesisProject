@@ -173,6 +173,18 @@ class TechniqueQuery {
 
 	public function generateQuery()
 	{
+		// ADDS 'FROM' statements
+
+		$pos = strrpos($this->queryString , "WHERE");
+
+		//$fromModel = "FROM " . htmlspecialchars($this->modelContext) . " ";
+		//$fromData = "FROM " . htmlspecialchars($this->dataContext) . " ";
+		$fromModel = "FROM " . ($this->modelContext) . " ";
+		// + multipart
+		$fromData = "FROM " . ($this->dataContext) . " ";
+
+		$this->queryString = substr_replace($this->queryString, $fromModel . $fromData, $pos, 0);
+
 		// REPLACES parameter with custom values
 
 		foreach ($this->parameters as $key => $value) {
