@@ -13,11 +13,11 @@ require_once('../config/constantsPath.php');
 require_once('SesameInterface.class.php');
 require_once('TechniqueQuery.class.php');
 
-require_once('DataInsert.class.php');
+require_once('CityRDF.class.php');
 
 //----------------------------------------------------------------
 
-$msg = "<div id='data_message' class='error'></div>";
+$msg = "<div id='enrichment_message' class='error'></div>";
 
 // Load repository list
 $sesame = new SesameInterface(URL_SESAME);
@@ -31,19 +31,22 @@ $repoName = "";
 $repoNumber = 0;
 $dataName = "";
 $listData = array();
+$listDataHuman = null; //for human-readable display
 $techName = "";
 
-if (isset($_POST["enrichment_repo"])){
-	$repoNumber = $_POST["enrichment_repo"];
+if (isset($_POST["enrichment_repoId"])){
+	$repoNumber = $_POST["enrichment_repoId"];
 	$repoName = $listRepo[$repoNumber]["id"];
 
 	// get all data context names
-	//$listData = array();
-	/*
-	catch (Exception $e){
-		$msg = "<div id='enrichment_message' class='error'>". $e->getMessage() ."</div>";
-	}
-	*/
+	$sesame->setRepository($repoName);
+	$listData = $sesame->getListContexts();
+
+	//remove city context
+	$listData = CityRDF::getListDataContexts($listData, $listDataHuman);
+
+	//var_dump($listData);
+	//var_dump($listDataHuman);
 }
 
 if (isset($_POST["enrichment_dataName"]))
@@ -51,13 +54,6 @@ if (isset($_POST["enrichment_dataName"]))
 
 if (isset($_POST["enrichment_techName"]))
 	$techName = $_POST["enrichment_techName"];
-
-//if ?
-//	$msg = "<div class='error'>Data couldn't be uploaded. </div>";
-//else {
-//	$msg = "<div class='confirmed'>The data '' has been uploaded to the '' repository!</div>";
-//}
-
 
 ?>
 
@@ -71,12 +67,12 @@ if (isset($_POST["enrichment_techName"]))
 				if ($repoNumber > 0)
 				{
 					echo "<input type='text' id='enrichment_repoName' name='enrichment_repoName' value='$repoName' readonly />";
-					echo "<input type='hidden' id='enrichment_repo' name='enrichment_repo' value='$repoNumber' />";
+					echo "<input type='hidden' id='enrichment_repoId' name='enrichment_repoId' value='$repoNumber' />";
 				}
 				// a selection of all repositories
 				else 
 				{
-					echo "<select id='enrichment_repo' name='enrichment_repo' size='1' onchange='loadEnrichment(false);'><option value='-1'>";
+					echo "<select id='enrichment_repoId' name='enrichment_repoId' size='1' onchange='loadEnrichment(false);'><option value='-1'>";
 
 					for($i = 1 ; $i < count ($listRepo) ; $i++){
 						echo "<option value='$i'>" . $listRepo[$i]["id"] . " - " . $listRepo[$i]["title"] ;
@@ -91,10 +87,9 @@ if (isset($_POST["enrichment_techName"]))
 			2 - Select a data set : 
 			<?php
 				// if already selected, or repo hasn't been selected yet
-				if (!empty($dataName) || $repoNumber < 1)
+				if ($repoNumber < 1)
 				{
-					echo "$dataName";
-					echo "<input type='hidden' id='enrichment_dataName' name='enrichment_dataName' value='$dataName' />";
+					echo "<input type='text' id='enrichment_dataName' name='enrichment_dataName' value='$dataName' readonly/>";
 				}
 				// a selection of all data in this repository
 				else 
@@ -102,7 +97,10 @@ if (isset($_POST["enrichment_techName"]))
 					echo "<select id='enrichment_data' name='enrichment_data' size='1'><option value='-1'>";
 
 					for($i = 0 ; $i < count ($listData) ; $i++){
-						echo "<option value='$i'>" . $listData[$i];
+						echo "<option value='".$listData[$i]."'";
+						if ($dataName == $listData[$i])
+							echo " selected";
+						echo ">" . $listDataHuman[$i];
 					}
 						
 					echo "</select>";
@@ -126,12 +124,17 @@ if (isset($_POST["enrichment_techName"]))
 			?>
 		</p>
 
-		<table>
-			<tr>
-				<td> <button class='champs' type="button" onclick="loadEnrichment(true);">Back</button> </td>
-				<td> <button class='champs' type="button" onclick="loadEnrichment(false);">Next</button> </td>
-			</tr>
-		</table>
+		<?php
+			if ($repoNumber > 0) {
+				echo "<table>
+					<tr>
+						<td> <button class='champs' type='button' onclick='loadEnrichment(true);'>Back</button> </td>
+						<td> <button class='champs' type='button' onclick='loadGeneration(false);'>Next</button> </td>
+					</tr>
+				</table>
+				";
+			}
+		?>
 		
 	</form>
 	<?php echo $msg;?>

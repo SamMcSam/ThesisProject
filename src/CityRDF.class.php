@@ -405,4 +405,24 @@ class CityRDF {
 			throw new Exception ("Saving the file failed.");
 	}
 
+	//------------------------------------------------------------------------------
+
+	//from a list of contexts, return the data contexts only
+	// in optional parameter, return the same list without prefixes
+	public static function getListDataContexts($listContext, &$listContextHumanReadable = null)
+	{
+		foreach ($listContext as $key => $uri) {
+			$uriPart = explode("/", $uri, 4);
+			$type = "http://" . $uriPart[2] . "/";
+
+			if ($type === CityRDF::FILE_CONTEXT)
+				unset($listContext[$key]);
+			else
+				$listContextHumanReadable[] = $uriPart[3];
+		}
+		$listContext = array_values($listContext);
+
+		return $listContext;
+	}
+
 }

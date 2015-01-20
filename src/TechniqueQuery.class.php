@@ -208,6 +208,11 @@ class TechniqueQuery {
 		return array_keys($this->parameters);
 	}
 
+	public function getParameterWithValues()
+	{
+		return $this->parameters;
+	}
+
 	public function getQuery()
 	{
 		if (!$this->parametersValid)

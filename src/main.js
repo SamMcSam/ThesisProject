@@ -142,11 +142,62 @@ function loadEnrichment(refresh)
 	var formData = null;
 
 	//get all the data from this form
-	if (!refresh){
+	if (!refresh){		
+		var selectRepo = document.getElementById("enrichment_repoId");
+		var repoNumber = selectRepo.options[selectRepo.selectedIndex].value;
+
+		var selectTech = document.getElementById("enrichment_techName");
+		var techName = selectTech.options[selectTech.selectedIndex].value;
+
 		formData = new FormData();
-    	//formData.append('uploaddata_file', uploaddata_file[0], uploaddata_file[0].name);
-    	//formData.append('repo_name', repoNumber);
+    	formData.append('enrichment_repoId', repoNumber);
+    	formData.append('enrichment_techName', techName);
 	}
+
+	xhrHTML("menuEnrichment", "menuEnrichment.php", formData);
+}
+
+function loadGeneration(refresh)
+{
+	var formData = null;
+
+	//get all the data from this form
+	if (!refresh){		
+		var repoId = document.getElementById("enrichment_repoId").value;
+		var repoName = document.getElementById("enrichment_repoName").value;
+
+		var selectData = document.getElementById("enrichment_data");
+		var dataName = selectData.options[selectData.selectedIndex].value;
+
+		var selectTech = document.getElementById("enrichment_techName");
+		var techName = selectTech.options[selectTech.selectedIndex].value;
+
+		if (dataName == "-1" || techName == "-1"){
+			afficheMessage("enrichment", "Please fill in all fields before continuing.");
+			return;
+		}
+
+		formData = new FormData();
+    	formData.append('enrichment_repoId', repoId);
+    	formData.append('enrichment_repoName', repoName);
+    	formData.append('enrichment_dataName', dataName);
+    	formData.append('enrichment_techName', techName);
+	}
+
+	xhrHTML("menuEnrichment", "menuGeneration.php", formData);
+}
+
+function goBackEnrichment()
+{
+	var formData = null;
+	var repoNumber = document.getElementById("enrichment_repoId").value;
+	var dataName = document.getElementById("enrichment_dataName").value;
+	var techName = document.getElementById("enrichment_techName").value;
+
+	formData = new FormData();
+	formData.append('enrichment_repoId', repoNumber);
+	formData.append('enrichment_dataName', dataName);
+	formData.append('enrichment_techName', techName);
 
 	xhrHTML("menuEnrichment", "menuEnrichment.php", formData);
 }
@@ -158,16 +209,22 @@ function refreshSection(div)
 {
 	switch (div) {
 	    case "menuCity":
-	        //loadCityDelete(true);
+	        //loadCityDelete(true);			
+	        //loadDataDelete(true);
 			loadData(true);
-			//loadDataDelete(true);
+	    	loadEnrichment(true);
 	        break;
-	    //ETC!
-
+	    case "menuData":
+	        //loadDataDelete(true);
+	    	loadEnrichment(true);
+	        break;
 	    case "menuTechnique":
 	    	loadEnrichment(true);
-    }	
-	
+	    	break;
+	    case "menuEnrichment":
+	    	window.scrollTo(0,document.body.scrollHeight);
+	    	break;
+    }		
 }
 
 //--------------------------------------------------
