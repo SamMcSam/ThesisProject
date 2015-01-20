@@ -93,6 +93,27 @@ class SesameInterface
 		return $listRepo;
 	}
 
+	public function getListContexts(){
+		$contextList = null;
+
+		$this->checkRepository();
+
+		$request = new HttpRequest($this->server . '/repositories/' . $this->repository . '/contexts');
+		$request->setHeader('Accept: ' . self::SPARQL_XML);
+
+		$response = $request->send(HttpRequest::METHOD_GET);
+
+		$xmlDoc = new DOMDocument();
+		$xmlDoc->loadXML($response);
+
+		$analyseXml = $xmlDoc->documentElement->getElementsByTagName("uri");
+		foreach($analyseXml as $contexts){	
+			$contextList[] = $contexts->nodeValue;
+		}
+		
+		return $contextList;
+	}
+
 	public function existsRepository($rep) {
 		$listRepo = $this->getListRepositories();
 
