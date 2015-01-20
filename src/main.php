@@ -65,8 +65,7 @@
 			</div>
 			<div id='menuEnrichment_loading' style="display:none;">
 				<img class ="imgLoading" src="../img/loading.gif"> LOADING...
-			</div>
-			
+			</div>			
 		</div>
 	</body>
 

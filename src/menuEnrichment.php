@@ -2,102 +2,138 @@
 /* 
 * Thesis project
 * @author Samuel Constantino
-* last update : 6/12/2014
+* last update : 20/1/2015
 *
-* Menu to  generate a enriched 3DCM
+* Menu to  generate a enriched 3DCM part 1 - selects the city, data, technique
+* then calls menuGeneration to specify the technique's parameters
 */
 
-//require_once('../config/constantsPath.php');
+require_once('../config/constantsPath.php');
 
-//require_once('SesameInterface.class.php');
+require_once('SesameInterface.class.php');
+require_once('TechniqueQuery.class.php');
 
-//if isset($_POST["uploadcity_name"]);
-//if isset($_POST["uploadcity_isCleaned"]);
+require_once('DataInsert.class.php');
 
+//----------------------------------------------------------------
 
+$msg = "<div id='data_message' class='error'></div>";
 
+// Load repository list
+$sesame = new SesameInterface(URL_SESAME);
+$listRepo = $sesame->getListRepositories();
 
-//$sesame = new SesameInterface(');
+//load technique list
+$listTech = TechniqueQuery::getTechniquesSupported();
 
+// parameters
+$repoName = "";
+$repoNumber = 0;
+$dataName = "";
+$listData = array();
+$techName = "";
 
-//exemple of a SELECT query
-/*
-$a = '
-PREFIX :<http://www.opengis.net/citygml/1.0>
-PREFIX app:<http://www.opengis.net/citygml/appearance/1.0>
-PREFIX ex:<http://example.org/stuff/1.0/>
-PREFIX xlink:<http://www.w3.org/1999/xlink>
-PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX gml:<http://www.opengis.net/gml>
-PREFIX dem:<http://www.opengis.net/citygml/relief/1.0>
-PREFIX bldg:<http://www.opengis.net/citygml/building/1.0>
-PREFIX xsi:<http://www.w3.org/2001/XMLSchema-instance>
+if (isset($_POST["enrichment_repo"])){
+	$repoNumber = $_POST["enrichment_repo"];
+	$repoName = $listRepo[$repoNumber]["id"];
 
-SELECT ?truc ?type
-WHERE {
- ?truc rdf:type ?type.
+	// get all data context names
+	//$listData = array();
+	/*
+	catch (Exception $e){
+		$msg = "<div id='enrichment_message' class='error'>". $e->getMessage() ."</div>";
+	}
+	*/
 }
-';
-*/
-//$query = $sesame->query($a, array('Accept: ' . SesameInterface::SPARQL_XML));
 
+if (isset($_POST["enrichment_dataName"]))
+	$dataName = $_POST["enrichment_dataName"];
 
-
-//exemple of a CONSTRUCT query
-/*
-$b = 'PREFIX test:<http://aa.com/>
-CONSTRUCT {
- _:1 a test:Truc.
- _:1 test:a ?truc.
- _:1 test:b ?a.
- _:1 test:c ?machin.
-}
-FROM <file://fakepath/Munich_clean2.xml>
-WHERE {
- ?truc ?a ?machin.
-}';
-*/
-//$query = $sesame->query($b, array('Accept: ' . SesameInterface::RDFXML));
-
-
-//echo '<pre>';
-//echo htmlspecialchars($query);
-//echo '</pre>';
-
-//$xmlDoc = new DOMDocument();
-//$xmlDoc->loadXML($query);
-//var_dump($xmlDoc);
-
-
-
-
-/*
-$msg = "";
+if (isset($_POST["enrichment_techName"]))
+	$techName = $_POST["enrichment_techName"];
 
 //if ?
-	$msg = "<div class='error'>Data couldn't be uploaded. </div>";
+//	$msg = "<div class='error'>Data couldn't be uploaded. </div>";
 //else {
-	$msg = "<div class='confirmed'>The data '' has been uploaded to the '' repository!</div>";
+//	$msg = "<div class='confirmed'>The data '' has been uploaded to the '' repository!</div>";
 //}
-*/
+
+
 ?>
 
 <a name="enrichment"></a>
 <fieldset> <legend>Generate an enriched 3DCM</legend> 
-	<form method='post' action='generateEnrichment.php' >
-		Use the city : <select class='champs' name='grapheCity'>
-			<option>City 1</option>
-			<option>City 2</option>
-		</select>
-		Use the data : <select class='champs' name='grapheData'>
-			<option>Data 1</option>
-		</select>
+	<form>
+		<p>
+			1 - Select a 3D model : 
+			<?php
+				// if already selected
+				if ($repoNumber > 0)
+				{
+					echo "<input type='text' id='enrichment_repoName' name='enrichment_repoName' value='$repoName' readonly />";
+					echo "<input type='hidden' id='enrichment_repo' name='enrichment_repo' value='$repoNumber' />";
+				}
+				// a selection of all repositories
+				else 
+				{
+					echo "<select id='enrichment_repo' name='enrichment_repo' size='1' onchange='loadEnrichment(false);'><option value='-1'>";
+
+					for($i = 1 ; $i < count ($listRepo) ; $i++){
+						echo "<option value='$i'>" . $listRepo[$i]["id"] . " - " . $listRepo[$i]["title"] ;
+					}
+						
+					echo "</select>";
+				}
+			
+			?>
+		</p>
+		<p>
+			2 - Select a data set : 
+			<?php
+				// if already selected, or repo hasn't been selected yet
+				if (!empty($dataName) || $repoNumber < 1)
+				{
+					echo "$dataName";
+					echo "<input type='hidden' id='enrichment_dataName' name='enrichment_dataName' value='$dataName' />";
+				}
+				// a selection of all data in this repository
+				else 
+				{
+					echo "<select id='enrichment_data' name='enrichment_data' size='1'><option value='-1'>";
+
+					for($i = 0 ; $i < count ($listData) ; $i++){
+						echo "<option value='$i'>" . $listData[$i];
+					}
+						
+					echo "</select>";
+				}
+			
+			?>
+		</p>
+		<p>
+			3 - Select a visualization technique : 
+			<?php
+				echo "<select id='enrichment_techName' name='enrichment_techName' size='1'><option value='-1'>";
+
+				for($i = 0 ; $i < count ($listTech) ; $i++){
+					echo "<option value='".$listTech[$i]."'";
+					if ($techName == $listTech[$i])
+						echo " selected";
+					echo ">" . $listTech[$i];
+				}
+					
+				echo "</select>";			
+			?>
+		</p>
+
+		<table>
+			<tr>
+				<td> <button class='champs' type="button" onclick="loadEnrichment(true);">Back</button> </td>
+				<td> <button class='champs' type="button" onclick="loadEnrichment(false);">Next</button> </td>
+			</tr>
+		</table>
 		
-		<br>
-		(dynamically generates input form for custom parameters)
-		<br><br>
-		
-		<!--<button class='champs' type='button' onclick="loadEnrichment(false);">Générer 3DCM</button>-->
-		<input type='submit' value='Test it out dog'/>
 	</form>
+	<?php echo $msg;?>
+
 </fieldset>
