@@ -28,8 +28,7 @@ try
 	$listRepo = $sesame->getListRepositories();
 
 	//load data type list
-	$jsonString = file_get_contents(PATH_DATATYPES);
-	$listTypes = json_decode($jsonString, true);
+	//$listTypes = DataInsert::getListTypes();
 
 	//set repository
 	$repoName = "Munich_v_1_0_0.xml"; //TEST

@@ -31,8 +31,7 @@ class DataInsert {
 	function __construct($dataType, $fileName, $filePath) 
 	{
 		//load data type list
-		$jsonString = file_get_contents(PATH_DATATYPES);
-		$listTypes = json_decode($jsonString, true);
+		$listTypes = DataInsert::getListTypes();
 
 		if (array_key_exists($dataType, $listTypes)){
 			$this->dataStructureName = $dataType;
@@ -126,5 +125,14 @@ class DataInsert {
 		}	
 		else 
 			throw new Exception ("Query could not be retrieved.");
+	}	
+
+	//------------------------------------------------------------------------------
+
+	public static function getListTypes()
+	{		
+		$jsonString = file_get_contents(PATH_DATATYPES);
+		$listTypes = json_decode($jsonString, true);
+		return $listTypes;
 	}
 }

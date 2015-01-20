@@ -2,7 +2,7 @@
 /* 
 * Thesis project
 * @author Samuel Constantino
-* last update : 6/12/2014
+* last update : 20/1/2015
 *
 * Menu to upload visualization techniques
 * analyses varaibles and layout managers to see if correct
@@ -20,6 +20,8 @@ $msg = "<div id='technique_message' class='error'></div>";
 
 $layoutsSupported = TechniqueQuery::getLayoutsSupported();
 
+//use lang as test, because might not have file set up
+//TODO - text upload
 if (isset($_POST["uploadtechnique_lang"])) {
 	try 
 	{

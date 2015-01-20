@@ -19,8 +19,7 @@ $sesame = new SesameInterface(URL_SESAME);
 $listRepo = $sesame->getListRepositories();
 
 //load data type list
-$jsonString = file_get_contents(PATH_DATATYPES);
-$listTypes = json_decode($jsonString, true);
+$listTypes = DataInsert::getListTypes();
 
 //IF called by AJAX with POST request
 if (isset($_FILES["uploaddata_file"])) {
