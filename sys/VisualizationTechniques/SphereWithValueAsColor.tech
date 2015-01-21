@@ -1,0 +1,33 @@
+PREFIX gml:<http://www.opengis.net/gml>
+PREFIX data:<http://master.thesis/project/data/>
+PREFIX vizu:<http://unige.ch/masterThesis/>
+PREFIX layout:<http://unige.ch/masterThesis/layoutmanagers/>
+
+CONSTRUCT {
+  _:technique a vizu:SphereWithValueAsColor.
+  _:technique vizu:location _:position.
+  
+  _:position a layout:PositionSimpleCoordinate.
+  _:position vizu:x ?x.
+  _:position vizu:y ?y.
+  _:position vizu:z ?z.
+  _:position vizu:sceneObject _:object.
+
+  _:object a layout:ObjectSphere.
+  _:object vizu:radius #radius='10'#.
+  _:object vizu:appearance _:appearance.
+
+  _:appearance a layout:AppearanceBicolorThreshold.
+  _:appearance vizu:color1 #color1='1 0 0'#.
+  _:appearance vizu:color2 #color2='0 0 1'#.
+  _:appearance vizu:value ?val.
+  _:appearance vizu:theshold #threshold='5'#.
+}
+
+WHERE {
+?info a data:DataType1.
+?info data:value ?val.
+?info data:x ?x.
+?info data:y ?y.
+?info data:z ?z.
+}
