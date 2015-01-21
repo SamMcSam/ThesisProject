@@ -10,6 +10,7 @@
 
 require_once('../config/constantsPath.php');
 
+require_once('DataInsert.class.php');
 require_once('TechniqueQuery.class.php');
 
 //goes back if information missing (in case of error)
@@ -40,7 +41,7 @@ $listParameters = $technique->getParameterWithValues();
 		</p>
 
 		<p>
-			Data set : <?php echo $dataName; ?>
+			Data set : <?php echo str_replace(DataInsert::DATA_URI, "", $dataName); ?>
 			<input type='hidden' name='enrichment_dataName' id='enrichment_dataName' value='<?php echo $dataName; ?>' readonly/>
 		</p>
 
