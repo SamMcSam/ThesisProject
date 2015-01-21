@@ -18,7 +18,7 @@ CONSTRUCT {
   _:object vizu:appearance _:appearance.
 
   _:appearance a layout:AppearanceSimpleColor.
-  _:appearance vizu:diffuseColor #color='1 0 0'#.
+  _:appearance vizu:diffuseColor #color=1 0 0#.
 }
 
 WHERE {

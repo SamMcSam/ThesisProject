@@ -188,7 +188,7 @@ class TechniqueQuery {
 		// REPLACES parameter with custom values
 
 		foreach ($this->parameters as $key => $value) {
-			$this->queryString = preg_replace("/\#(".$key.".*)\#/", $value, $this->queryString);
+			$this->queryString = preg_replace("/\#(".$key.".*)\#/", "'".$value."'", $this->queryString);
 		}
 	}
 

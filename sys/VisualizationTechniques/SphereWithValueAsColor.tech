@@ -14,14 +14,14 @@ CONSTRUCT {
   _:position vizu:sceneObject _:object.
 
   _:object a layout:ObjectSphere.
-  _:object vizu:radius #radius='10'#.
+  _:object vizu:radius #radius=10#.
   _:object vizu:appearance _:appearance.
 
   _:appearance a layout:AppearanceBicolorThreshold.
-  _:appearance vizu:color1 #color1='1 0 0'#.
-  _:appearance vizu:color2 #color2='0 0 1'#.
+  _:appearance vizu:color1 #color1=0 1 1#.
+  _:appearance vizu:color2 #color2=1 0 0#.
   _:appearance vizu:value ?val.
-  _:appearance vizu:theshold #threshold='5'#.
+  _:appearance vizu:theshold #threshold=5#.
 }
 
 WHERE {
