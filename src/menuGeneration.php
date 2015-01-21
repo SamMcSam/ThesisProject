@@ -54,7 +54,7 @@ $listParameters = $technique->getParameterWithValues();
 			<ul style='margin-left:20px;'>
 				<?php
 					foreach ($listParameters as $parameter => $value) {
-						echo "<li>$parameter : <input type='text' name='parameter_1' value=". '"' . htmlspecialchars($value) . '"' . " /></li>";   // ????????????
+						echo "<li>$parameter : <input type='text' name='parameters[$parameter]' value=". '"' . htmlspecialchars($value) . '"' . " /></li>";   // ????????????
 					}
 				?>
 			</ul>

@@ -11,6 +11,7 @@
 require_once('../config/constantsPath.php');
 
 require_once('SesameInterface.class.php');
+require_once('CityRDF.class.php');
 require_once('DataInsert.class.php');
 require_once('TechniqueQuery.class.php');
 require_once('VisualizationResult.class.php');
@@ -21,37 +22,33 @@ $errorMessage = "";
 
 try 
 {
-	//if (isset($_POST["repoName"]) && $_POST....)
-	//$repoName
-	//$nameTechnique
-	//else
-	//	throw new Exception("Couldn't retrieve request.");
+	if (!isset($_POST["enrichment_repoName"]) || !isset($_POST["enrichment_dataName"]) || !isset($_POST["enrichment_techName"]))
+		throw new Exception("Couldn't retrieve information from request.");
+
+	$repoName = htmlspecialchars($_POST["enrichment_repoName"]);
+	$dataName = htmlspecialchars($_POST["enrichment_dataName"]);
+	$techName = htmlspecialchars($_POST["enrichment_techName"]);
+
+	//parameters
+	$parameterList = $_POST["parameters"];
 
 	// Technique
 	//----------------------------
 
 	$sesame = new SesameInterface(URL_SESAME);
 
-	// Load repository list
-	//$listRepo = $sesame->getListRepositories();
-
-	//load data type list
-	//$listTypes = DataInsert::getListTypes();
-
 	//set repository
-	$repoName = "Munich_v_1_0_0.xml"; //TEST
 	if (!$sesame->setRepository($repoName))
 		throw new Exception("Repository not found.");
 
 	//open technique
-	$nameTechnique = "SphereWithValueAsRadius";
-	$technique = new TechniqueQuery($nameTechnique);
+	$technique = new TechniqueQuery($techName);
 
-	$technique->setModelGraph("<http://city.file/Munich_v_1_0_0.xml>");
-	$technique->setDataGraph("<http://data.graph/2015-01-15_12-16-59/Munich_DataProto_type1a-2.txt>");
+	$technique->setModelGraph("<". CityRDF::FILE_CONTEXT . $repoName .">");
+	$technique->setDataGraph("<". $dataName .">");
 
 	//$technique->getParameterNames();
-	$technique->loadParameterValues(["color" => "'1 0 0'"]);
+	$technique->loadParameterValues($parameterList);
 
 	$layoutNames = $technique->getLayoutNames();
 
@@ -110,9 +107,9 @@ try
 				<?php echo $errorMessage; ?>
 			</p>
 
-			<p>
+			<!--<p>
 				<a href='javascript:history.back()'>Go back</a>
-			</p>
+			</p>-->	
 		</div>
 
 	</body>
