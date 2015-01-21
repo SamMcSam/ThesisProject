@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-	SphereObject
+	ObjectSphere
 
 	Author : Samuel Constantino
 	Created : 9/1/15
-	Last update : 16/1/15
+	Last update : 21/1/15
 	***************************
 
 	Description : defines a 3d sphere object
 
 	Parameters necessary : 
 		vizu:radius = the size of the radius
-		vizu:color = 3 float from 0-1 defined as 'r g b'
+		vizu:appearance = an Appearance node
 
 	Returned object : 
 		<Shape>
 			<Sphere radius='_'/>
 			<Appearance>
-				<Material diffuseColor='_ _ _'>
+				[...]
 			</Appearance>
 		<Shape>
 -->
@@ -29,7 +29,7 @@
 >
 
 	<!--shape object-->
-	<xsl:template match="*[@typeLayout='SphereObject']">
+	<xsl:template match="*[@typeLayout='ObjectSphere']">
 
 		<shape>
 			<sphere>
@@ -38,12 +38,14 @@
 			</sphere>
 			
 			<appearance>
-				<material>
-				<xsl:attribute name="diffuseColor"><xsl:value-of select="./vizu:color"/></xsl:attribute>
-				</material>
-			</appearance>
+				<xsl:apply-templates select="./vizu:appearance" />	
+			</appearance>		
 		</shape>
 
+	</xsl:template>	
+
+	<xsl:template match="vizu:appearance">
+			<xsl:copy-of select="node()"/>
 	</xsl:template>	
 
 </xsl:stylesheet>

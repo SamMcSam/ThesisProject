@@ -6,14 +6,19 @@ PREFIX layout:<http://unige.ch/masterThesis/layoutmanagers/>
 CONSTRUCT {
   _:technique a vizu:SphereWithValueAsRadius.
   _:technique vizu:location _:position.
-  _:position a layout:SimplePositionOnCoordinate.
+  
+  _:position a layout:PositionSimpleCoordinate.
   _:position vizu:x ?x.
   _:position vizu:y ?y.
   _:position vizu:z ?z.
   _:position vizu:sceneObject _:object.
-  _:object a layout:SphereObject.
+
+  _:object a layout:ObjectSphere.
   _:object vizu:radius ?val.
-  _:object vizu:color #color='1 0 0'#.
+  _:object vizu:appearance _:appearance.
+
+  _:appearance a layout:AppearanceSimpleColor.
+  _:appearance vizu:diffuseColor #color='1 0 0'#.
 }
 
 WHERE {

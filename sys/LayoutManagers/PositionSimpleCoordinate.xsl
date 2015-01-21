@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-	SimplePositionOnCoordinate
+	PositionSimpleCoordinate
 
 	Author : Samuel Constantino
 	Created : 9/1/15
-	Last update : 15/1/15
+	Last update : 21/1/15
 	***************************
 
 	Description : most basic positionning for given three-dimensional coordinates of an object
@@ -28,7 +28,7 @@
 >
 
 	<!--Position object-->
-	<xsl:template match="*[@typeLayout='SimplePositionOnCoordinate']">	
+	<xsl:template match="*[@typeLayout='PositionSimpleCoordinate']">	
 
 		<position>
 			<xsl:attribute name="translation">
