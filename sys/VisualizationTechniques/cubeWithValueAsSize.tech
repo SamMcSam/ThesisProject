@@ -1,0 +1,32 @@
+PREFIX gml:<http://www.opengis.net/gml>
+PREFIX data:<http://master.thesis/project/data/>
+PREFIX vizu:<http://unige.ch/masterThesis/>
+PREFIX layout:<http://unige.ch/masterThesis/layoutmanagers/>
+
+CONSTRUCT {
+  _:technique a vizu:cubeWithValueAsSize.
+  _:technique vizu:location _:position.
+  
+  _:position a layout:PositionSimpleCoordinate.
+  _:position vizu:x ?x.
+  _:position vizu:y ?y.
+  _:position vizu:z ?z.
+  _:position vizu:sceneObject _:object.
+
+  _:object a layout:ObjectBox.
+  _:object vizu:sizeX ?val.
+  _:object vizu:sizeY ?val.
+  _:object vizu:sizeZ ?val.
+  _:object vizu:appearance _:appearance.
+
+  _:appearance a layout:AppearanceSimpleColor.
+  _:appearance vizu:diffuseColor #color=1 0 0#.
+}
+
+WHERE {
+?info a data:DataType1.
+?info data:value ?val.
+?info data:x ?x.
+?info data:y ?y.
+?info data:z ?z.
+}
