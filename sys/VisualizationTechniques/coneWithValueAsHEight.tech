@@ -4,7 +4,7 @@ PREFIX vizu:<http://unige.ch/masterThesis/>
 PREFIX layout:<http://unige.ch/masterThesis/layoutmanagers/>
 
 CONSTRUCT {
-  _:technique a vizu:coneWithValueAsBase.
+  _:technique a vizu:coneWithValueAsHeight.
   _:technique vizu:location _:position.
   
   _:position a layout:PositionSimpleCoordinate.
