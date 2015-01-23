@@ -27,6 +27,17 @@
 
 		<div id='mainBlock'>
 
+			<!-- MENU TO GENERATE ENRICHED MODEL -->
+			<div class='titre'>Enriched city model</div>
+			<div id='menuEnrichment'>
+				<?php include("menuEnrichment.php");?>
+			</div>
+			<div id='menuEnrichment_loading' style="display:none;">
+				<img class ="imgLoading" src="../img/loading.gif"> LOADING...
+			</div>	
+
+			<hr />
+
 			<!-- MENU TO UPLOAD CITY -->
 			<div class='titre'>City graph</div>
 			<div id='menuCity'>
@@ -57,15 +68,7 @@
 			<div id='menuTechnique_loading' style="display:none;">
 				<img class ="imgLoading" src="../img/loading.gif"> LOADING...
 			</div>
-
-			<!-- MENU TO GENERATE ENRICHED MODEL -->
-			<div class='titre'>Enriched city model</div>
-			<div id='menuEnrichment'>
-				<?php include("menuEnrichment.php");?>
-			</div>
-			<div id='menuEnrichment_loading' style="display:none;">
-				<img class ="imgLoading" src="../img/loading.gif"> LOADING...
-			</div>			
+		
 		</div>
 	</body>
 

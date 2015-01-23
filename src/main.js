@@ -222,7 +222,7 @@ function refreshSection(div)
 	    	loadEnrichment(true);
 	    	break;
 	    case "menuEnrichment":
-	    	window.scrollTo(0,document.body.scrollHeight);
+	    	//window.scrollTo(0,document.body.scrollHeight);
 	    	break;
     }		
 }
