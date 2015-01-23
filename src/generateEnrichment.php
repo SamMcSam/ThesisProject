@@ -3,9 +3,11 @@
 * Thesis project
 * @author Samuel Constantin
 * created : 12/1/2015
-* last update : 12/1/2015
+* last update : 23/1/2015
 *
 * calls different methods necessary to get rdf from technique, apply layout managers and add it to 3d model
+*
+* TODO : change phony loading text to AJAX loading
 */
 
 require_once('../config/constantsPath.php');
@@ -68,7 +70,6 @@ try
 	//transforms in X3D
 	$languageOutput = "X3D";
 	$visualization->translateLanguage($languageOutput);
-
 
 	// Enriched Model
 	//----------------------------
@@ -133,9 +134,17 @@ try
 	var i = 2;
 
 	document.onload = function () {
-		printLog();
+		var x3d = document.getElementById('OK');
+
+		if (x3d == null){
+			document.getElementById('loading').style.display = 'none';
+	   	 	document.getElementById('mainBlock').style.display = '';
+		}
+		else
+			printLog();
 	};
 
+	//TODO: display according to status AJAX, instead of faked timer
 	function printLog(){
 		var max = 800;
 		var min = 300;
