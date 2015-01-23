@@ -98,7 +98,7 @@ try
 
 	<body>
 		<div id='loading'>
-			<div>LOADING...</div> 
+			<div>***LOADING***</div> 
 			<div id='loading0'>Analysing specification...</div>
 			<div id='loading1'>Generating request...</div>
 			<div id='loading2' style='display:none;'>Querying triple store...</div>
