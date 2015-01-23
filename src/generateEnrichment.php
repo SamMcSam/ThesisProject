@@ -119,7 +119,7 @@ try
 		<div id='mainBlock' style='display:none;'>
 			<?php 
 				if (empty($errorMessage))
-					echo "<p style='height:400px'><x3d width='600px' height='400px'>" . $output . "</x3d></p>";
+					echo "<p id='OK' style='height:400px'><x3d width='600px' height='400px'>" . $output . "</x3d></p>";
 			?>
 
 			<p>
