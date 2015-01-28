@@ -32,7 +32,10 @@ try
 	$techName = htmlspecialchars($_POST["enrichment_techName"]);
 
 	//parameters
-	$parameterList = $_POST["parameters"];
+	if (isset($_POST["parameters"])) 
+		$parameterList = $_POST["parameters"];
+	else
+		$parameterList = array();
 
 	// Technique
 	//----------------------------
