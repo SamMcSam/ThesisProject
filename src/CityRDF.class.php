@@ -21,9 +21,13 @@ class CityRDF {
 	const RDF_NODE = "rdf:RDF";
 	const RDF_URI = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 	const GML_URI = "http://www.opengis.net/gml";
+
 	const GEOADDED_NAME = "protogeometry";
 	const GEOADDED_URI = "http://unige.ch/masterThesis/";
+	
 	const GEOADDED_CENTER = "center";
+	const GEOADDED_HIGHEST = "highest";
+	const GEOADDED_LOWEST = "lowest";
 	const GEOADDED_LOC = "location";
 
 	private $fileName;
@@ -194,14 +198,8 @@ class CityRDF {
 		}
 	}
 
-	//TODO : corners!!
-	//for each node in the list
-	//update lowest x
-	//update lowest y
-	//update lowest z
-	//update highest x
-	//update highest y
-	//update highest z
+	//------------------------------------------------------------------------------
+
 	private function calculateCenters()
 	{
 		$xpath = new DOMXPath($this->xml);
@@ -221,6 +219,9 @@ class CityRDF {
 		  	//echo sizeof($arrayValue). "---<br>";
 		  	//print_r($arrayValue);
 
+			//storing corner values
+			$corners = ["highest" => ["x" => null, "y" => null, "z" => null], "lowest" = > ["x" => null, "y" => null, "z" => null]];
+
 		  	//compute midpoints
 		  	$midpointsX = array();
 		  	$midpointsY = array();
@@ -235,6 +236,13 @@ class CityRDF {
 				$midpointsZ[] = $midz;
 				//echo "Midpoint : " . $midx . ", " . $midy . ", " . $midz;
     			//echo "<br>";
+
+				testHighestLowest($corners, $arrayValue[$i], "x");
+				testHighestLowest($corners, $arrayValue[$i+1], "y");
+				testHighestLowest($corners, $arrayValue[$i+2], "z");
+				testHighestLowest($corners, $arrayValue[$i+3], "x");
+				testHighestLowest($corners, $arrayValue[$i+4], "y");
+				testHighestLowest($corners, $arrayValue[$i+5], "z");
 		  	}
 
 		  	// AVERAGE THE MIDPOINT
@@ -250,6 +258,8 @@ class CityRDF {
 		  	$y = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":y", $center["y"]);
 		  	$z = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":z", $center["z"]);
 
+		  	//DO THE SAME FOR THE CORNERS!!
+
 		    $locationNode->appendChild($x);
 		    $locationNode->appendChild($y);
 		    $locationNode->appendChild($z);
@@ -262,7 +272,7 @@ class CityRDF {
 		}
 
 		// 2) propagate centers and average them for each id
-		$this->propagateCenters();
+		//$this->propagateCenters();
 		
 		/*
 		echo "<pre>";
@@ -380,6 +390,18 @@ class CityRDF {
 			if ($nodesToAverage->length < 1)
 				$done = true;
 		}
+	}
+
+	private function testHighestLowest(&$corners, $value, $axis)
+	{
+		if ($axis != "x" || $axis != "y" || $axis != "z")
+			throw new Exception ("Axis wasn't specified when saving corner dimensions (values 'x', 'y' or 'z')");
+
+		if ($value > $corners["highest"][$axis] || $corners["highest"][$axis] == null)
+			$corners["highest"][$axis] = $value;
+
+		if ($value < $corners["lowest"][$axis] || $corners["lowest"][$axis] == null)
+			$corners["lowest"][$axis] = $value;
 	}
 
 	//------------------------------------------------------------------------------
