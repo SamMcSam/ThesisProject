@@ -179,8 +179,12 @@ class TechniqueQuery {
 
 		//$fromModel = "FROM " . htmlspecialchars($this->modelContext) . " ";
 		//$fromData = "FROM " . htmlspecialchars($this->dataContext) . " ";
+		
 		$fromModel = "FROM " . ($this->modelContext) . " ";
+
 		// + multipart
+		//for each context, add here
+
 		$fromData = "FROM " . ($this->dataContext) . " ";
 
 		$this->queryString = substr_replace($this->queryString, $fromModel . $fromData, $pos, 0);

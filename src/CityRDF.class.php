@@ -10,9 +10,13 @@
 
 require_once('../config/constantsPath.php');
 
+require_once('SesameInterface.class.php');
+
 class CityRDF {
 
 	const FILE_CONTEXT = "http://city.file/";
+	const PARAMETER_CONTEXT = "parameters://repository/";
+	const OBJECTS_CONTEXT = "model://cityobjects/";
 
 	const STAT_NAME = "status";
 	const STAT_PROPAGATE = "propagate";
@@ -65,7 +69,7 @@ class CityRDF {
 		$this->calculateCenters();
 
 		//save file in temp folder
-		$this->getFile();
+		//$this->getFile();
 	}
 
 	private function generateXML()
@@ -94,6 +98,7 @@ class CityRDF {
    		$newRoot->setAttribute('xmlns:failsafe','http://escape.nodes/without/namespaces#');
    		$newRoot->setAttribute('xmlns:core', 'http://www.opengis.net/citygml/1.0');
    		$newRoot->setAttribute('xmlns:protogeometry', 'http://unige.ch/masterThesis/'); //for adding attributes
+	
 
 		//transform multiple pos into a single posList (old gml doc)
 		//----------
@@ -505,6 +510,87 @@ class CityRDF {
 
 		if ($value < $corners["lowest"][$axis] || $corners["lowest"][$axis] == null)
 			$corners["lowest"][$axis] = $value;
+	}
+
+	//------------------------------------------------------------------------------
+
+	public function uploadSingleFile(SesameInterface $sesame)
+	{
+		$context = "<" . CityRDF::FILE_CONTEXT . $sesame->getRepository() . ">";
+		$sesame->appendFile($this->getFile(), $context);
+	}
+
+	//fragmented upload
+	public function uploadFiles(SesameInterface $sesame)
+	{
+		$time = time();
+
+		$this->getFile();
+
+		if ($this->xml != null) 
+		{
+			$xpath = new DOMXPath($this->xml);
+			$cityObjects = $xpath->query("//*[local-name() = 'cityObjectMember']/*");
+
+			$i = 1;
+
+			/*echo "<pre>";
+			echo $this->xml->saveXML();
+			echo "</pre>";*/
+
+			//echo print_r($cityObjects);
+
+			foreach ($cityObjects as $obj) {
+				//create a temp document to save the file
+				$doc = new DOMDocument();
+
+		   		$root = $doc->createElementNS(CityRDF::RDF_URI, CityRDF::RDF_NODE);
+		   		$doc->appendChild($root);
+
+				//add the node
+				$importedObj = $doc->importNode( $obj , true );
+				$root->appendChild($importedObj);
+
+				//save in a temp file
+				$filePath = PATH_TEMPFILES . $time . "_" . $i;
+				$doc->save($filePath);
+
+				//upload to the triple store
+				$context = "<" . CityRDF::FILE_CONTEXT . $sesame->getRepository() . "_$i>";
+				
+				try{
+					$sesame->appendFile($filePath, $context);
+				}
+				catch (Exception $e){
+				}	
+				
+				//break;
+
+				//remove the object from the main xml
+				//$obj->parentNode->parentNode->removeChild($obj->parentNode);
+
+				echo "$i - ";
+				$i++;
+				sleep(0.2);
+			}
+
+			echo "OK?";
+
+			$cityObjects = $xpath->query("//*[local-name() = 'cityObjectMember']");
+			foreach ($cityObjects as $obj) {
+				$obj->parentNode->removeChild($obj);
+			}
+
+			$filePath = PATH_TEMPFILES . $time . "_0";
+			$this->xml->save($filePath);
+
+			//upload to the triple store
+			$context = "<" . CityRDF::FILE_CONTEXT . $sesame->getRepository() . "_0>";
+			$sesame->appendFile($filePath, $context);
+
+		}
+		else
+			throw new Exception ("No file loaded.");
 	}
 
 	//------------------------------------------------------------------------------
