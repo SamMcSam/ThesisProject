@@ -184,6 +184,7 @@ class TechniqueQuery {
 
 		// + multipart
 		//for each context, add here
+		//ADD HERE LOTS OF THINGS!!!!!!!!!!!!!!!!!
 
 		$fromData = "FROM " . ($this->dataContext) . " ";
 

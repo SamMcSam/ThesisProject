@@ -561,8 +561,7 @@ class CityRDF {
 				try{
 					$sesame->appendFile($filePath, $context);
 				}
-				catch (Exception $e){
-				}	
+				catch (Exception $e){}	
 				
 				//break;
 
@@ -576,6 +575,7 @@ class CityRDF {
 
 			echo "OK?";
 
+			//remove the object from the main xml
 			$cityObjects = $xpath->query("//*[local-name() = 'cityObjectMember']");
 			foreach ($cityObjects as $obj) {
 				$obj->parentNode->removeChild($obj);
