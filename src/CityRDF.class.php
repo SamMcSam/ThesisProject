@@ -348,7 +348,7 @@ class CityRDF {
 				// remove status (if loop reached end, else will add a new one in the copy)
 				$node->removeAttribute(CityRDF::STAT_NAME);
 				
-				// if id
+				// if id parent, then add a copy of the node here, to be easier to compute average
 				if ($parent != null) {
 					$copy = $node->cloneNode(true);
 					$parent->appendChild($copy);
@@ -364,7 +364,8 @@ class CityRDF {
 
 			foreach ($nodesToAverage as $node)
 			{
-				//$childCenters = $xpath->query("./".CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_CENTER, $node); //relative query
+				//first, center nodes
+
 				$childCenters = $xpath->query("./".CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_CENTER."/*", $node); //relative query
 				//echo "child per capita : " . $childCenters->length . "<br>";
 
@@ -389,34 +390,95 @@ class CityRDF {
 				$sumZ /= $childCenters->length;
 				//echo $sumZ."<br>";
 
-				//compute highest, lowest
-				//$childCenters = $xpath->query("./".CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_CORNER."/*", $node);
+				//second, highest, lowest nodes
 
-				//add average center node
+				//compute highest, lowest
+				$childHighest = $xpath->query("./".CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_HIGHEST."/*", $node);
+				$childLowest = $xpath->query("./".CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_LOWEST."/*", $node);
+
+				//store the lowest and highest dimensions
+				$corners = $this->getNewCornerArray();
+				foreach ($childHighest as $child) {
+					//echo $child->nodeName . "<br>";
+					foreach ($child->childNodes as $dimensions){
+						//echo $dimensions->nodeName . "<br>";
+						if ($dimensions->nodeName == CityRDF::GEOADDED_NAME.":x")
+							$this->testHighestLowest($corners, $dimensions->nodeValue, "x");
+						else if ($dimensions->nodeName == CityRDF::GEOADDED_NAME.":y")	
+							$this->testHighestLowest($corners, $dimensions->nodeValue, "y");
+						else if ($dimensions->nodeName == CityRDF::GEOADDED_NAME.":z")	
+							$this->testHighestLowest($corners, $dimensions->nodeValue, "z");	
+					}
+				}
+				foreach ($childLowest as $child) {
+					//echo $child->nodeName . "<br>";
+					foreach ($child->childNodes as $dimensions){
+						//echo $dimensions->nodeName . "<br>";
+						if ($dimensions->nodeName == CityRDF::GEOADDED_NAME.":x")
+							$this->testHighestLowest($corners, $dimensions->nodeValue, "x");
+						else if ($dimensions->nodeName == CityRDF::GEOADDED_NAME.":y")	
+							$this->testHighestLowest($corners, $dimensions->nodeValue, "y");
+						else if ($dimensions->nodeName == CityRDF::GEOADDED_NAME.":z")	
+							$this->testHighestLowest($corners, $dimensions->nodeValue, "z");	
+					}
+				}
+
+				//finally, save this new data
+
+				//ADDING NODES
 				$average = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_CENTER);
 				$locationNode = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_LOC);
 			  	$x = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":x", $sumX);
 			  	$y = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":y", $sumY);
 			  	$z = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":z", $sumZ);
-			    //$average->appendChild($x);
-			    //$average->appendChild($y);
-			    //$average->appendChild($z);
+
 			    $locationNode->appendChild($x);
 			    $locationNode->appendChild($y);
 			    $locationNode->appendChild($z);
 			    $average->appendChild($locationNode);
 
+				$highest = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_HIGHEST);
+				$locationHighest = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_LOC);
+			  	$x = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":x", $corners["highest"]["x"]);
+			  	$y = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":y", $corners["highest"]["y"]);
+			  	$z = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":z", $corners["highest"]["z"]);
+
+			    $locationHighest->appendChild($x);
+			    $locationHighest->appendChild($y);
+			    $locationHighest->appendChild($z);
+			    $highest->appendChild($locationHighest);
+
+				$lowest = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_LOWEST);
+				$locationLowest = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_LOC);
+			  	$x = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":x", $corners["lowest"]["x"]);
+			  	$y = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":y", $corners["lowest"]["y"]);
+			  	$z = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":z", $corners["lowest"]["z"]);
+
+			    $locationLowest->appendChild($x);
+			    $locationLowest->appendChild($y);
+			    $locationLowest->appendChild($z);
+			    $lowest->appendChild($locationLowest);
+
 				//remove all geometric information in double
+				//$geoInfo = $xpath->query("./".CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_CENTER . " or " . "./".CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_HIGHEST . " or " . "./".CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_LOWEST, $node); 
 				$geoInfo = $xpath->query("./".CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_CENTER, $node); 
+				foreach ($geoInfo as $info) {
+					$node->removeChild($info);
+				}$geoInfo = $xpath->query("./".CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_HIGHEST, $node); 
+				foreach ($geoInfo as $info) {
+					$node->removeChild($info);
+				}$geoInfo = $xpath->query("./".CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_LOWEST, $node); 
 				foreach ($geoInfo as $info) {
 					$node->removeChild($info);
 				}
 
-				//remove all copys of corners
-
 				//add averaged center with status propagate
 				$average->setAttribute(CityRDF::STAT_NAME, CityRDF::STAT_PROPAGATE);
 			    $node->appendChild($average);
+				$highest->setAttribute(CityRDF::STAT_NAME, CityRDF::STAT_PROPAGATE);
+			    $node->appendChild($highest);
+				$lowest->setAttribute(CityRDF::STAT_NAME, CityRDF::STAT_PROPAGATE);
+			    $node->appendChild($lowest);
 				
 				//remove status=average
 				$node->removeAttribute(CityRDF::STAT_NAME);
