@@ -220,7 +220,7 @@ class CityRDF {
 		  	//print_r($arrayValue);
 
 			//storing corner values
-			$corners = ["highest" => ["x" => null, "y" => null, "z" => null], "lowest" = > ["x" => null, "y" => null, "z" => null]];
+			$corners = $this->getNewCornerArray();
 
 		  	//compute midpoints
 		  	$midpointsX = array();
@@ -237,18 +237,24 @@ class CityRDF {
 				//echo "Midpoint : " . $midx . ", " . $midy . ", " . $midz;
     			//echo "<br>";
 
-				testHighestLowest($corners, $arrayValue[$i], "x");
-				testHighestLowest($corners, $arrayValue[$i+1], "y");
-				testHighestLowest($corners, $arrayValue[$i+2], "z");
-				testHighestLowest($corners, $arrayValue[$i+3], "x");
-				testHighestLowest($corners, $arrayValue[$i+4], "y");
-				testHighestLowest($corners, $arrayValue[$i+5], "z");
+				//get values for highest and lowest corner
+				$this->testHighestLowest($corners, $arrayValue[$i], "x");
+				$this->testHighestLowest($corners, $arrayValue[$i+1], "y");
+				$this->testHighestLowest($corners, $arrayValue[$i+2], "z");
+				$this->testHighestLowest($corners, $arrayValue[$i+3], "x");
+				$this->testHighestLowest($corners, $arrayValue[$i+4], "y");
+				$this->testHighestLowest($corners, $arrayValue[$i+5], "z");
 		  	}
 
 		  	// AVERAGE THE MIDPOINT
 		  	$center = ["x" => array_sum($midpointsX)/count($midpointsX), "y" => array_sum($midpointsY)/count($midpointsY), "z" => array_sum($midpointsZ)/count($midpointsZ)];
+		  	
 		  	//echo "Center at : " . $center["x"] . ", " . $center["y"] . ", " . $center["z"];
 		  	//echo "<br>";
+		  	//echo "<br>";
+		  	//echo "Highest point at : " . $corners["highest"]["x"] . ", " . $corners["highest"]["y"] . ", " . $corners["highest"]["z"];
+		  	//echo "<br>";
+		  	//echo "Lowest point at : " . $corners["lowest"]["x"] . ", " . $corners["lowest"]["y"] . ", " . $corners["lowest"]["z"];
 		  	//echo "<br>";
 
 		  	// CREATE NODES HERE FOR CENTER //('xmlns:protogeometry', 'http://unige.ch/masterThesis/')
@@ -258,21 +264,46 @@ class CityRDF {
 		  	$y = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":y", $center["y"]);
 		  	$z = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":z", $center["z"]);
 
-		  	//DO THE SAME FOR THE CORNERS!!
-
 		    $locationNode->appendChild($x);
 		    $locationNode->appendChild($y);
 		    $locationNode->appendChild($z);
 		    $centerNode->appendChild($locationNode);
 
-			$centerNode->setAttribute(CityRDF::STAT_NAME, CityRDF::STAT_PROPAGATE); //for step 2
+		  	// CREATE NODES FOR CORNERS //('xmlns:protogeometry', 'http://unige.ch/masterThesis/')
+		  	$highestNode = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_HIGHEST);
+		  	$locationHighNode = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_LOC);
+		  	$x = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":x", $corners["highest"]["x"]);
+		  	$y = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":y", $corners["highest"]["y"]);
+		  	$z = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":z", $corners["highest"]["z"]);
+		    $locationHighNode->appendChild($x);
+		    $locationHighNode->appendChild($y);
+		    $locationHighNode->appendChild($z);
+		    $highestNode->appendChild($locationHighNode);
 
+		  	$lowestNode = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_LOWEST);
+		  	$locationLowNode = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_LOC);
+		  	$x = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":x", $corners["lowest"]["x"]);
+		  	$y = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":y", $corners["lowest"]["y"]);
+		  	$z = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":z", $corners["lowest"]["z"]);
+		    $locationLowNode->appendChild($x);
+		    $locationLowNode->appendChild($y);
+		    $locationLowNode->appendChild($z);
+		    $lowestNode->appendChild($locationLowNode);
+
+		  	//for step 2  (propagation)
+		  	$centerNode->setAttribute(CityRDF::STAT_NAME, CityRDF::STAT_PROPAGATE); 
+		  	$highestNode->setAttribute(CityRDF::STAT_NAME, CityRDF::STAT_PROPAGATE); 
+		  	$lowestNode->setAttribute(CityRDF::STAT_NAME, CityRDF::STAT_PROPAGATE); 
+
+		  	//append new nodes
 		    $posList->parentNode->appendChild($centerNode);
+		    $posList->parentNode->appendChild($highestNode);
+		    $posList->parentNode->appendChild($lowestNode);
 			//echo $node->childNodes->length . " ";
 		}
 
 		// 2) propagate centers and average them for each id
-		//$this->propagateCenters();
+		$this->propagateCenters();
 		
 		/*
 		echo "<pre>";
@@ -358,6 +389,9 @@ class CityRDF {
 				$sumZ /= $childCenters->length;
 				//echo $sumZ."<br>";
 
+				//compute highest, lowest
+				//$childCenters = $xpath->query("./".CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_CORNER."/*", $node);
+
 				//add average center node
 				$average = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_CENTER);
 				$locationNode = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_LOC);
@@ -378,6 +412,8 @@ class CityRDF {
 					$node->removeChild($info);
 				}
 
+				//remove all copys of corners
+
 				//add averaged center with status propagate
 				$average->setAttribute(CityRDF::STAT_NAME, CityRDF::STAT_PROPAGATE);
 			    $node->appendChild($average);
@@ -392,9 +428,14 @@ class CityRDF {
 		}
 	}
 
+	private function getNewCornerArray()
+	{
+		return ["highest" => ["x" => null, "y" => null, "z" => null], "lowest" => ["x" => null, "y" => null, "z" => null]];
+	}
+
 	private function testHighestLowest(&$corners, $value, $axis)
 	{
-		if ($axis != "x" || $axis != "y" || $axis != "z")
+		if ($axis != "x" && $axis != "y" && $axis != "z")
 			throw new Exception ("Axis wasn't specified when saving corner dimensions (values 'x', 'y' or 'z')");
 
 		if ($value > $corners["highest"][$axis] || $corners["highest"][$axis] == null)
