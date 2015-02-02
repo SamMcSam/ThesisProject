@@ -568,12 +568,13 @@ class CityRDF {
 				//remove the object from the main xml
 				//$obj->parentNode->parentNode->removeChild($obj->parentNode);
 
-				echo "$i - ";
+				//echo "$i - ";
 				$i++;
-				sleep(0.2);
+				//in case server can't handle multiple upload 
+				sleep(0.2); //unnecessary?
 			}
 
-			echo "OK?";
+			//echo "OK?";
 
 			//remove the object from the main xml
 			$cityObjects = $xpath->query("//*[local-name() = 'cityObjectMember']");
