@@ -23,6 +23,8 @@ require_once('SesameInterface.class.php');
 $nameRepo = "";
 $msg = "<div id='city_message' class='error'></div>";
 
+$startTime = time();	
+
 if (isset($_FILES["uploadcity_file"])) {
 	try 
 	{
@@ -71,6 +73,8 @@ if (isset($_FILES["uploadcity_file"])) {
 
 }
 
+$endTime = time() - $startTime;	
+
 ?>
 
 <a name="model"></a>
@@ -89,5 +93,5 @@ if (isset($_FILES["uploadcity_file"])) {
 		</p>
 		<button class='champs' type="button" onclick="loadCity(false);">Upload</button>
 	</form>
-	<?php echo $msg;?>
+	<?php echo $msg . " <br> " . $endTime ; ?>
 </fieldset>
