@@ -93,5 +93,5 @@ $endTime = time() - $startTime;
 		</p>
 		<button class='champs' type="button" onclick="loadCity(false);">Upload</button>
 	</form>
-	<?php echo $msg . " <br> " . $endTime ; ?>
+	<?php echo $msg; ?>
 </fieldset>
