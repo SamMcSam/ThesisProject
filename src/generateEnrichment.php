@@ -49,8 +49,12 @@ try
 	//open technique
 	$technique = new TechniqueQuery($techName);
 
-	$technique->setModelGraph("<". CityRDF::FILE_CONTEXT . $repoName .">");
-	$technique->setDataGraph("<". $dataName .">");
+	//$technique->setModelGraph("<". CityRDF::FILE_CONTEXT . $repoName .">"); //OLD, without chunks
+	$listData = $sesame->getListContexts();
+	$listData = CityRDF::getListCityContexts($listData);
+	$technique->setModelGraph($listData);
+
+	$technique->setDataGraph($dataName);
 
 	//$technique->getParameterNames();
 	$technique->loadParameterValues($parameterList);

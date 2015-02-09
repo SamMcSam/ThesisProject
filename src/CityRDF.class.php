@@ -9,14 +9,11 @@
 */
 
 require_once('../config/constantsPath.php');
+require_once('../config/constantsContexts.php');
 
 require_once('SesameInterface.class.php');
 
 class CityRDF {
-
-	const FILE_CONTEXT = "http://city.file/";
-	const PARAMETER_CONTEXT = "parameters://repository/";
-	const OBJECTS_CONTEXT = "model://cityobjects/";
 
 	const STAT_NAME = "status";
 	const STAT_PROPAGATE = "propagate";
@@ -516,7 +513,7 @@ class CityRDF {
 
 	public function uploadSingleFile(SesameInterface $sesame)
 	{
-		$context = "<" . CityRDF::FILE_CONTEXT . $sesame->getRepository() . ">";
+		$context = "<" . FILE_CONTEXT . $sesame->getRepository() . ">";
 		$sesame->appendFile($this->getFile(), $context);
 	}
 
@@ -556,7 +553,7 @@ class CityRDF {
 				$doc->save($filePath);
 
 				//upload to the triple store
-				$context = "<" . CityRDF::FILE_CONTEXT . $sesame->getRepository() . "_$i>";
+				$context = "<" . FILE_CONTEXT . $sesame->getRepository() . "_$i>";
 				
 				try{
 					$sesame->appendFile($filePath, $context);
@@ -586,7 +583,7 @@ class CityRDF {
 			$this->xml->save($filePath);
 
 			//upload to the triple store
-			$context = "<" . CityRDF::FILE_CONTEXT . $sesame->getRepository() . "_0>";
+			$context = "<" . FILE_CONTEXT . $sesame->getRepository() . "_0>";
 			$sesame->appendFile($filePath, $context);
 
 		}
@@ -623,14 +620,37 @@ class CityRDF {
 	// in optional parameter, return the same list without prefixes
 	public static function getListDataContexts($listContext, &$listContextHumanReadable = null)
 	{
+		if ($listContextHumanReadable == null)
+			$listContextHumanReadable = array();
+
 		foreach ($listContext as $key => $uri) {
 			$uriPart = explode("/", $uri, 4);
 			$type = "http://" . $uriPart[2] . "/";
 
-			if ($type === CityRDF::FILE_CONTEXT)
+			if ($type === FILE_CONTEXT)
 				unset($listContext[$key]);
 			else
 				$listContextHumanReadable[] = $uriPart[3];
+		}
+		$listContext = array_values($listContext);
+
+		return $listContext;
+	}
+
+	//from a list of contexts, returns all the chunks of the city graph
+	public static function getListCityContexts($listContext, &$listContextHumanReadable = null)
+	{
+		if ($listContextHumanReadable == null)
+			$listContextHumanReadable = array();
+
+		foreach ($listContext as $key => $uri) {
+			$uriPart = explode("/", $uri, 4);
+			$type = "http://" . $uriPart[2] . "/";
+
+			if ($type === FILE_CONTEXT)
+				$listContextHumanReadable[] = $uriPart[3];
+			else
+				unset($listContext[$key]);				
 		}
 		$listContext = array_values($listContext);
 

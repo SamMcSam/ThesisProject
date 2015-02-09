@@ -180,13 +180,13 @@ class TechniqueQuery {
 		//$fromModel = "FROM " . htmlspecialchars($this->modelContext) . " ";
 		//$fromData = "FROM " . htmlspecialchars($this->dataContext) . " ";
 		
-		$fromModel = "FROM " . ($this->modelContext) . " ";
+		//all city chunks
+		$fromModel = "";
+		foreach ($this->modelContext as $model) {
+			$fromModel .= "FROM <" . $model . "> ";
+		}
 
-		// + multipart
-		//for each context, add here
-		//ADD HERE LOTS OF THINGS!!!!!!!!!!!!!!!!!
-
-		$fromData = "FROM " . ($this->dataContext) . " ";
+		$fromData = "FROM <" . ($this->dataContext) . "> ";
 
 		$this->queryString = substr_replace($this->queryString, $fromModel . $fromData, $pos, 0);
 
