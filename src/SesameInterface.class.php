@@ -58,6 +58,11 @@ class SesameInterface
 		}
 	}
 	
+	public function getRepository()
+	{
+		return $this->repository;
+	}
+	
 	//------------------------------------------------------
 	// Tests on Sesame
 	//------------------------------------------------------

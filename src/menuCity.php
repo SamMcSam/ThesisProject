@@ -23,6 +23,8 @@ require_once('SesameInterface.class.php');
 $nameRepo = "";
 $msg = "<div id='city_message' class='error'></div>";
 
+$startTime = time();	
+
 if (isset($_FILES["uploadcity_file"])) {
 	try 
 	{
@@ -42,7 +44,6 @@ if (isset($_FILES["uploadcity_file"])) {
 		$city = new CityRDF($tempFile, $completeUpload, $removeTexture);
 
 		// create repository
-
 		$nameRepo = $str=preg_replace('/\s+/', '', $nameFile); // removes spaces
 		$sesame = new SesameInterface(URL_SESAME);
 
@@ -52,15 +53,15 @@ if (isset($_FILES["uploadcity_file"])) {
 			$sesame->setRepository($nameRepo);
  
 			// upload city model as a graph
-			$context = "<" . CityRDF::FILE_CONTEXT . $nameRepo . ">";
-			$sesame->appendFile($city->getFile(), $context);
+			$city->uploadFiles($sesame);
+			//$city->uploadSingleFile($sesame);
 		}
 		else{
 			$msg = "<div id='city_message' class='error'>A repository for this file already exists.</div>";
 			//throw new Exception("A repository for this file already exists.");
 			//NOT AN ERROR HERE, or will erase the repo!!!
 		}
-		
+
 		$msg = "<div id='city_message' class='confirmed'>A repository for the 3D model '$nameRepo' has been created!</div>";
 	}
 	catch (Exception $e){
@@ -71,6 +72,8 @@ if (isset($_FILES["uploadcity_file"])) {
 	}
 
 }
+
+$endTime = time() - $startTime;	
 
 ?>
 
@@ -86,9 +89,9 @@ if (isset($_FILES["uploadcity_file"])) {
 			Remove textures : <input id='uploadcity_texture' type='checkbox' name='uploadcity_texture' value='removed' checked>
 		</p>
 		<p>		
-			Upload completeness : <input id='uploadcity_complete' type='number' name='uploadcity_complete' value='50' style="width:50px" onchange="verifyPercent(this);"> %
+			Upload completeness : <input id='uploadcity_complete' type='number' name='uploadcity_complete' value='100' style="width:50px" onchange="verifyPercent(this);"> %
 		</p>
 		<button class='champs' type="button" onclick="loadCity(false);">Upload</button>
 	</form>
-	<?php echo $msg;?>
+	<?php echo $msg; ?>
 </fieldset>

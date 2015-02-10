@@ -1,0 +1,59 @@
+PREFIX gml:<http://www.opengis.net/gml>
+PREFIX data:<http://master.thesis/project/data/>
+PREFIX vizu:<http://unige.ch/masterThesis/>
+PREFIX layout:<http://unige.ch/masterThesis/layoutmanagers/>
+PREFIX protogeometry:<http://unige.ch/masterThesis/>
+
+CONSTRUCT {
+  _:technique a vizu:textLabelAbove.
+  _:technique vizu:location _:position.
+  
+  _:position a layout:PositionAtDistance.
+  _:position vizu:originX ?centerX.
+  _:position vizu:originY ?centerY.
+  _:position vizu:originZ ?highestZ.
+  _:position vizu:distanceX '0'.
+  _:position vizu:distanceY '0'.
+  _:position vizu:distanceZ #offset=10#.
+  _:position vizu:sceneObject _:object.
+
+  _:object a layout:ObjectPanel.
+  _:object vizu:content ?val.
+  _:object vizu:fontSize #fontSize=5#.
+  _:object vizu:orientation #orientation=0 0 0 0#.
+  _:object vizu:border #border=1#.
+  _:object vizu:appearanceText _:appearanceT.
+  _:object vizu:appearancePanel _:appearanceP.
+
+  _:appearanceT a layout:AppearanceSimpleColor.
+  _:appearanceT vizu:diffuseColor '1 1 1'.
+
+  _:appearanceP a layout:AppearanceSimpleColor.
+  _:appearanceP vizu:diffuseColor '0.2 0.2 0.2'.
+}
+
+WHERE {
+?info a data:DataType2.
+
+?info data:value ?val.
+?info data:id ?id1.
+
+?object gml:id ?id2.
+ FILTER (str(?id1) = str(?id2))
+
+?object protogeometry:center ?center.
+?center protogeometry:x ?centerX.
+?center protogeometry:y ?centerY.
+?center protogeometry:z ?centerZ.
+
+?object protogeometry:highest ?highest.
+?highest protogeometry:x ?highestX.
+?highest protogeometry:y ?highestY.
+?highest protogeometry:z ?highestZ.
+
+?object protogeometry:lowest ?lowest.
+?lowest protogeometry:x ?lowestX.
+?lowest protogeometry:y ?lowestY.
+?lowest protogeometry:z ?lowestZ.
+
+}

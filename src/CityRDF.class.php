@@ -9,10 +9,11 @@
 */
 
 require_once('../config/constantsPath.php');
+require_once('../config/constantsContexts.php');
+
+require_once('SesameInterface.class.php');
 
 class CityRDF {
-
-	const FILE_CONTEXT = "http://city.file/";
 
 	const STAT_NAME = "status";
 	const STAT_PROPAGATE = "propagate";
@@ -21,9 +22,13 @@ class CityRDF {
 	const RDF_NODE = "rdf:RDF";
 	const RDF_URI = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 	const GML_URI = "http://www.opengis.net/gml";
+
 	const GEOADDED_NAME = "protogeometry";
 	const GEOADDED_URI = "http://unige.ch/masterThesis/";
+	
 	const GEOADDED_CENTER = "center";
+	const GEOADDED_HIGHEST = "highest";
+	const GEOADDED_LOWEST = "lowest";
 	const GEOADDED_LOC = "location";
 
 	private $fileName;
@@ -61,7 +66,7 @@ class CityRDF {
 		$this->calculateCenters();
 
 		//save file in temp folder
-		$this->getFile();
+		//$this->getFile();
 	}
 
 	private function generateXML()
@@ -90,6 +95,7 @@ class CityRDF {
    		$newRoot->setAttribute('xmlns:failsafe','http://escape.nodes/without/namespaces#');
    		$newRoot->setAttribute('xmlns:core', 'http://www.opengis.net/citygml/1.0');
    		$newRoot->setAttribute('xmlns:protogeometry', 'http://unige.ch/masterThesis/'); //for adding attributes
+	
 
 		//transform multiple pos into a single posList (old gml doc)
 		//----------
@@ -194,14 +200,8 @@ class CityRDF {
 		}
 	}
 
-	//TODO : corners!!
-	//for each node in the list
-	//update lowest x
-	//update lowest y
-	//update lowest z
-	//update highest x
-	//update highest y
-	//update highest z
+	//------------------------------------------------------------------------------
+
 	private function calculateCenters()
 	{
 		$xpath = new DOMXPath($this->xml);
@@ -221,6 +221,9 @@ class CityRDF {
 		  	//echo sizeof($arrayValue). "---<br>";
 		  	//print_r($arrayValue);
 
+			//storing corner values
+			$corners = $this->getNewCornerArray();
+
 		  	//compute midpoints
 		  	$midpointsX = array();
 		  	$midpointsY = array();
@@ -235,12 +238,25 @@ class CityRDF {
 				$midpointsZ[] = $midz;
 				//echo "Midpoint : " . $midx . ", " . $midy . ", " . $midz;
     			//echo "<br>";
+
+				//get values for highest and lowest corner
+				$this->testHighestLowest($corners, $arrayValue[$i], "x");
+				$this->testHighestLowest($corners, $arrayValue[$i+1], "y");
+				$this->testHighestLowest($corners, $arrayValue[$i+2], "z");
+				$this->testHighestLowest($corners, $arrayValue[$i+3], "x");
+				$this->testHighestLowest($corners, $arrayValue[$i+4], "y");
+				$this->testHighestLowest($corners, $arrayValue[$i+5], "z");
 		  	}
 
 		  	// AVERAGE THE MIDPOINT
 		  	$center = ["x" => array_sum($midpointsX)/count($midpointsX), "y" => array_sum($midpointsY)/count($midpointsY), "z" => array_sum($midpointsZ)/count($midpointsZ)];
+		  	
 		  	//echo "Center at : " . $center["x"] . ", " . $center["y"] . ", " . $center["z"];
 		  	//echo "<br>";
+		  	//echo "<br>";
+		  	//echo "Highest point at : " . $corners["highest"]["x"] . ", " . $corners["highest"]["y"] . ", " . $corners["highest"]["z"];
+		  	//echo "<br>";
+		  	//echo "Lowest point at : " . $corners["lowest"]["x"] . ", " . $corners["lowest"]["y"] . ", " . $corners["lowest"]["z"];
 		  	//echo "<br>";
 
 		  	// CREATE NODES HERE FOR CENTER //('xmlns:protogeometry', 'http://unige.ch/masterThesis/')
@@ -255,9 +271,36 @@ class CityRDF {
 		    $locationNode->appendChild($z);
 		    $centerNode->appendChild($locationNode);
 
-			$centerNode->setAttribute(CityRDF::STAT_NAME, CityRDF::STAT_PROPAGATE); //for step 2
+		  	// CREATE NODES FOR CORNERS //('xmlns:protogeometry', 'http://unige.ch/masterThesis/')
+		  	$highestNode = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_HIGHEST);
+		  	$locationHighNode = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_LOC);
+		  	$x = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":x", $corners["highest"]["x"]);
+		  	$y = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":y", $corners["highest"]["y"]);
+		  	$z = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":z", $corners["highest"]["z"]);
+		    $locationHighNode->appendChild($x);
+		    $locationHighNode->appendChild($y);
+		    $locationHighNode->appendChild($z);
+		    $highestNode->appendChild($locationHighNode);
 
+		  	$lowestNode = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_LOWEST);
+		  	$locationLowNode = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_LOC);
+		  	$x = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":x", $corners["lowest"]["x"]);
+		  	$y = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":y", $corners["lowest"]["y"]);
+		  	$z = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":z", $corners["lowest"]["z"]);
+		    $locationLowNode->appendChild($x);
+		    $locationLowNode->appendChild($y);
+		    $locationLowNode->appendChild($z);
+		    $lowestNode->appendChild($locationLowNode);
+
+		  	//for step 2  (propagation)
+		  	$centerNode->setAttribute(CityRDF::STAT_NAME, CityRDF::STAT_PROPAGATE); 
+		  	$highestNode->setAttribute(CityRDF::STAT_NAME, CityRDF::STAT_PROPAGATE); 
+		  	$lowestNode->setAttribute(CityRDF::STAT_NAME, CityRDF::STAT_PROPAGATE); 
+
+		  	//append new nodes
 		    $posList->parentNode->appendChild($centerNode);
+		    $posList->parentNode->appendChild($highestNode);
+		    $posList->parentNode->appendChild($lowestNode);
 			//echo $node->childNodes->length . " ";
 		}
 
@@ -307,7 +350,7 @@ class CityRDF {
 				// remove status (if loop reached end, else will add a new one in the copy)
 				$node->removeAttribute(CityRDF::STAT_NAME);
 				
-				// if id
+				// if id parent, then add a copy of the node here, to be easier to compute average
 				if ($parent != null) {
 					$copy = $node->cloneNode(true);
 					$parent->appendChild($copy);
@@ -323,7 +366,8 @@ class CityRDF {
 
 			foreach ($nodesToAverage as $node)
 			{
-				//$childCenters = $xpath->query("./".CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_CENTER, $node); //relative query
+				//first, center nodes
+
 				$childCenters = $xpath->query("./".CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_CENTER."/*", $node); //relative query
 				//echo "child per capita : " . $childCenters->length . "<br>";
 
@@ -348,22 +392,84 @@ class CityRDF {
 				$sumZ /= $childCenters->length;
 				//echo $sumZ."<br>";
 
-				//add average center node
+				//second, highest, lowest nodes
+
+				//compute highest, lowest
+				$childHighest = $xpath->query("./".CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_HIGHEST."/*", $node);
+				$childLowest = $xpath->query("./".CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_LOWEST."/*", $node);
+
+				//store the lowest and highest dimensions
+				$corners = $this->getNewCornerArray();
+				foreach ($childHighest as $child) {
+					//echo $child->nodeName . "<br>";
+					foreach ($child->childNodes as $dimensions){
+						//echo $dimensions->nodeName . "<br>";
+						if ($dimensions->nodeName == CityRDF::GEOADDED_NAME.":x")
+							$this->testHighestLowest($corners, $dimensions->nodeValue, "x");
+						else if ($dimensions->nodeName == CityRDF::GEOADDED_NAME.":y")	
+							$this->testHighestLowest($corners, $dimensions->nodeValue, "y");
+						else if ($dimensions->nodeName == CityRDF::GEOADDED_NAME.":z")	
+							$this->testHighestLowest($corners, $dimensions->nodeValue, "z");	
+					}
+				}
+				foreach ($childLowest as $child) {
+					//echo $child->nodeName . "<br>";
+					foreach ($child->childNodes as $dimensions){
+						//echo $dimensions->nodeName . "<br>";
+						if ($dimensions->nodeName == CityRDF::GEOADDED_NAME.":x")
+							$this->testHighestLowest($corners, $dimensions->nodeValue, "x");
+						else if ($dimensions->nodeName == CityRDF::GEOADDED_NAME.":y")	
+							$this->testHighestLowest($corners, $dimensions->nodeValue, "y");
+						else if ($dimensions->nodeName == CityRDF::GEOADDED_NAME.":z")	
+							$this->testHighestLowest($corners, $dimensions->nodeValue, "z");	
+					}
+				}
+
+				//finally, save this new data
+
+				//ADDING NODES
 				$average = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_CENTER);
 				$locationNode = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_LOC);
 			  	$x = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":x", $sumX);
 			  	$y = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":y", $sumY);
 			  	$z = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":z", $sumZ);
-			    //$average->appendChild($x);
-			    //$average->appendChild($y);
-			    //$average->appendChild($z);
+
 			    $locationNode->appendChild($x);
 			    $locationNode->appendChild($y);
 			    $locationNode->appendChild($z);
 			    $average->appendChild($locationNode);
 
+				$highest = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_HIGHEST);
+				$locationHighest = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_LOC);
+			  	$x = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":x", $corners["highest"]["x"]);
+			  	$y = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":y", $corners["highest"]["y"]);
+			  	$z = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":z", $corners["highest"]["z"]);
+
+			    $locationHighest->appendChild($x);
+			    $locationHighest->appendChild($y);
+			    $locationHighest->appendChild($z);
+			    $highest->appendChild($locationHighest);
+
+				$lowest = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_LOWEST);
+				$locationLowest = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_LOC);
+			  	$x = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":x", $corners["lowest"]["x"]);
+			  	$y = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":y", $corners["lowest"]["y"]);
+			  	$z = $this->xml->createElementNS(CityRDF::GEOADDED_URI, CityRDF::GEOADDED_NAME.":z", $corners["lowest"]["z"]);
+
+			    $locationLowest->appendChild($x);
+			    $locationLowest->appendChild($y);
+			    $locationLowest->appendChild($z);
+			    $lowest->appendChild($locationLowest);
+
 				//remove all geometric information in double
+				//$geoInfo = $xpath->query("./".CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_CENTER . " or " . "./".CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_HIGHEST . " or " . "./".CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_LOWEST, $node); 
 				$geoInfo = $xpath->query("./".CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_CENTER, $node); 
+				foreach ($geoInfo as $info) {
+					$node->removeChild($info);
+				}$geoInfo = $xpath->query("./".CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_HIGHEST, $node); 
+				foreach ($geoInfo as $info) {
+					$node->removeChild($info);
+				}$geoInfo = $xpath->query("./".CityRDF::GEOADDED_NAME.":".CityRDF::GEOADDED_LOWEST, $node); 
 				foreach ($geoInfo as $info) {
 					$node->removeChild($info);
 				}
@@ -371,6 +477,10 @@ class CityRDF {
 				//add averaged center with status propagate
 				$average->setAttribute(CityRDF::STAT_NAME, CityRDF::STAT_PROPAGATE);
 			    $node->appendChild($average);
+				$highest->setAttribute(CityRDF::STAT_NAME, CityRDF::STAT_PROPAGATE);
+			    $node->appendChild($highest);
+				$lowest->setAttribute(CityRDF::STAT_NAME, CityRDF::STAT_PROPAGATE);
+			    $node->appendChild($lowest);
 				
 				//remove status=average
 				$node->removeAttribute(CityRDF::STAT_NAME);
@@ -380,6 +490,105 @@ class CityRDF {
 			if ($nodesToAverage->length < 1)
 				$done = true;
 		}
+	}
+
+	private function getNewCornerArray()
+	{
+		return ["highest" => ["x" => null, "y" => null, "z" => null], "lowest" => ["x" => null, "y" => null, "z" => null]];
+	}
+
+	private function testHighestLowest(&$corners, $value, $axis)
+	{
+		if ($axis != "x" && $axis != "y" && $axis != "z")
+			throw new Exception ("Axis wasn't specified when saving corner dimensions (values 'x', 'y' or 'z')");
+
+		if ($value > $corners["highest"][$axis] || $corners["highest"][$axis] == null)
+			$corners["highest"][$axis] = $value;
+
+		if ($value < $corners["lowest"][$axis] || $corners["lowest"][$axis] == null)
+			$corners["lowest"][$axis] = $value;
+	}
+
+	//------------------------------------------------------------------------------
+
+	public function uploadSingleFile(SesameInterface $sesame)
+	{
+		$context = "<" . FILE_CONTEXT . $sesame->getRepository() . ">";
+		$sesame->appendFile($this->getFile(), $context);
+	}
+
+	//fragmented upload
+	public function uploadFiles(SesameInterface $sesame)
+	{
+		$time = time();
+
+		$this->getFile();
+
+		if ($this->xml != null) 
+		{
+			$xpath = new DOMXPath($this->xml);
+			$cityObjects = $xpath->query("//*[local-name() = 'cityObjectMember']/*");
+
+			$i = 1;
+
+			/*echo "<pre>";
+			echo $this->xml->saveXML();
+			echo "</pre>";*/
+
+			//echo print_r($cityObjects);
+
+			foreach ($cityObjects as $obj) {
+				//create a temp document to save the file
+				$doc = new DOMDocument();
+
+		   		$root = $doc->createElementNS(CityRDF::RDF_URI, CityRDF::RDF_NODE);
+		   		$doc->appendChild($root);
+
+				//add the node
+				$importedObj = $doc->importNode( $obj , true );
+				$root->appendChild($importedObj);
+
+				//save in a temp file
+				$filePath = PATH_TEMPFILES . $time . "_" . $i;
+				$doc->save($filePath);
+
+				//upload to the triple store
+				$context = "<" . FILE_CONTEXT . $sesame->getRepository() . "_$i>";
+				
+				try{
+					$sesame->appendFile($filePath, $context);
+				}
+				catch (Exception $e){}	
+				
+				//break;
+
+				//remove the object from the main xml
+				//$obj->parentNode->parentNode->removeChild($obj->parentNode);
+
+				//echo "$i - ";
+				$i++;
+				//in case server can't handle multiple upload 
+				sleep(0.2); //unnecessary?
+			}
+
+			//echo "OK?";
+
+			//remove the object from the main xml
+			$cityObjects = $xpath->query("//*[local-name() = 'cityObjectMember']");
+			foreach ($cityObjects as $obj) {
+				$obj->parentNode->removeChild($obj);
+			}
+
+			$filePath = PATH_TEMPFILES . $time . "_0";
+			$this->xml->save($filePath);
+
+			//upload to the triple store
+			$context = "<" . FILE_CONTEXT . $sesame->getRepository() . "_0>";
+			$sesame->appendFile($filePath, $context);
+
+		}
+		else
+			throw new Exception ("No file loaded.");
 	}
 
 	//------------------------------------------------------------------------------
@@ -411,14 +620,37 @@ class CityRDF {
 	// in optional parameter, return the same list without prefixes
 	public static function getListDataContexts($listContext, &$listContextHumanReadable = null)
 	{
+		if ($listContextHumanReadable == null)
+			$listContextHumanReadable = array();
+
 		foreach ($listContext as $key => $uri) {
 			$uriPart = explode("/", $uri, 4);
 			$type = "http://" . $uriPart[2] . "/";
 
-			if ($type === CityRDF::FILE_CONTEXT)
+			if ($type === FILE_CONTEXT)
 				unset($listContext[$key]);
 			else
 				$listContextHumanReadable[] = $uriPart[3];
+		}
+		$listContext = array_values($listContext);
+
+		return $listContext;
+	}
+
+	//from a list of contexts, returns all the chunks of the city graph
+	public static function getListCityContexts($listContext, &$listContextHumanReadable = null)
+	{
+		if ($listContextHumanReadable == null)
+			$listContextHumanReadable = array();
+
+		foreach ($listContext as $key => $uri) {
+			$uriPart = explode("/", $uri, 4);
+			$type = "http://" . $uriPart[2] . "/";
+
+			if ($type === FILE_CONTEXT)
+				$listContextHumanReadable[] = $uriPart[3];
+			else
+				unset($listContext[$key]);				
 		}
 		$listContext = array_values($listContext);
 

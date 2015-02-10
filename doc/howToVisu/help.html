@@ -1,0 +1,79 @@
+
+
+<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='fr' lang='fr'>
+	<head>
+		<title>How to write Technique Specifications?</title>
+		<meta charset='UTF-8'>
+	</head>
+
+	<body>
+		<header>
+			<div id='headerText'>
+				Prototyping visualization techniques in 3DCM
+				<p>How to use</p>
+			</div>
+		</header>
+
+		<div id='mainBlock'>
+
+			Structure : 
+<textarea rows="42" cols="80">
+PREFIX gml:<http://www.opengis.net/gml>
+PREFIX data:<http://master.thesis/project/data/>
+PREFIX vizu:<http://unige.ch/masterThesis/>
+PREFIX layout:<http://unige.ch/masterThesis/layoutmanagers/>
+PREFIX protogeometry:<http://unige.ch/masterThesis/>
+
+CONSTRUCT {
+_:technique a vizu:coneWithValueAsHeight.
+_:technique vizu:location _:position.
+
+_:position a layout:PositionSimpleCoordinate.
+_:position vizu:x ?x.
+_:position vizu:y ?y.
+_:position vizu:z ?z.
+_:position vizu:sceneObject _:object.
+
+_:object a layout:ObjectPanel.
+_:object vizu:content ?val.
+_:object vizu:fontSize #fontSize=5#.
+_:object vizu:orientation #orientation=0 0 0 0#.
+_:object vizu:border #border=1#.
+_:object vizu:appearanceText _:appearanceT.
+_:object vizu:appearancePanel _:appearanceP.
+
+_:appearanceT a layout:AppearanceSimpleColor.
+_:appearanceT vizu:diffuseColor '1 1 1'.
+
+_:appearanceP a layout:AppearanceSimpleColor.
+_:appearanceP vizu:diffuseColor '0.2 0.2 0.2'.
+}
+
+WHERE {
+?info a data:DataType1.
+?info data:value ?val.
+?info data:id ?id1.
+
+?object gml:id ?id2.
+?object protogeometry:center ?center;
+?center protogeometry:x ?centerX;
+?center protogeometry:y ?centerY;
+?center protogeometry:z ?centerZ;
+?object protogeometry:highest ?highest;
+?highest protogeometry:x ?highestX;
+?highest protogeometry:y ?highestY;
+?highest protogeometry:z ?highestZ;
+?object protogeometry:lowest ?lowest;
+?lowest protogeometry:x ?lowestX;
+?lowest protogeometry:y ?lowestY;
+?lowest protogeometry:z ?lowestZ;
+
+FILTER (str(?id1) = str(?id2))
+}
+</textarea>
+
+			
+		</div>
+	</body>
+
+</html>

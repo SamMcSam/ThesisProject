@@ -114,7 +114,7 @@ if (isset($_POST["uploadtechnique_lang"])) {
 		<button class='champs' type="button" onclick="loadTechnique(false);">Upload</button>
 	</form>
 	<p>
-		<a href='#technique'>Read me more on technique definition format</a>
+		<a href='../doc/howToVisu/help.html' target="_blank">Read me more on technique definition format</a>
 	</p>
 	<?php 
 		echo $analyse . "</div>";

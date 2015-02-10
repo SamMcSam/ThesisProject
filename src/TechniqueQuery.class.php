@@ -179,9 +179,14 @@ class TechniqueQuery {
 
 		//$fromModel = "FROM " . htmlspecialchars($this->modelContext) . " ";
 		//$fromData = "FROM " . htmlspecialchars($this->dataContext) . " ";
-		$fromModel = "FROM " . ($this->modelContext) . " ";
-		// + multipart
-		$fromData = "FROM " . ($this->dataContext) . " ";
+		
+		//all city chunks
+		$fromModel = "";
+		foreach ($this->modelContext as $model) {
+			$fromModel .= "FROM <" . $model . "> ";
+		}
+
+		$fromData = "FROM <" . ($this->dataContext) . "> ";
 
 		$this->queryString = substr_replace($this->queryString, $fromModel . $fromData, $pos, 0);
 
