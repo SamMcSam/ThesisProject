@@ -14,7 +14,7 @@
 		vizu:fontSize = size of the textual content
 		vizu:appearanceText = an Appearance node for the textual content
 		vizu:appearancePanel = an Appearance node for the panel behind it
-		vizu:orientation = orientation of the panel - x y z angle(radian) (for default use "0 0 0 0")
+		vizu:orientation = orientation of the panel - x y z angle(radian) (for default use "0 0 0 0") (for facing one direction "0 1 0 1.57079633")
 		vizu:border = size of the label around the text
 
 	Returned object : 
@@ -52,7 +52,7 @@
 
 		<!--overall orientation-->
 		<position>
-			<xsl:attribute name="orientation">
+			<xsl:attribute name="rotation">
 				<xsl:value-of select="./vizu:orientation"/>
 			</xsl:attribute>
 
