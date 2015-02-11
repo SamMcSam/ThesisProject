@@ -95,6 +95,7 @@ class CityRDF {
    		$newRoot->setAttribute('xmlns:failsafe','http://escape.nodes/without/namespaces#');
    		$newRoot->setAttribute('xmlns:core', 'http://www.opengis.net/citygml/1.0');
    		$newRoot->setAttribute('xmlns:protogeometry', 'http://unige.ch/masterThesis/'); //for adding attributes
+   		$newRoot->setAttribute('xmlns:ex=', 'http://example.org/stuff/1.0/'); //for the one missing namespace in carouge -_-
 	
 
 		//transform multiple pos into a single posList (old gml doc)
