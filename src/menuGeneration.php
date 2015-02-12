@@ -64,7 +64,8 @@ $listParameters = $technique->getParameterWithValues();
 		<table>
 			<tr>
 				<td> <button class='champs' type='button' onclick="goBackEnrichment();">Cancel</button> </td>
-				<td> <input type='submit' value='Generate enriched model'/> </td>
+				<td> <input type='submit'  name="display_button" value='Visualize enriched model'/> </td>
+				<td> <input type='submit'  name="save_button" value='Save locally'/> </td>
 			</tr>
 		</table>
 
