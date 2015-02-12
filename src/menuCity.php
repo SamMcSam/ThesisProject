@@ -28,6 +28,8 @@ $startTime = time();
 if (isset($_FILES["uploadcity_file"])) {
 	try 
 	{
+		$sesame = new SesameInterface(URL_SESAME);
+		
 		$nameFile = $_FILES["uploadcity_file"]["name"];
 		$tempFile = $_FILES["uploadcity_file"]["tmp_name"];
 		//echo $nameFile;
@@ -45,7 +47,6 @@ if (isset($_FILES["uploadcity_file"])) {
 
 		// create repository
 		$nameRepo = $str=preg_replace('/\s+/', '', $nameFile); // removes spaces
-		$sesame = new SesameInterface(URL_SESAME);
 
 		if (!$sesame->existsRepository($nameRepo)) {
 			$description = "Repository for the city '" . $nameRepo . "' created on " . date("Y-m-d H:i:s");
