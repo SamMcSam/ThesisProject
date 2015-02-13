@@ -125,7 +125,7 @@ class ModelResult
 		$xpathObjects = new DOMXPath($visualization->getXML());
 
 		// each object is added to the main transform tag
-		$mainTransform = $xpathMain->query('//transform[1]')->item(0);
+		$mainTransform = $xpathMain->query('//transform[1]|//Transform[1]')->item(0);
 
 		//import all visualization objects
 		$listObject = $xpathObjects->query('//visualization/*');

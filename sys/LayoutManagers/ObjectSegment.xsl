@@ -13,8 +13,6 @@
 		vizu:originX = origin point
 		vizu:originY
 		vizu:originZ
-
-	Parameters optional :
 		vizu:endX = end point
 		vizu:endY
 		vizu:endZ
@@ -58,16 +56,16 @@
 			</xsl:otherwise>
 		</xsl:choose>
 
-		<shape>
+		<Shape>
 			<IndexedLineSet coordIndex='0 1'>
 				<Coordinate>
 					<xsl:attribute name="point"><xsl:value-of select="./vizu:originX" /><xsl:text> </xsl:text><xsl:value-of select="./vizu:originY" /><xsl:text> </xsl:text><xsl:value-of select="./vizu:originZ" /><xsl:text> </xsl:text><xsl:value-of select="$endX" /><xsl:text> </xsl:text><xsl:value-of select="$endY" /><xsl:text> </xsl:text><xsl:value-of select="$endZ" /><xsl:text> </xsl:text></xsl:attribute>
 				</Coordinate>
 			</IndexedLineSet> 
-		 	<appearance>
-				<material diffuseColor="0 0 0"/>
-			</appearance>
-		</shape> 
+		 	<Appearance>
+				<Material diffuseColor="0 0 0"/>
+			</Appearance>
+		</Shape> 
 
 	</xsl:template>	
 

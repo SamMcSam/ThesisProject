@@ -29,27 +29,27 @@
 	<!--shape object-->
 	<xsl:template match="*[@typeLayout='ObjectStar']">
 		
-		<position>
+		<Position>
 			<xsl:attribute name="scale"><xsl:value-of select="./vizu:scale" /><xsl:text> </xsl:text><xsl:value-of select="./vizu:scale" /><xsl:text> </xsl:text><xsl:value-of select="./vizu:scale" /></xsl:attribute>
 			
-			<group  DEF="horiz" >
-				<shape  DEF="spike" >
-
-			       <appearance>
+			<Group  DEF="horiz" >
+				<Shape  DEF="spike" >
+			       <Appearance>
 						<xsl:apply-templates select="./vizu:appearance" />	
-					</appearance>
+					</Appearance>
 
-			       	<cylinder  radius="0.5" height="5.0"/>
-			    </shape>
-			    <position  rotation="1 0 0 1.5708">
-			        <shape  USE="spike"><xsl:text> </xsl:text></shape>
-			    </position>
+			       	<Cylinder  radius="0.5" height="5.0"/>
+			    </Shape>
+			    <Position  rotation="1 0 0 1.5708">
+			        <Shape  USE="spike"><xsl:text> </xsl:text></Shape>
+			    </Position>
 
-			</group>
-			<position rotation="0 1 0 1.5708">
-					<shape USE="horiz"><xsl:text> </xsl:text></shape>
-			</position>
-		</position>
+			</Group>
+			
+			<Position rotation="0 1 0 1.5708">
+					<Shape USE="horiz"><xsl:text> </xsl:text></Shape>
+			</Position>
+		</Position>
 
 	</xsl:template>	
 

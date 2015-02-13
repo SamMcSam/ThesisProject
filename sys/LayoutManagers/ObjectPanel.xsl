@@ -51,45 +51,45 @@
 		<xsl:variable name="height"><xsl:value-of select="./vizu:fontSize" /></xsl:variable>
 
 		<!--overall orientation-->
-		<position>
+		<Position>
 			<xsl:attribute name="rotation">
 				<xsl:value-of select="./vizu:orientation"/>
 			</xsl:attribute>
 
 			<!--box behind-->
-			<position translation="0 0 -1">
-				<shape>
-					<appearance>
+			<Position translation="0 0 -1">
+				<Shape>
+					<Appearance>
 						<xsl:apply-templates select="./vizu:appearancePanel" />	
-					</appearance>	
+					</Appearance>	
 
-					<box>
+					<Box>
 						<xsl:attribute name="size">
 							<xsl:value-of select="$length * 3 + ./vizu:border"/>
 							<xsl:text> </xsl:text>
 							<xsl:value-of select="$height + ./vizu:border"/>
 							<xsl:text> </xsl:text>1</xsl:attribute>
 						<xsl:text> </xsl:text>
-					</box>
-				</shape>
-			</position>
+					</Box>
+				</Shape>
+			</Position>
 
 			<!--text-->
-			<shape>
-				<appearance>
+			<Shape>
+				<Appearance>
 					<xsl:apply-templates select="./vizu:appearanceText" />	
-				</appearance>	
+				</Appearance>	
 
-				<text>
+				<Text>
 					<xsl:attribute name="string"><xsl:value-of select="./vizu:content"/></xsl:attribute>
 					<FontStyle>
 						<xsl:attribute name="size"><xsl:value-of select="./vizu:fontSize"/></xsl:attribute>
 						<xsl:text> </xsl:text>
 					</FontStyle>
-				</text>
-			</shape>
+				</Text>
+			</Shape>
 
-		</position>
+		</Position>
 
 	</xsl:template>	
 	

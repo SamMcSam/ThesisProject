@@ -13,10 +13,10 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 	<!--Position object-->
-	<xsl:template match="position">
-        <transform>
+	<xsl:template match="Position|position">
+        <Transform>
         	<xsl:apply-templates select="@*|node()"/>
-        </transform>
+        </Transform>
     </xsl:template>	
 
 </xsl:stylesheet> 

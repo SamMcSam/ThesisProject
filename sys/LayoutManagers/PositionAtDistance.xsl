@@ -38,7 +38,7 @@
 		<xsl:variable name="distanceY" select="number(vizu:distanceY)" />
 		<xsl:variable name="distanceZ" select="number(vizu:distanceZ)" />
 
-		<position>
+		<Position>
 			<xsl:attribute name="translation">
 				<xsl:value-of select="$originX + $distanceX" /><xsl:text> </xsl:text>
 				<xsl:value-of select="$originY + $distanceY" /><xsl:text> </xsl:text>
@@ -46,7 +46,7 @@
 			</xsl:attribute>
 			
 			<xsl:apply-templates select="./vizu:sceneObject" />
-		</position>
+		</Position>
 
 	</xsl:template>
 

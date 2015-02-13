@@ -39,7 +39,7 @@
 		<xsl:variable name="distanceY" select="number(vizu:distanceY)" />
 		<xsl:variable name="distanceZ" select="number(vizu:distanceZ)" />
 
-		<position>
+		<Position>
 			<xsl:attribute name="translation">
 				<xsl:value-of select="$originX + $distanceX" /><xsl:text> </xsl:text>
 				<xsl:value-of select="$originY + $distanceY" /><xsl:text> </xsl:text>
@@ -48,7 +48,7 @@
 			
 			<xsl:apply-templates select="./vizu:sceneObject" />
 
-			<shape>
+			<Shape>
 				<IndexedLineSet coordIndex='0 1'>
 				<Coordinate DEF='Segment'>
 					<xsl:attribute name="point">
@@ -58,15 +58,19 @@
 					</xsl:attribute>
 				</Coordinate>
 				</IndexedLineSet> 
-				<appearance>
-					<material>
+				<Appearance>
+					<LineProperties DEF='TestLineProperties' linetype='1' linewidthScaleFactor='1000' applied='true' containerField='lineProperties'>
+					<MetadataString name='test LineProperties metadata child' containerField='metadata'/>
+					</LineProperties>
+
+					<Material>
 						<xsl:attribute name="emissiveColor">
 							<xsl:value-of select="./vizu:lineColor" />
 						</xsl:attribute>
-					</material> 
-				</appearance>
-			</shape>
-		</position>
+					</Material> 
+				</Appearance>
+			</Shape>
+		</Position>
 
 	</xsl:template>
 

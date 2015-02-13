@@ -29,17 +29,17 @@
 	<!--shape object-->
 	<xsl:template match="*[@typeLayout='ObjectBox']">
 
-		<shape>
-			<box>
+		<Shape>
+			<Box>
 				<xsl:attribute name="size">
 					<xsl:value-of select="./vizu:sizeX"/><xsl:text> </xsl:text><xsl:value-of select="./vizu:sizeY"/><xsl:text> </xsl:text><xsl:value-of select="./vizu:sizeZ"/> 
 				</xsl:attribute>
 				<xsl:text> </xsl:text> <!--REALLY IMPORTANT!! - without it, php will create an empty tag (not accepted in x3d) -->
-			</box> 
-			<appearance>
+			</Box> 
+			<Appearance>
 				<xsl:apply-templates select="./vizu:appearance" />	
-			</appearance>
-		</shape>
+			</Appearance>
+		</Shape>
 
 	</xsl:template>	
 

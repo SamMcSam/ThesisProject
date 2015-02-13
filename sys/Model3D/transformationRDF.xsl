@@ -30,13 +30,15 @@
     </xsl:template>
 
 	<xsl:template match="/">
-		<scene dopickpass="true" pickmode="idBuf" bboxsize="-1,-1,-1" bboxcenter="0,0,0" render="true">
-		
-			<transform translation="0 0 0">
-				<xsl:apply-templates />
-			</transform>
+		<X3D width='600px' height='400px'>
+			<Scene dopickpass="true" pickmode="idBuf" bboxsize="-1,-1,-1" bboxcenter="0,0,0" render="true">
 			
-		</scene>
+				<Transform translation="0 0 0">
+					<xsl:apply-templates />
+				</Transform>
+				
+			</Scene>
+		</X3D>
     </xsl:template>
 
 

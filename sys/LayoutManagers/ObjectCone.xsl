@@ -30,29 +30,29 @@
 	<!--shape object-->
 	<xsl:template match="*[@typeLayout='ObjectCone']">
 		
-		<position>
+		<Position>
 			<xsl:attribute name="rotation">1 0 0 1.5708</xsl:attribute>
 			<xsl:attribute name="translation">0<xsl:text> </xsl:text>0<xsl:text> </xsl:text><xsl:value-of select="./vizu:height div 2" /></xsl:attribute>
 
-			<shape>
+			<Shape>
 
 				<xsl:apply-templates select="./vizu:sceneObject" />
 			
-				<cone>
+				<Cone>
 					<xsl:attribute name="bottomRadius"><xsl:value-of select="./vizu:bottomRadius"/></xsl:attribute>
 
 					<xsl:attribute name="height"><xsl:value-of select="./vizu:height"/></xsl:attribute>
 
 					<xsl:text> </xsl:text> <!--REALLY IMPORTANT!! - without it, php will create an empty tag (not accepted in x3d) -->
-				</cone>
+				</Cone>
 
-				<appearance>
+				<Appearance>
 					<xsl:apply-templates select="./vizu:appearance" />	
-				</appearance>
+				</Appearance>
 
-			</shape>
+			</Shape>
 
-	</position>
+	</Position>
 
 	</xsl:template>	
 

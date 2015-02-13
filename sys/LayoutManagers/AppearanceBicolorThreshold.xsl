@@ -23,7 +23,7 @@
 
 	<!--shape object-->
 	<xsl:template match="*[@typeLayout='AppearanceBicolorThreshold']">
-		<material>
+		<Material>
 
 			<xsl:choose>
 				<xsl:when test="./vizu:value &lt; ./vizu:theshold">
@@ -34,7 +34,7 @@
 				</xsl:otherwise>
 	       </xsl:choose>
 			
-		</material>
+		</Material>
 	</xsl:template>	
 
 </xsl:stylesheet>

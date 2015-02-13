@@ -31,16 +31,16 @@
 	<!--shape object-->
 	<xsl:template match="*[@typeLayout='ObjectSphere']">
 
-		<shape>
-			<sphere>
+		<Shape>
+			<Sphere>
 				<xsl:attribute name="radius"><xsl:value-of select="./vizu:radius"/></xsl:attribute>
 				<xsl:text> </xsl:text> <!--REALLY IMPORTANT!! - without it, php will create an empty tag (not accepted in x3d) -->
-			</sphere>
+			</Sphere>
 			
-			<appearance>
+			<Appearance>
 				<xsl:apply-templates select="./vizu:appearance" />	
-			</appearance>		
-		</shape>
+			</Appearance>		
+		</Shape>
 
 	</xsl:template>	
 	

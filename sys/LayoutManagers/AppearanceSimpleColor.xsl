@@ -20,9 +20,9 @@
 
 	<!--shape object-->
 	<xsl:template match="*[@typeLayout='AppearanceSimpleColor']">
-		<material>
+		<Material>
 			<xsl:attribute name="diffuseColor"><xsl:value-of select="./vizu:diffuseColor"/></xsl:attribute>
-		</material>
+		</Material>
 	</xsl:template>	
 
 </xsl:stylesheet>

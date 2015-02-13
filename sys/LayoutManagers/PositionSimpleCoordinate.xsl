@@ -30,7 +30,7 @@
 	<!--Position object-->
 	<xsl:template match="*[@typeLayout='PositionSimpleCoordinate']">	
 
-		<position>
+		<Position>
 			<xsl:attribute name="translation">
 				<xsl:value-of select="vizu:x" /><xsl:text> </xsl:text>
 				<xsl:value-of select="vizu:y" /><xsl:text> </xsl:text>
@@ -38,7 +38,7 @@
 			</xsl:attribute>
 			
 			<xsl:apply-templates select="./vizu:sceneObject" />
-		</position>
+		</Position>
 
 	</xsl:template>
 
