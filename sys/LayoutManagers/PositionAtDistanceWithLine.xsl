@@ -59,7 +59,7 @@
 				</Coordinate>
 				</IndexedLineSet> 
 				<Appearance>
-					<LineProperties DEF='TestLineProperties' linetype='1' linewidthScaleFactor='1000' applied='true' containerField='lineProperties'>
+					<LineProperties DEF='TestLineProperties' linetype='1' linewidthScaleFactor='10' applied='true' containerField='lineProperties'>
 					<MetadataString name='test LineProperties metadata child' containerField='metadata'/>
 					</LineProperties>
 

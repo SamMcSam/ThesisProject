@@ -1,0 +1,46 @@
+PREFIX gml:<http://www.opengis.net/gml>
+PREFIX data:<http://master.thesis/project/data/>
+PREFIX vizu:<http://unige.ch/masterThesis/>
+PREFIX layout:<http://unige.ch/masterThesis/layoutmanagers/>
+PREFIX protogeometry:<http://unige.ch/masterThesis/>
+
+CONSTRUCT {
+  _:technique a vizu:relationLineWithoutValue.
+  _:technique vizu:location _:position.
+  
+  _:position a layout:ObjectSegment.
+  _:position vizu:originX ?startX.
+  _:position vizu:originY ?startY.
+  _:position vizu:originZ ?startZ.
+  _:position vizu:endX ?endX.
+  _:position vizu:endY ?endY.
+  _:position vizu:endZ ?endZ.
+  _:position vizu:lineColor #color=0 0 0#.
+}
+
+WHERE {
+?info a data:DataType3.
+
+?info data:value ?val.
+?info data:idA ?dataIdA.
+?info data:idB ?dataIdB.
+
+?objectA gml:id ?idA.
+?objectB gml:id ?idB.
+FILTER 
+(
+str(?idA) = str(?dataIdA)
+&& str(?idB) = str(?dataIdB)
+&& str(?idB) != str(?dataIdB)
+)
+
+?objectA protogeometry:center ?centerA.
+?centerA protogeometry:x ?startX.
+?centerA protogeometry:y ?startY.
+?centerA protogeometry:z ?startZ.
+
+?objectB protogeometry:center ?centerB.
+?centerB protogeometry:x ?endX.
+?centerB protogeometry:y ?endY.
+?centerB protogeometry:z ?endZ.
+}
