@@ -5,7 +5,7 @@ PREFIX layout:<http://unige.ch/masterThesis/layoutmanagers/>
 PREFIX protogeometry:<http://unige.ch/masterThesis/>
 
 CONSTRUCT {
-  _:technique a vizu:relationLineWithoutValue.
+  _:technique a vizu:relationLineWithLabelAbove.
   _:technique vizu:location _:position.
   
   _:position a layout:PositionBetweenTwoPointsWithLine.
@@ -15,10 +15,38 @@ CONSTRUCT {
   _:position vizu:endX ?endX.
   _:position vizu:endY ?endY.
   _:position vizu:endZ ?endZ.
-  _:position vizu:appearanceLine _:appearance.
+  _:position vizu:appearanceLine _:appearanceLB.
+  _:position vizu:sceneObject _:position2.
 
-  _:appearance a layout:AppearanceSimpleColor.
-  _:appearance vizu:emissiveColor #color=0 0 0#.
+  _:appearanceLB a layout:AppearanceSimpleColor.
+  _:appearanceLB vizu:emissiveColor #lineBetweenColor=0 0 0#.
+
+  _:position2 a layout:PositionAtDistanceWithLine.
+  _:position2 vizu:originX '0'.
+  _:position2 vizu:originY '0'.
+  _:position2 vizu:originZ '0'.
+  _:position2 vizu:distanceX '0'.
+  _:position2 vizu:distanceY '0'.
+  _:position2 vizu:distanceZ #offset=10#.
+  _:position2 vizu:appearanceLine _:appearanceLA.
+  _:position2 vizu:sceneObject _:object.
+
+  _:appearanceLA a layout:AppearanceSimpleColor.
+  _:appearanceLA vizu:emissiveColor #lineAboveColor=0 0 0#.
+
+  _:object a layout:ObjectPanel.
+  _:object vizu:content ?val.
+  _:object vizu:fontSize #fontSize=5#.
+  _:object vizu:orientation #orientation=0 0 0 0#.
+  _:object vizu:border #border=1#.
+  _:object vizu:appearanceText _:appearanceT.
+  _:object vizu:appearancePanel _:appearanceP.
+
+  _:appearanceT a layout:AppearanceSimpleColor.
+  _:appearanceT vizu:diffuseColor '1 1 1'.
+
+  _:appearanceP a layout:AppearanceSimpleColor.
+  _:appearanceP vizu:diffuseColor '0.2 0.2 0.2'.
 }
 WHERE {
   ?data a data:DataType3.  

@@ -16,8 +16,8 @@
 		vizu:distanceX = distance to the originX point
 		vizu:distanceY
 		vizu:distanceZ
-		vizu:lineColor = (r g b)
 		vizu:sceneObject = any object node with its own manager
+		vizu:appearanceLine = an Appearance node for the line
 
 	Returned object : 
 		<Position translation="_ _ _">
@@ -59,16 +59,21 @@
 				</Coordinate>
 				</IndexedLineSet> 
 				<Appearance>
+					<xsl:apply-templates select="./vizu:appearanceLine" />	
+				</Appearance>	
+				<!--
+				<Appearance>
 					<LineProperties DEF='TestLineProperties' linetype='1' linewidthScaleFactor='10' applied='true' containerField='lineProperties'>
 					<MetadataString name='test LineProperties metadata child' containerField='metadata'/>
 					</LineProperties>
 
 					<Material>
 						<xsl:attribute name="emissiveColor">
-							<xsl:value-of select="./vizu:lineColor" />
+							<xsl:value-of select="./vizu:appearanceLine" />
 						</xsl:attribute>
 					</Material> 
 				</Appearance>
+				-->
 			</Shape>
 		</Position>
 

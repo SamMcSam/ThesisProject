@@ -15,8 +15,11 @@ CONSTRUCT {
   _:position vizu:distanceX '0'.
   _:position vizu:distanceY '0'.
   _:position vizu:distanceZ #offset=10#.
-  _:position vizu:lineColor #color=0 0 0#.
+  _:position vizu:appearanceLine _:appearanceL.
   _:position vizu:sceneObject _:object.
+
+  _:appearanceL a layout:AppearanceSimpleColor.
+  _:appearanceL vizu:diffuseColor #lineColor=0 0 0#.
 
   _:object a layout:ObjectPanel.
   _:object vizu:content ?val.
