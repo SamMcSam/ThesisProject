@@ -17,11 +17,17 @@ CONSTRUCT {
   _:object vizu:radius #radius=10#.
   _:object vizu:appearance _:appearance.
 
-  _:appearance a layout:AppearanceBicolorThreshold.
-  _:appearance vizu:color1 #color1=0 1 1#.
-  _:appearance vizu:color2 #color2=1 0 0#.
+  _:appearance a layout:ComputationThreshold.
   _:appearance vizu:value ?val.
   _:appearance vizu:theshold #threshold=5#.
+  _:appearance vizu:object1 _:color1.
+  _:appearance vizu:object2 _:color2.
+
+  _:color1 a layout:AppearanceSimpleColor.
+  _:color1 vizu:diffuseColor #color1=0 1 0#.
+
+  _:color2 a layout:AppearanceSimpleColor.
+  _:color2 vizu:diffuseColor #color2=1 0 0#.
 }
 
 WHERE {
