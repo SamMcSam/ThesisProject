@@ -94,12 +94,9 @@ try
 	$errorMessage = "ERROR : " . $e->getMessage();
 }
 
-
 //Either displays in in HTML loader
 //Or save as
 if (isset($_POST["display_button"]))
 	include("displayEnrichment.php");
 else if (isset($_POST["save_button"]))
 	include("downloadEnrichment.php");
-
-?>

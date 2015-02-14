@@ -46,7 +46,7 @@
 			<Coordinate DEF='Segment'>
 				<xsl:attribute name="point">
 					<xsl:value-of select="$originX" /><xsl:text> </xsl:text>
-					<xsl:value-of select="$originX" /><xsl:text> </xsl:text>
+					<xsl:value-of select="$originY" /><xsl:text> </xsl:text>
 					<xsl:value-of select="$originZ" /><xsl:text> </xsl:text>
 					<xsl:value-of select="$endX" /><xsl:text> </xsl:text>
 					<xsl:value-of select="$endY" /><xsl:text> </xsl:text>

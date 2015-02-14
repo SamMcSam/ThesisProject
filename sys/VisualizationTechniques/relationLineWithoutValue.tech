@@ -17,30 +17,35 @@ CONSTRUCT {
   _:position vizu:endZ ?endZ.
   _:position vizu:lineColor #color=0 0 0#.
 }
-
 WHERE {
-?info a data:DataType3.
-
-?info data:value ?val.
-?info data:idA ?dataIdA.
-?info data:idB ?dataIdB.
-
-?objectA gml:id ?idA.
-?objectB gml:id ?idB.
-FILTER 
-(
-str(?idA) = str(?dataIdA)
-&& str(?idB) = str(?dataIdB)
-&& str(?idB) != str(?dataIdB)
-)
-
-?objectA protogeometry:center ?centerA.
-?centerA protogeometry:x ?startX.
-?centerA protogeometry:y ?startY.
-?centerA protogeometry:z ?startZ.
-
-?objectB protogeometry:center ?centerB.
-?centerB protogeometry:x ?endX.
-?centerB protogeometry:y ?endY.
-?centerB protogeometry:z ?endZ.
+  ?data a data:DataType3.  
+  ?data data:value ?val.
+  {
+    SELECT *
+    WHERE 
+    {
+        ?data a data:DataType3.  
+        ?data data:idA ?datId1.
+        ?obj1 gml:id ?obId1.
+        ?obj1 protogeometry:center ?centerA.
+        ?centerA protogeometry:x ?startX.
+        ?centerA protogeometry:y ?startY.
+        ?centerA protogeometry:z ?startZ.
+      FILTER (str(?datId1) = str(?obId1)) 
+    }
+  }
+  {
+    SELECT *
+    WHERE 
+    {
+      ?data a data:DataType3.  
+      ?data data:idB ?datId2.
+      ?obj2 gml:id ?obId2.
+      ?obj2 protogeometry:center ?centerB.
+      ?centerB protogeometry:x ?endX.
+      ?centerB protogeometry:y ?endY.
+      ?centerB protogeometry:z ?endZ.
+      FILTER (str(?datId2) = str(?obId2))
+    }
+  }
 }

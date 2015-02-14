@@ -175,7 +175,7 @@ class TechniqueQuery {
 	{
 		// ADDS 'FROM' statements
 
-		$pos = strrpos($this->queryString , "WHERE");
+		$pos = strpos($this->queryString , "WHERE");
 
 		//$fromModel = "FROM " . htmlspecialchars($this->modelContext) . " ";
 		//$fromData = "FROM " . htmlspecialchars($this->dataContext) . " ";
