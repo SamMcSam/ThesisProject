@@ -1,0 +1,35 @@
+PREFIX gml:<http://www.opengis.net/gml>
+PREFIX data:<http://master.thesis/project/data/>
+PREFIX vizu:<http://unige.ch/masterThesis/>
+PREFIX layout:<http://unige.ch/masterThesis/layoutmanagers/>
+
+CONSTRUCT {
+  _:technique a vizu:vectorfieldValueAsColor.
+  _:technique vizu:location _:position.
+
+  _:position a layout:PositionAtCoordinate.
+  _:position vizu:x ?x.
+  _:position vizu:y ?y.
+  _:position vizu:z ?z.
+  _:position vizu:offsetZ #zOffset=10#.
+  _:position vizu:sceneObject _:object.
+
+  _:object a layout:ObjectSegment.
+  _:object vizu:lineColor #color=1 0 0#.
+  _:object vizu:originX '0'.
+  _:object vizu:originY '0'.
+  _:object vizu:originZ '0'.
+  _:object vizu:endX ?vX.
+  _:object vizu:endY ?vY.
+  _:object vizu:endZ ?vZ.
+}
+
+WHERE {
+?info a data:DataComplexVector.
+?info data:x ?x.
+?info data:y ?y.
+?info data:z ?z.
+?info data:vX ?vX.
+?info data:vY ?vY.
+?info data:vZ ?vZ.
+}
