@@ -66,7 +66,7 @@ try
 
 	// Runs CONSTRUCT
 	//----------------------------
-	
+
 	//gets constructed graph
 	//$reponse = $sesame->query($query , 'Accept: ' . SesameInterface::RDFXML);
 	//echo $reponse;
@@ -93,6 +93,7 @@ try
 {
 	$errorMessage = "ERROR : " . $e->getMessage();
 }
+//echo $errorMessage;
 
 //Either displays in in HTML loader
 //Or save as

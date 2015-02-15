@@ -1,0 +1,28 @@
+PREFIX gml:<http://www.opengis.net/gml>
+PREFIX data:<http://master.thesis/project/data/>
+PREFIX vizu:<http://unige.ch/masterThesis/>
+PREFIX layout:<http://unige.ch/masterThesis/layoutmanagers/>
+PREFIX protogeometry:<http://unige.ch/masterThesis/>
+
+CONSTRUCT {
+  _:technique a vizu:SimpleIsosurface.
+  _:technique vizu:content _:complex.
+  
+  _:complex a layout:ComplexElevationGrid.
+  _:complex vizu:x ?x.
+  _:complex vizu:y ?y.
+  _:complex vizu:z ?z.
+  _:complex vizu:val ?val.
+
+  _:complex vizu:color #color=1 0 0#.
+  _:complex vizu:creaseAngle #creaseAngle=0#.
+  _:complex vizu:offsetZ #offsetZ=0#.
+  _:complex vizu:proportion #proportion=1#.
+}
+WHERE {
+?info a data:DataType1.
+?info data:value ?val.
+?info data:x ?x.
+?info data:y ?y.
+?info data:z ?z.
+}
