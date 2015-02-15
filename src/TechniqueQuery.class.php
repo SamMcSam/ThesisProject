@@ -141,15 +141,16 @@ class TechniqueQuery {
 
 	//-------------------------------------------------------
 
+	//TODO : correct this! with this code, error when value = 0!?!
 	private function validateParameters()
 	{
 		$this->parametersValid = true;
-
+		/*
 		foreach ($this->parameters as $key => $value) {
 			if (empty($value))
 				$this->parametersValid = false;
 		}
-
+		*/
 		//echo $this->parametersValid;
 		//print_r($this->parameters);
 		return $this->parametersValid;
