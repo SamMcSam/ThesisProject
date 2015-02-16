@@ -5,7 +5,7 @@ PREFIX layout:<http://unige.ch/masterThesis/layoutmanagers/>
 PREFIX protogeometry:<http://unige.ch/masterThesis/>
 
 CONSTRUCT {
-  _:technique a vizu:SimpleIsosurface.
+  _:technique a vizu:IsosurfaceSimpleColor.
   _:technique vizu:content _:complex.
   
   _:complex a layout:ComplexElevationGrid.
