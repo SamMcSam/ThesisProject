@@ -16,6 +16,7 @@ CONSTRUCT {
   _:object a layout:ObjectCone.
   _:object vizu:bottomRadius #radius=10#.
   _:object vizu:height ?val.
+  _:object vizu:proportionHeight #proportionHeight=1#.
   _:object vizu:appearance _:appearance.
 
   _:appearance a layout:AppearanceSimpleColor.

@@ -30,7 +30,7 @@
     </xsl:template>
 
 	<xsl:template match="/">
-		<X3D width='600px' height='400px'>
+		<X3D profile='Interactive' version='3.0' width='600px' height='400px'>
 			<Scene dopickpass="true" pickmode="idBuf" bboxsize="-1,-1,-1" bboxcenter="0,0,0" render="true">
 			
 				<Transform translation="0 0 0">
