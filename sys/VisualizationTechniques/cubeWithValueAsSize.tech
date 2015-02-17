@@ -7,10 +7,11 @@ CONSTRUCT {
   _:technique a vizu:cubeWithValueAsSize.
   _:technique vizu:location _:position.
   
-  _:position a layout:PositionSimpleCoordinate.
+  _:position a layout:PositionAtCoordinate.
   _:position vizu:x ?x.
   _:position vizu:y ?y.
   _:position vizu:z ?z.
+  _:position vizu:offsetZ #offsetZ=0#.
   _:position vizu:sceneObject _:object.
 
   _:object a layout:ObjectBox.
