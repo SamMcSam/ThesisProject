@@ -4,7 +4,7 @@
 
 	Author : Samuel Constantino
 	Created : 28/1/15
-	Last update : 28/1/15
+	Last update : 17/2/15
 	***************************
 
 	Description : defines an example of a more complex 3d object
@@ -12,6 +12,8 @@
 	Parameters necessary : 
 		vizu:scale = size of the object
 		vizu:appearance = an Appearance node
+	Optional parameters:
+		vizu:proportion = applied to the scale
 
 	Returned object : 
 		<position> (so that the base is at Z position)
@@ -28,9 +30,20 @@
 
 	<!--shape object-->
 	<xsl:template match="*[@typeLayout='ObjectStar']">
+
+		<!--optional parameters-->
+		<xsl:variable name="proportion">
+			<xsl:choose>
+				<xsl:when test="vizu:proportion"><xsl:value-of select="number(vizu:proportion)" /></xsl:when>
+				<xsl:otherwise>1</xsl:otherwise>				
+			</xsl:choose>
+		</xsl:variable>
+
+		<!--required parameters-->
+		<xsl:variable name="scale" select="number(vizu:scale) * $proportion" />
 		
 		<Position>
-			<xsl:attribute name="scale"><xsl:value-of select="./vizu:scale" /><xsl:text> </xsl:text><xsl:value-of select="./vizu:scale" /><xsl:text> </xsl:text><xsl:value-of select="./vizu:scale" /></xsl:attribute>
+			<xsl:attribute name="scale"><xsl:value-of select="$scale" /><xsl:text> </xsl:text><xsl:value-of select="$scale" /><xsl:text> </xsl:text><xsl:value-of select="$scale" /></xsl:attribute>
 			
 			<Group  DEF="horiz" >
 				<Shape  DEF="spike" >

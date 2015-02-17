@@ -47,7 +47,7 @@
 				<xsl:otherwise>1</xsl:otherwise>				
 			</xsl:choose>
 		</xsl:variable>
-
+		<!--required parameters-->
 		<xsl:variable name="bottomRadius" select="number(vizu:bottomRadius) * $proportionRadius" />
 		<xsl:variable name="height" select="number(vizu:height) * $proportionHeight" />
 		

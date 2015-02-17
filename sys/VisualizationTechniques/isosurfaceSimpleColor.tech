@@ -13,7 +13,6 @@ CONSTRUCT {
   _:complex vizu:y ?y.
   _:complex vizu:z ?z.
   _:complex vizu:val ?val.
-
   _:complex vizu:color #color=1 0 0#.
   _:complex vizu:creaseAngle #creaseAngle=0#.
   _:complex vizu:offsetZ #offsetZ=0#.
