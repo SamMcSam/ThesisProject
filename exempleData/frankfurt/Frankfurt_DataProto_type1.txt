@@ -1,0 +1,8 @@
+#prototype data
+#example of type 1 data - value associated to points
+#$x $y $z $val
+200 250 1 4
+200 260 1 2
+200 280 1 5
+200 290 1 3
+200 300 1 4
