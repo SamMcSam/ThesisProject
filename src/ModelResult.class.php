@@ -5,9 +5,8 @@
 * created : 14/1/2015
 * last update : 14/1/2015
 *
-* queries the repository with a CONSTRUCT query (got from TechniqueQuery object) -> gets abstract objects
-* applies layout managers -> gets concrete generic objects
-* translates output into a defined language -> gets concrete objects
+* queries the repository to retrieve the 3D scene
+* adds the visualization objects to create an enriched city model
 * 
 * note that this model only supports X3D as output for the mb_decode_numericentity(str, convmap, encoding)
 */

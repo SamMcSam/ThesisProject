@@ -5,7 +5,7 @@ PREFIX layout:<http://unige.ch/masterThesis/layoutmanagers/>
 PREFIX protogeometry:<http://unige.ch/masterThesis/>
 
 CONSTRUCT {
-  _:technique a vizu:relationLineWithoutValue.
+  _:technique a vizu:relationLineWithValueAsColor.
   _:technique vizu:location _:position.
   
   _:position a layout:PositionBetweenTwoPointsWithLine.
@@ -19,7 +19,7 @@ CONSTRUCT {
   
   _:appearance a layout:ComputationThreshold.
   _:appearance vizu:value ?val.
-  _:appearance vizu:theshold #threshold=5#.
+  _:appearance vizu:threshold #threshold=5#.
   _:appearance vizu:object1 _:color1.
   _:appearance vizu:object2 _:color2.
 

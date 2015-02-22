@@ -1,79 +1,362 @@
 
 
 <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='fr' lang='fr'>
-	<head>
-		<title>How to write Technique Specifications?</title>
-		<meta charset='UTF-8'>
-	</head>
+<head>
+	<title>How to write Technique Specifications?</title>
+	<meta charset='UTF-8'>
+</head>
 
-	<body>
-		<header>
-			<div id='headerText'>
-				Prototyping visualization techniques in 3DCM
-				<p>How to use</p>
-			</div>
-		</header>
+<body>
 
-		<div id='mainBlock'>
+	<div id='mainBlock' style='width: 760px ; margin-left: auto ; margin-right: auto ;'>
 
-			Structure : 
-<textarea rows="42" cols="80">
-PREFIX gml:<http://www.opengis.net/gml>
-PREFIX data:<http://master.thesis/project/data/>
-PREFIX vizu:<http://unige.ch/masterThesis/>
-PREFIX layout:<http://unige.ch/masterThesis/layoutmanagers/>
-PREFIX protogeometry:<http://unige.ch/masterThesis/>
+	<h1>Prototyping visualization techniques in 3DCM</h1>
 
-CONSTRUCT {
-_:technique a vizu:coneWithValueAsHeight.
-_:technique vizu:location _:position.
+	<i>Text adapted from the thesis paper annexes</i>
 
-_:position a layout:PositionSimpleCoordinate.
-_:position vizu:x ?x.
-_:position vizu:y ?y.
-_:position vizu:z ?z.
-_:position vizu:sceneObject _:object.
 
-_:object a layout:ObjectPanel.
-_:object vizu:content ?val.
-_:object vizu:fontSize #fontSize=5#.
-_:object vizu:orientation #orientation=0 0 0 0#.
-_:object vizu:border #border=1#.
-_:object vizu:appearanceText _:appearanceT.
-_:object vizu:appearancePanel _:appearanceP.
+	<!-- ************************************************************************** -->
 
-_:appearanceT a layout:AppearanceSimpleColor.
-_:appearanceT vizu:diffuseColor '1 1 1'.
 
-_:appearanceP a layout:AppearanceSimpleColor.
-_:appearanceP vizu:diffuseColor '0.2 0.2 0.2'.
-}
+	<br>
+	<h2>How to write techniques : </h2>
 
-WHERE {
-?info a data:DataType1.
-?info data:value ?val.
-?info data:id ?id1.
+	<p>A visualization technique is defined in a text file containing a CONSTRUCT SPARQL query. The query is made of three parts : the PREFIX clause that defines the namespaces, the CONSTRUCT clause that defines the output graph, and the WHERE clause that defines the input graphs. </p>
 
-?object gml:id ?id2.
-?object protogeometry:center ?center;
-?center protogeometry:x ?centerX;
-?center protogeometry:y ?centerY;
-?center protogeometry:z ?centerZ;
-?object protogeometry:highest ?highest;
-?highest protogeometry:x ?highestX;
-?highest protogeometry:y ?highestY;
-?highest protogeometry:z ?highestZ;
-?object protogeometry:lowest ?lowest;
-?lowest protogeometry:x ?lowestX;
-?lowest protogeometry:y ?lowestY;
-?lowest protogeometry:z ?lowestZ;
+	<p>The minimum namespaces needed are : </p>
 
-FILTER (str(?id1) = str(?id2))
-}
-</textarea>
+	<pre><code>
+	PREFIX gml:<http://www.opengis.net/gml>
+	PREFIX data:<http://master.thesis/project/data/>
+	PREFIX vizu:<http://unige.ch/masterThesis/>
+	PREFIX layout:<http://unige.ch/masterThesis/layoutmanagers/>
+	PREFIX protogeometry:<http://unige.ch/masterThesis/>
+	</code></pre>
 
-			
-		</div>
-	</body>
+	<p>The system only support cities in GML format, so the $gml$ namespace is used to refer to main elements of the city graph. Please refer to the city file you uploaded if you need to know what other namespaces you can use (for example, CityGML defines the namespace for buildings, roads, etc.). The $data$ namespace is used in data graphs. The $vizu$ namespace is used to define the properties of visualization techniques and the $layout$ namespace is used for managers. The $protogeometry$ namespace is used to retrieve geometrical information that was calculated by the system (centers and bounding boxes). </p>
+
+	<p>The CONSTRUCT clause defines what the technique is composed of. We use blank nodes to define all parts of the technique. To use a manager, you need to define a blank node of the class of this manager. Then, you can define what the properties of this manager take as values. For example : </p>
+
+	<pre><code>
+			_:position a layout:PositionSimpleCoordinate.
+			_:position vizu:x ?x.
+			_:position vizu:y ?y.
+			_:position vizu:z ?z.
+			_:position vizu:sceneObject _:object.
+	</code></pre>
+
+	<p>Here, we define a blank node ``position'' of the class ``layout:PositionSimpleCoordinate'' (which is a manager, as you can see with its prefix). This manager has parameters ``vizu:x'', ``vizu:y'', ``vizu:z'' and ``vizu:sceneObject''. We define this parameters with predicate structures. It will produce a positioning node to place the object in a position $x$, $y$ and $z$ in the 3D scene.  </p>
+
+	<p>To know how to use managers, you can take a look at the description down below (as well as in the managers file, in the commentaries). </p>
+
+	<p>All techniques are made of nested managers. In this case the blank node ``\_:object'' will also be of a class manager and have its own parameters. </p>
+
+	<p>Finally the WHERE clause defines the schema to retrieve information from the triple store. We define here the information to put in the variables to use as objects of the predicates in the CONSTRUCT clause. </p>
+
+	<p>Here are the WHERE clauses for each of the data types for a description of the data types) : </p>
+
+	<pre><code>
+		WHERE {
+			?info a data:DataType1.
+			?info data:value ?val.
+			?info data:x ?x.
+			?info data:y ?y.
+			?info data:z ?z.
+		}
+	</code></pre>
+
+	<p>This is the simplest query, that retrieves the $x$, $y$, $z$ and value information from the data graph (to use them in the CONSTRUCT part, as variables ``?x'', ``?y'', ``?z'' and ``?val'').   </p>
+
+	<pre><code>
+		WHERE {
+			?info a data:DataType2.
+
+			?info data:value ?val.
+			?info data:id ?id1.
+
+			?object gml:id ?id2.
+			 FILTER (str(?id1) = str(?id2))
+
+			?object protogeometry:center ?center.
+			?center protogeometry:x ?centerX.
+			?center protogeometry:y ?centerY.
+			?center protogeometry:z ?centerZ.
+
+			?object protogeometry:highest ?highest.
+			?highest protogeometry:x ?highestX.
+			?highest protogeometry:y ?highestY.
+			?highest protogeometry:z ?highestZ.
+
+			?object protogeometry:lowest ?lowest.
+			?lowest protogeometry:x ?lowestX.
+			?lowest protogeometry:y ?lowestY.
+			?lowest protogeometry:z ?lowestZ.
+		}
+	</code></pre>
+
+	<p>This WHERE clause retrieves information on a city object defined in the data as an id, and matches it to the city graph by finding the corresponding id (the FILTER part). We then retrieve informations such as the center (``protogeometry:center'') and corners of the bounding boxes (``protogeometry:highest'' and ``protogeometry:lowest''). </p>
+
+	<pre><code>
+		WHERE {
+			?data a data:DataType3.  
+			?data data:value ?val.
+			{
+				SELECT *
+				WHERE 
+				{
+						?data a data:DataType3.  
+						?data data:idA ?datId1.
+						?obj1 gml:id ?obId1.
+						?obj1 protogeometry:center ?centerA.
+						?centerA protogeometry:x ?startX.
+						?centerA protogeometry:y ?startY.
+						?centerA protogeometry:z ?startZ.
+					FILTER (str(?datId1) = str(?obId1)) 
+				}
+			}
+			{
+				SELECT *
+				WHERE 
+				{
+					?data a data:DataType3.  
+					?data data:idB ?datId2.
+					?obj2 gml:id ?obId2.
+					?obj2 protogeometry:center ?centerB.
+					?centerB protogeometry:x ?endX.
+					?centerB protogeometry:y ?endY.
+					?centerB protogeometry:z ?endZ.
+					FILTER (str(?datId2) = str(?obId2))
+				}
+			}
+		}
+	</code></pre>
+
+	<p>This is the most complex one, as it needs to match two different objects (in nested SELECT queries). If you need a data type that matches more than two, please use this kind of query to write it. </p>
+
+	<p>Note that you could also, for each object, retrieve their centers and bounding boxes information, by adding this information in the nested SELECT queries. </p>
+
+	<pre><code>
+		WHERE {
+			?info a data:DataComplexVector.
+			?info data:x ?x.
+			?info data:y ?y.
+			?info data:z ?z.
+			?info data:vX ?vX.
+			?info data:vY ?vY.
+			?info data:vZ ?vZ.
+		}
+	</code></pre>
+
+	<p>If you define your own data types (in the JSON configuration file), you can follow this same kind of structure to retrieve the data information. </p>
+
+
+	<!-- ************************************************************************** -->
+
+
+	<br>
+	<h2>Data types : </h2>
+
+	<p>The JSON file in the sys/DataTypes directory describes the types of data that can be uploaded to the triple store. This file can also be modified to support new types.  </p>
+
+	<pre><code>
+		{
+			"DataType1": [
+					"x",
+					"y",
+					"z",
+					"value"
+			],
+
+			"DataType2": [
+					"id",
+					"value"
+			],
+
+			"DataType3": [
+					"idA",
+					"idB",
+					"value"
+			],
+
+			"DataComplexVector": [
+					"x",
+					"y",
+					"z",
+					"vX",
+					"vY",
+					"vZ"
+			]
+		}
+	</code></pre>
+
+	<p>A type is described with a name and an array containing the predicates to be used to insert and retrieve the information in the technique queries. </p>
+
+
+	<!-- ************************************************************************** -->
+
+
+	<br>
+	<h2>Managers : </h2>
+
+	<p>Here is a description of all the managers implemented (with parameters in a list each time) :</p>
+
+		<h3>- AppearanceSimpleColor</h3>
+		<ul>
+			<li> diffuseColor - coloring defined as three RGB values between 0 and 1</li>
+			<li> emissiveColor - same</li>
+		</ul>
+		Defines a material with a simple vertex coloring. Its parameters define two different 3D coloring techniques.
+		
+		<h3>- ComplexElevationGrid</h3>
+		<ul>
+			<li> x - coordinate of a single data point</li>
+			<li> y</li>
+			<li> z</li>
+			<li> offsetZ - offset for the z axis</li>
+			<li> val - the value at this point</li>
+			<li> proportion - scaling of the value</li>
+			<li> color - defined as three RGB values between 0 and 1</li>
+			<li> creaseAngle - precision of the curves, between 0 and 1</li>
+		</ul>
+		Defines an elevation grid to simulate an isosurface.  
+		
+		<h3>- ComputationThreshold</h3>
+		<ul>
+			<li> object1 - a node (can be a position node, appearance node or something else)</li>
+			<li> object2</li>
+			<li> threshold - the threshold to make the choice between producing object1 or object2</li>
+			<li> value - the data value to compare to the threshold</li>
+		</ul>
+		Defines an computational manager that produces either one of two objects. 
+		
+		<h3>- ObjectBar</h3>
+		<ul>
+			<li> weight</li>
+			<li> height</li>
+			<li> proportion - value to scale the height parameter</li>
+			<li> appearance - an appearance node</li>
+		</ul>
+		Defines a bar visualization object.
+		
+		<h3>- ObjectBox</h3>
+		<ul>
+			<li> sizeX</li>
+			<li> sizeY</li>
+			<li> sizeZ</li>
+			<li> appearance - an appearance node</li>
+		</ul>
+		Defines a cube visualization object.
+		
+		<h3>- ObjectCone</h3>
+		<ul>
+			<li> bottomRadius</li>
+			<li> height</li>
+			<li> appearance - an appearance node</li>
+			<li> proportionRadius (optional) - scaling the bottomRadius value</li>
+			<li> proportionHeight (optional) - scaling the height value</li>
+		</ul>
+		Defines a cone visualization object.
+		
+		<h3>- ObjectPanel</h3>
+		<ul>
+			<li> content</li>
+			<li> fontSize</li>
+			<li> orientation - orientation of the panel given as $x$, $y$, $z$ and angle (in radian)</li> 
+			<li> border - margin size between the text and panel</li>
+			<li> appearanceText - an appearance node for the text</li>
+			<li> appearancePanel - an appearance node for the panel</li>
+		</ul>
+		Defines a panel visualization object.
+		
+		<h3>- ObjectSegment</h3>
+		<ul>
+			<li> originX - origin point</li>
+			<li> originY</li>
+			<li> originZ</li>
+			<li> endX - ending point</li>
+			<li> endY</li>
+			<li> endZ</li>
+			<li> lineColor - coloring defined as three RGB values between 0 and 1</li>
+		</ul>
+		Defines a line visualization object between two points.
+		
+		<h3>- ObjectSphere</h3>
+		<ul>
+			<li> radius</li>
+			<li> appearance - an appearance node</li>
+		</ul>
+		Defines a sphere visualization object.
+		
+		<h3>- ObjectStar</h3>
+		<ul>
+			<li> scale - defines the size of the star object</li>
+			<li> proportion (optional) - applied to the scale</li>
+			<li> appearance - an appearance node</li>
+		</ul>
+		Defines a star-like visualization object. This manager is an example of how to create custom shapes.
+		
+		<h3>- PositionAtCoordinate</h3>
+		<ul>
+			<li> x</li>
+			<li> y</li>
+			<li> z</li>
+			<li> offsetX (optional)</li>
+			<li> offsetY (optional)</li>
+			<li> offsetZ (optional)</li>
+			<li> sceneObject - any object node with its own manager</li>
+		</ul>
+		Layout manager that places an object on a set of coordinates with an offset (or not).
+		
+		<h3>- PositionAtDistance</h3>
+		<ul>
+			<li> x</li>
+			<li> y</li>
+			<li> z</li>
+			<li> distanceX</li>
+			<li> distanceY</li>
+			<li> distanceZ</li>
+			<li> sceneObject - any object node with its own manager</li>
+		</ul>
+		Layout manager that places an object at a distance from a set of coordinates. (The difference with the previous one being that here the offsets are not optional. They do behave in the same way, however.)
+		
+		<h3>- PositionAtDistanceWithLine</h3>
+		<ul>
+			<li> x</li>
+			<li> y</li>
+			<li> z</li>
+			<li> distanceX</li>
+			<li> distanceY</li>
+			<li> distanceZ</li>
+			<li> sceneObject - any object node with its own manager</li>
+			<li> appearanceLine = an Appearance node for the line</li>
+		</ul>
+		Similar to the previous one but with a line drawn between the object and the origin point.
+		
+		<h3>- PositionBetweenTwoPointsWithLine</h3>
+		<ul>
+			<li> originX - origin point</li>
+			<li> originY</li>
+			<li> originZ</li>
+			<li> endX - ending point</li>
+			<li> endY</li>
+			<li> endZ</li>
+			<li> appearanceLine - an Appearance node for the line</li>
+			<li> sceneObject - any object node with its own manager</li>
+		</ul>
+		Layout manager that draws a line between two points and places an object in the middle of this line.
+		
+		<h3>- PositionSimpleCoordinate</h3>
+		<ul>
+			<li> x</li>
+			<li> y</li>
+			<li> z</li>
+			<li> sceneObject - any object node with its own manager</li>
+		</ul>
+		Layout manager that positions an object exactly at a point in space.
+	</ul>
+
+
+	</div>
+</body>
 
 </html>

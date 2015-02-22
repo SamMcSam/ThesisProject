@@ -20,8 +20,6 @@
 		vizu:endY
 		vizu:endZ
 		vizu:appearanceLine = an Appearance node for the line
-
-	Optional :
 		vizu:sceneObject = any object node with its own manager
 
 	Returned object : 

@@ -19,7 +19,7 @@ CONSTRUCT {
 
   _:appearance a layout:ComputationThreshold.
   _:appearance vizu:value ?val.
-  _:appearance vizu:theshold #threshold=5#.
+  _:appearance vizu:threshold #threshold=5#.
   _:appearance vizu:object1 _:color1.
   _:appearance vizu:object2 _:color2.
 

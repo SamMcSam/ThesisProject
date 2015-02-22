@@ -13,7 +13,7 @@
 		vizu:object1 = any node
 		vizu:object2 = any node
 		vizu:value = the data value that will decide which object to pick from object1 or object2
-		vizu:theshold = the threshold to make the choice 
+		vizu:threshold = the threshold to make the choice 
 
 	(object1 when val < threshold, object2 when val >= threshold)
 
@@ -27,7 +27,7 @@
 	<xsl:template match="*[@typeLayout='ComputationThreshold']">
 
 		<xsl:choose>
-			<xsl:when test="./vizu:value &lt; ./vizu:theshold">
+			<xsl:when test="./vizu:value &lt; ./vizu:threshold">
 				<xsl:apply-templates select="./vizu:object1" />
 			</xsl:when>
 			<xsl:otherwise>

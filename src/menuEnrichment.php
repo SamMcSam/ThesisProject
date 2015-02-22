@@ -4,7 +4,7 @@
 * @author Samuel Constantino
 * last update : 20/1/2015
 *
-* Menu to  generate a enriched 3DCM part 1 - selects the city, data, technique
+* Menu to  generate an enriched 3DCM part 1 - selects the city, data, technique
 * then calls menuGeneration to specify the technique's parameters
 */
 

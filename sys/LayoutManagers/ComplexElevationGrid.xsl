@@ -7,17 +7,17 @@
 	Last update : 15/2/15
 	***************************
 
-	Description : 
+	Description : an elevation grid to simulate an isosurface
 
 	Parameters necessary : 
 		vizu:x
 		vizu:y 
 		vizu:z
+		vizu:offsetZ
 		vizu:val
+		vizu:proportion = use 1 or higher
 		vizu:color = "r g b"
 		vizu:creaseAngle = angle (between 0,1)
-		vizu:offsetZ
-		vizu:proportion = use 1 or higher
 
 	Returned object : 
 		....
