@@ -24,7 +24,7 @@ CONSTRUCT {
   _:object a layout:ObjectPanel.
   _:object vizu:content ?val.
   _:object vizu:fontSize #fontSize=5#.
-  _:object vizu:orientation #orientation=0 0 0 0#.
+  _:object vizu:orientation #orientation=1 0 0 1.57079633#.
   _:object vizu:border #border=1#.
   _:object vizu:appearanceText _:appearanceT.
   _:object vizu:appearancePanel _:appearanceP.
